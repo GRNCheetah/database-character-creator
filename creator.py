@@ -297,7 +297,7 @@ class CharacterCreate(tk.Frame):
                                     to=360,
                                     orient=tk.HORIZONTAL,
                                     background=self.hexPantsColor.get())
-        self.sldMidColor.config(command=lambda x: self.setColor(self.sldMidColor, self.pantsColor))
+        self.sldMidColor.config(command=self.handlePantsColor)
         self.sldMidColor.grid(row=2, column=3)
 
         # Bot Slider
@@ -310,7 +310,7 @@ class CharacterCreate(tk.Frame):
                                     to=360,
                                     orient=tk.HORIZONTAL,
                                     background=self.hexShoesColor.get())
-        self.sldBotColor.config(command=lambda x: self.setColor(self.sldBotColor, self.shoesColor))
+        self.sldBotColor.config(command=self.handleShoesColor)
         self.sldBotColor.grid(row=3, column=3)
 
     def rgb_to_hex(self, rgb):
