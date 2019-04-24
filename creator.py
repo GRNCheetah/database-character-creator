@@ -169,12 +169,14 @@ class CharacterCreate(tk.Frame):
         rbMale = tk.Radiobutton(lfInfo,
                                 text="Male",
                                 variable=self.gender,
-                                value="Male")
+                                value="Male",
+                                command=self.setGender)
         rbMale.grid(row=7, column=1)
         rbFemale = tk.Radiobutton(lfInfo,
                                   text="Female",
                                   variable=self.gender,
-                                  value="Female")
+                                  value="Female",
+                                  command=self.setGender)
         rbFemale.grid(row=8, column=1)
 
         # Skill
@@ -211,17 +213,18 @@ class CharacterCreate(tk.Frame):
 
         # Middle Person, needs to be three sections, maybe four
 
-        imgPerson = tk.PhotoImage(file="person.gif")
-        #self.character = IE.CharacterManip()
-        #imgPerson = self.character.returnGIF()
-        person = tk.Label(lfVisual,
+        #imgPerson = tk.PhotoImage(file="person.gif")
+        self.character = IE.CharacterManip(self.species.get(), self.gender.get())
+        self.imgPerson = self.character.returnGIF()
+        self.lblPerson = tk.Label(lfVisual,
                           height=150,
                           width=50,
-                          image=imgPerson)
-
-        person.grid(row=1,
+                          image=self.imgPerson)
+        self.lblPerson.image = self.imgPerson
+        self.lblPerson.grid(row=1,
                     column=1,
                     rowspan=3)
+
 
         # Top left
         butLeftShirt = tk.Button(lfVisual,
@@ -272,7 +275,7 @@ class CharacterCreate(tk.Frame):
         butRightShoes.grid(row=3, column=2)
 
         # Top Slider
-        self.shirtColor = tk.IntVar(0) # Reprents hex number in decimal'
+        self.shirtColor = tk.IntVar(0) # Represents hex number in decimal
         self.hexShirtColor = tk.StringVar()
         self.hexShirtColor.set("#ff0000")
         self.sldTopColor = tk.Scale(lfVisual,
@@ -281,7 +284,7 @@ class CharacterCreate(tk.Frame):
                                to=360,
                                orient=tk.HORIZONTAL,
                                background=self.hexShirtColor.get())
-        self.sldTopColor.config(command=lambda x: self.setColor(self.sldTopColor, self.shirtColor))
+        self.sldTopColor.config(command=self.handleShirtColor)
         self.sldTopColor.grid(row=1, column=3)
 
         # Mid Slider
@@ -313,18 +316,59 @@ class CharacterCreate(tk.Frame):
     def rgb_to_hex(self, rgb):
         return "#%02x%02x%02x" % rgb
 
-    def setColor(self, slider, intColor):
-        """Updates the color of a slider whenever it changes.
 
-        Also needs to update the character image. Do this with self.CLOTHESColor
-        """
-        rgb = ImageColor.getrgb("hsl(" + str(intColor.get()) + ", 100%, 50%)")
+    def handleShirtColor(self,  event):
+        """Update the color of the slider and the shirt."""
+        # Update the Slider
+        rgb = ImageColor.getrgb("hsl(" + str(self.shirtColor.get()) + ", 100%, 50%)")
         newHex = self.rgb_to_hex(rgb)
-        slider.config(bg=newHex)
+        self.sldTopColor.config(bg=newHex)
+
+        # Update the person
+        self.imgPerson = self.character.setShirtColor(newHex)
+        self.lblPerson.configure(image=self.imgPerson)
+        self.lblPerson.image = self.imgPerson
+
+    def handlePantsColor(self, event):
+        """Update the color of the slider and the pants."""
+        # Update the Slider
+        rgb = ImageColor.getrgb("hsl(" + str(self.pantsColor.get()) + ", 100%, 50%)")
+        newHex = self.rgb_to_hex(rgb)
+        self.sldMidColor.config(bg=newHex)
+
+        # Update the person
+        self.imgPerson = self.character.setPantsColor(newHex)
+        self.lblPerson.configure(image=self.imgPerson)
+        self.lblPerson.image = self.imgPerson
+
+    def handleShoesColor(self, event):
+        """Update the color of the slider and the shoes."""
+        # Update the Slider
+        rgb = ImageColor.getrgb("hsl(" + str(self.shoesColor.get()) + ", 100%, 50%)")
+        newHex = self.rgb_to_hex(rgb)
+        self.sldTopColor.config(bg=newHex)
+
+        # Update the person
+        self.imgPerson = self.character.setShoesColor(newHex)
+        self.lblPerson.configure(image=self.imgPerson)
+        self.lblPerson.image = self.imgPerson
 
 
     def setSpecies(self, event):
         self.species.set(self.species_list[self.speciesNum.get()])
+
+        # Update the character
+        self.character.update_character(self.species.get(), self.gender.get())
+        self.imgPerson = self.character.returnGIF()
+        self.lblPerson.configure(image=self.imgPerson)
+        self.lblPerson.image = self.imgPerson
+
+    def setGender(self):
+        # Update the character
+        self.character.update_character(self.species.get(), self.gender.get())
+        self.imgPerson = self.character.returnGIF()
+        self.lblPerson.configure(image=self.imgPerson)
+        self.lblPerson.image = self.imgPerson
 
 
     def infoNextClick(self):
