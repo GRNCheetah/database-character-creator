@@ -156,8 +156,9 @@ class CharacterCreate(tk.Frame):
         sldColor = tk.Scale(lfInfo,
                             variable=self.colorNum,
                             from_=0,
-                            to=5,
-                            orient=tk.HORIZONTAL)
+                            to=4,
+                            orient=tk.HORIZONTAL,
+                            command=self.setColor)
         sldColor.grid(row=6, column=1)
 
         # Gender
@@ -214,63 +215,68 @@ class CharacterCreate(tk.Frame):
         # Middle Person, needs to be three sections, maybe four
 
         #imgPerson = tk.PhotoImage(file="person.gif")
-        self.character = IE.CharacterManip(self.species.get(), self.gender.get())
+        self.character = IE.CharacterManip(self.species.get(), self.gender.get(), self.colorNum.get())
         self.imgPerson = self.character.returnGIF()
         self.lblPerson = tk.Label(lfVisual,
-                          height=150,
-                          width=50,
                           image=self.imgPerson)
         self.lblPerson.image = self.imgPerson
         self.lblPerson.grid(row=1,
                     column=1,
                     rowspan=3)
 
+        but_dim = 100
 
         # Top left
         butLeftShirt = tk.Button(lfVisual,
                                  image=imgLeftArrow,
-                                 width=50,
-                                 height=50)
+                                 width=but_dim,
+                                 height=but_dim,
+                                 command=self.shirtLeft)
         butLeftShirt.image = imgLeftArrow
         butLeftShirt.grid(row=1, column=0)
 
         # Top Right
         butRightShirt = tk.Button(lfVisual,
                                  image=imgRightArrow,
-                                 width=50,
-                                 height=50)
+                                 width=but_dim,
+                                 height=but_dim,
+                                 command=self.shirtRight)
         butRightShirt.image = imgRightArrow
         butRightShirt.grid(row=1, column=2)
 
         # Mid left
         butLeftPants = tk.Button(lfVisual,
                                  image=imgLeftArrow,
-                                 width=50,
-                                 height=50)
+                                 width=but_dim,
+                                 height=but_dim,
+                                 command=self.pantsLeft)
         butLeftPants.immge = imgLeftArrow
         butLeftPants.grid(row=2, column=0)
 
         # Mid Right
         butRightPants = tk.Button(lfVisual,
                                   image=imgRightArrow,
-                                  width=50,
-                                  height=50)
+                                  width=but_dim,
+                                  height=but_dim,
+                                  command=self.pantsRight)
         butRightPants.image = imgRightArrow
         butRightPants.grid(row=2, column=2)
 
         # Bot left
         butLeftShoes = tk.Button(lfVisual,
                                  image=imgLeftArrow,
-                                 width=50,
-                                 height=50)
+                                 width=but_dim,
+                                 height=but_dim,
+                                 command=self.shoesLeft)
         butLeftShoes.image = imgLeftArrow
         butLeftShoes.grid(row=3, column=0)
 
         # Bot Right
         butRightShoes = tk.Button(lfVisual,
                                   image=imgRightArrow,
-                                  width=50,
-                                  height=50)
+                                  width=but_dim,
+                                  height=but_dim,
+                                  command=self.shoesRight)
         butRightShoes.image = imgRightArrow
         butRightShoes.grid(row=3, column=2)
 
@@ -346,29 +352,52 @@ class CharacterCreate(tk.Frame):
         # Update the Slider
         rgb = ImageColor.getrgb("hsl(" + str(self.shoesColor.get()) + ", 100%, 50%)")
         newHex = self.rgb_to_hex(rgb)
-        self.sldTopColor.config(bg=newHex)
+        self.sldBotColor.config(bg=newHex)
 
         # Update the person
         self.imgPerson = self.character.setShoesColor(newHex)
         self.lblPerson.configure(image=self.imgPerson)
         self.lblPerson.image = self.imgPerson
 
+    def shirtLeft(self):
+        self.character._shirtLeft()
+        self.updateCharLabel()
+
+    def shirtRight(self):
+        self.character._shirtRight()
+        self.updateCharLabel()
+
+    def pantsLeft(self):
+        self.character._pantsLeft()
+        self.updateCharLabel()
+
+    def pantsRight(self):
+        self.character._pantsRight()
+        self.updateCharLabel()
+
+    def shoesLeft(self):
+        self.character._shoesLeft()
+        self.updateCharLabel()
+
+    def shoesRight(self):
+        self.character._shoesRight()
+        self.updateCharLabel()
 
     def setSpecies(self, event):
         self.species.set(self.species_list[self.speciesNum.get()])
 
         # Update the character
-        self.character.update_character(self.species.get(), self.gender.get())
-        self.imgPerson = self.character.returnGIF()
-        self.lblPerson.configure(image=self.imgPerson)
-        self.lblPerson.image = self.imgPerson
+        self.character.update_character(self.species.get(), self.gender.get(), self.colorNum.get())
+        self.updateCharLabel()
 
     def setGender(self):
         # Update the character
-        self.character.update_character(self.species.get(), self.gender.get())
-        self.imgPerson = self.character.returnGIF()
-        self.lblPerson.configure(image=self.imgPerson)
-        self.lblPerson.image = self.imgPerson
+        self.character.update_character(self.species.get(), self.gender.get(), self.colorNum.get())
+        self.updateCharLabel()
+
+    def setColor(self, event):
+        self.character.update_character(self.species.get(), self.gender.get(), self.colorNum.get())
+        self.updateCharLabel()
 
 
     def infoNextClick(self):
@@ -376,6 +405,10 @@ class CharacterCreate(tk.Frame):
         print(self.entFName.get())
         print(self.height.get())
 
+    def updateCharLabel(self):
+        self.imgPerson = self.character.returnGIF()
+        self.lblPerson.configure(image=self.imgPerson)
+        self.lblPerson.image = self.imgPerson
 
 class CharacterView(tk.Frame):
 

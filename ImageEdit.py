@@ -15,22 +15,31 @@ class CharacterManip:
     """
 
 
-    def __init__(self, species, gender):
+    def __init__(self, species, gender, color):
         """Should initialize with the Species, Gender, and Color of the character.
 
 
         :param species:
         """
-        self.species = ""
-        self.gender = ""
+        self.species = species
+        self.gender = gender
+        self.color = color # int
 
-        self.max_w = 50
-        self.max_h = 150
+        self.human_colors =["#ffdbac",
+                            "#f1c27d",
+                            "#e0ac69",
+                            "#c68642",
+                            "#8d5524"]
+
+        self.max_w = 300
+        self.max_h = 500
         self.w = 0
         self.h = 0
         # Original image of the character
         self.character = Image.new("RGB", (self.max_w, self.max_h))
+        self.base = Image.new("RGB", (self.max_w, self.max_h))
         self.mod = Image.new("RGB", (self.max_w, self.max_h))
+        self.m_skin = Image.new("L", (self.max_w, self.max_h))
         # List of clothes masks
         self.shirts = []
         self.pants = []
@@ -44,8 +53,9 @@ class CharacterManip:
         self.col_shirt = self.def_col
         self.col_pants = self.def_col
         self.col_shoes = self.def_col
+        self.col_skin = self.human_colors[color] # String
 
-        self.update_character(species, gender)
+        self.update_character(species, gender, color)
 
 
 
@@ -62,14 +72,20 @@ class CharacterManip:
     def _open(self, f_name, mode):
         return Image.open(os.path.join("assets", f_name)).convert(mode)
 
-    def update_character(self, s, g):
+    def update_character(self, s, g, c):
         """Run whenever an attribute of the chracter's phyisical being is changed."""
 
         self.species = s
         self.gender = g
+        self.color = c
+
+        self.curr_shirt = 0
+        self.curr_pants = 0
+        self.curr_shoes = 0
 
         if self.species == "Human" and self.gender == "Female":
             self.character = self._open("fe_base.gif", "RGB")
+            self.m_skin = self._open("fe_m_skin.gif", "L")
             # Load clothing items
             self.shirts = [self._open("fe_m_blouse.gif", "L"),
                            self._open("fe_m_crop.gif", "L")]
@@ -79,8 +95,11 @@ class CharacterManip:
 
         elif self.species == "Human" and self.gender == "Male":
             self.character = self._open("male.gif", "RGB")
+            self.m_skin = None
             # Load clothing items
             self.shirts = [self._open("tshirt_mask.gif", "L")]
+            self.pants = []
+            self.shoes = []
 
         # Convert so all the same
         #self.character = self.character.convert("RGB")
@@ -92,6 +111,10 @@ class CharacterManip:
         self.h = int(self.h * self.ratio)
         # Resize character image
         self.character = self.character.resize((self.w, self.h), Image.ANTIALIAS)
+        self.base = self.character.copy()
+        if self.m_skin:
+            self.m_skin = self.m_skin.resize((self.w, self.h), Image.ANTIALIAS)
+
         # Resize clothes
         for i in range(len(self.shirts)):
             self.shirts[i] = self.shirts[i].resize((self.w, self.h), Image.ANTIALIAS)
@@ -99,6 +122,9 @@ class CharacterManip:
             self.pants[i] = self.pants[i].resize((self.w, self.h), Image.ANTIALIAS)
         for i in range(len(self.shoes)):
             self.shoes[i] = self.shoes[i].resize((self.w, self.h), Image.ANTIALIAS)
+
+        if self.species == "Human" and self.m_skin:
+            self.setSkinColor(self.human_colors[self.color])
 
         self.setAllColor()
 
@@ -108,36 +134,84 @@ class CharacterManip:
         self.setPantsColor(self.col_pants)
         self.setShoesColor(self.col_shoes)
 
+    def setSkinColor(self, rgbHex):
+        self.col_skin = rgbHex
+        self.mod=Image.new("RGB", (self.w, self.h), self.col_skin)
+        self.character.paste(self.mod, mask=self.m_skin)
 
     def setShirtColor(self, rgbHex):
         """Creates and returns a tKinter image with the correct color shirt."""
+        self.col_shirt = rgbHex
         if self.shirts:
-            print("Setting shirt default")
-            self.col_shirt = rgbHex
             self.mod = Image.new("RGB", (self.w, self.h), self.col_shirt)
             # Pastes the color (mod) into the white area of the mask.
             self.character.paste(self.mod, mask=self.shirts[self.curr_shirt])
-        print(self.character.mode)
         return ImageTk.PhotoImage(self.character)
 
     def setPantsColor(self, rgbHex):
         """Creates and returns a tKinter image with the correct color pants."""
+        self.col_pants = rgbHex
         if self.pants:
-            print("Setting pants default")
-            self.col_pants = rgbHex
             self.mod = Image.new("RGB", (self.w, self.h), self.col_pants)
             self.character.paste(self.mod, mask=self.pants[self.curr_pants])
-        print(self.character.mode)
         return ImageTk.PhotoImage(self.character)
 
     def setShoesColor(self, rgbHex):
         """Creates and returns a tKinter image with the correct color shoes."""
+        self.col_shoes = rgbHex
         if self.shoes:
-            self.col_shoes = rgbHex
             self.mod = Image.new("RGB", (self.w, self.h), self.col_shoes)
             self.character.paste(self.mod, mask=self.shoes[self.curr_shoes])
 
         return ImageTk.PhotoImage(self.character)
+
+    def _shirtLeft(self):
+        self.curr_shirt -= 1
+        if (self.curr_shirt <= -1):
+            self.curr_shirt = len(self.shirts) - 1
+        self.character = self.base.copy()
+        self.setAllColor()
+
+
+    def _shirtRight(self):
+        self.curr_shirt += 1
+        if (self.curr_shirt >= len(self.shirts)):
+            self.curr_shirt = 0
+        self.character = self.base.copy()
+        self.setAllColor()
+
+    def _pantsLeft(self):
+        self.curr_pants -= 1
+        if (self.curr_pants <= -1):
+            self.curr_pants = len(self.pants) - 1
+        self.character = self.base.copy()
+        self.setAllColor()
+
+
+    def _pantsRight(self):
+        self.curr_pants += 1
+        if (self.curr_pants >= len(self.pants)):
+            self.curr_pants = 0
+        self.character = self.base.copy()
+        self.setAllColor()
+
+    def _shoesLeft(self):
+        self.curr_shoes -= 1
+        if (self.curr_shoes <= -1):
+            self.curr_shoes = len(self.shoes) - 1
+        self.character = self.base.copy()
+        self.setAllColor()
+
+
+    def _shoesRight(self):
+        self.curr_shoes += 1
+        if (self.curr_shoes >= len(self.shoes)):
+            self.curr_shoes = 0
+        self.character = self.base.copy()
+        self.setAllColor()
+
+
+
 
     def returnGIF(self):
         return ImageTk.PhotoImage(self.character)
