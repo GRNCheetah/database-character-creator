@@ -25,11 +25,17 @@ class CharacterManip:
         self.gender = gender
         self.color = color # int
 
-        self.human_colors =["#ffdbac",
-                            "#f1c27d",
-                            "#e0ac69",
-                            "#c68642",
-                            "#8d5524"]
+        self.human_colors = ["#ffdbac",
+                             "#f1c27d",
+                             "#e0ac69",
+                             "#c68642",
+                             "#8d5524"]
+
+        self.bear_colors = ["#ffe7b5",
+                            "#ffde58",
+                            "#d76300",
+                            "#633800",
+                            "#eff5eb",]
 
         self.max_w = 300
         self.max_h = 500
@@ -79,9 +85,7 @@ class CharacterManip:
         self.gender = g
         self.color = c
 
-        self.curr_shirt = 0
-        self.curr_pants = 0
-        self.curr_shoes = 0
+
 
         if self.species == "Human" and self.gender == "Female":
             self.character = self._open("fe_base.gif", "RGB")
@@ -100,6 +104,16 @@ class CharacterManip:
             self.shirts = [self._open("tshirt_mask.gif", "L")]
             self.pants = []
             self.shoes = []
+
+        elif self.species == "Bear" and self.gender == "Male":
+            self.character = self._open("bm_base.gif", "RGB")
+            self.m_skin = self._open("bm_m_skin.gif", "L")
+            # Load clothing items
+            self.shirts = [self._open("bm_m_t_shirt.gif", "L"),
+                           self._open("bm_m_button_up.gif", "L")]
+            self.pants = [self._open("bm_m_shorts.gif", "L"),
+                          self._open("bm_m_jeans.gif", "L")]
+            self.shoes = [self._open("bm_m_tennis_shoes.gif", "L")]
 
         # Convert so all the same
         #self.character = self.character.convert("RGB")
@@ -123,13 +137,17 @@ class CharacterManip:
         for i in range(len(self.shoes)):
             self.shoes[i] = self.shoes[i].resize((self.w, self.h), Image.ANTIALIAS)
 
-        if self.species == "Human" and self.m_skin:
-            self.setSkinColor(self.human_colors[self.color])
+
 
         self.setAllColor()
 
 
     def setAllColor(self):
+        if self.species == "Human" and self.m_skin:
+            self.setSkinColor(self.human_colors[self.color])
+        elif self.species == "Bear" and self.m_skin:
+            self.setSkinColor(self.bear_colors[self.color])
+
         self.setShirtColor(self.col_shirt)
         self.setPantsColor(self.col_pants)
         self.setShoesColor(self.col_shoes)

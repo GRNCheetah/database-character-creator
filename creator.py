@@ -224,7 +224,7 @@ class CharacterCreate(tk.Frame):
                     column=1,
                     rowspan=3)
 
-        but_dim = 100
+        but_dim = 50
 
         # Top left
         butLeftShirt = tk.Button(lfVisual,
