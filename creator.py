@@ -44,6 +44,10 @@ class Creator(tk.Tk):
 
 
 class MainMenu(tk.Frame):
+    """Shown at the start of the program.
+
+    Allows for the user to select between creating a character, and viewing all characters.
+    """
 
     def __init__(self, parent, controller):
         """
@@ -52,7 +56,7 @@ class MainMenu(tk.Frame):
         :param controller: Creator self
         """
         tk.Frame.__init__(self, parent)
-
+        print("MEME ALERT")
         # Top most part of the screen
         self.label = tk.Label(self, text="The Character Creator", font=LARGE_FONT)
         self.label.pack()
@@ -85,9 +89,14 @@ class MainMenu(tk.Frame):
 
 
 class CharacterCreate(tk.Frame):
+    """The first frame of the character creator.
+
+    Handles the visual effects of the character, as well as the name, job, skill, etc.
+    """
 
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent, bg="green")
+        self.controller = controller
 
         label = tk.Label(self, text="Time To Design", font=LARGE_FONT)
         label.pack(pady=10, padx=10)
@@ -319,6 +328,32 @@ class CharacterCreate(tk.Frame):
         self.sldBotColor.config(command=self.handleShoesColor)
         self.sldBotColor.grid(row=3, column=3)
 
+    def set_defaults(self):
+        """Sets everything to default when you go back to main menu."""
+        self.entFName.delete(0, tk.END)
+        self.entLName.delete(0, tk.END)
+        self.height.set("Short")
+        self.weight.set("Light")
+        self.speciesNum.set(0)
+        self.species.set(self.species_list[0])
+        self.colorNum.set(0)
+        self.gender.set("Male")
+        self.entSkill.delete(0, tk.END)
+        self.entJob.delete(0, tk.END)
+
+        self.character = IE.CharacterManip(self.species.get(), self.gender.get(), self.colorNum.get())
+        self.updateCharLabel()
+        self.shirtColor.set(0)
+        self.hexShirtColor.set("#ff0000")
+        self.sldTopColor.config(background=self.hexShirtColor.get())
+        self.pantsColor.set(0)
+        self.hexPantsColor.set("#ff0000")
+        self.sldMidColor.config(background=self.hexPantsColor.get())
+        self.shoesColor.set(0)
+        self.hexShoesColor.set("#ff0000")
+        self.sldBotColor.config(background=self.hexShoesColor.get())
+
+
     def rgb_to_hex(self, rgb):
         return "#%02x%02x%02x" % rgb
 
@@ -404,11 +439,44 @@ class CharacterCreate(tk.Frame):
         print("yo")
         print(self.entFName.get())
         print(self.height.get())
+        self.set_defaults()
+        self.controller.show_frame(MainMenu)
 
     def updateCharLabel(self):
         self.imgPerson = self.character.returnGIF()
         self.lblPerson.configure(image=self.imgPerson)
         self.lblPerson.image = self.imgPerson
+
+class PersonalityTest(tk.Frame):
+    """The second page of the character creator.
+
+    The personality quiz of the character, not the human.
+    """
+    def __init__(self, parent, controller):
+        tk.Frame.__init__(self, parent)
+
+        label = tk.Label(self, text="Personality Test", font=LARGE_FONT)
+        label.pack(pady=10, padx=10)
+
+        # ----- Q1 -----
+        lfQ1 = tk.LabelFrame(self,
+                               text="Question 1")
+        lfQ1.pack(fill="both", expand="yes", side="left")
+
+        lblQ1 = tk.Label(self,
+                         text="")
+
+
+
+
+
+
+
+        pass
+
+
+
+
 
 class CharacterView(tk.Frame):
 

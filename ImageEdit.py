@@ -85,7 +85,9 @@ class CharacterManip:
         self.gender = g
         self.color = c
 
-
+        self.curr_shirt = 0
+        self.curr_pants = 0
+        self.curr_shoes = 0
 
         if self.species == "Human" and self.gender == "Female":
             self.character = self._open("fe_base.gif", "RGB")
@@ -95,15 +97,19 @@ class CharacterManip:
                            self._open("fe_m_crop.gif", "L")]
             self.pants = [self._open("fe_m_jeans.gif", "L"),
                           self._open("fe_m_skirt.gif", "L")]
-            self.shoes = []
+            self.shoes = [self._open("fe_m_tennis_shoes.gif", "L"),
+                          self._open("fe_m_boots.gif", "L")]
 
         elif self.species == "Human" and self.gender == "Male":
-            self.character = self._open("male.gif", "RGB")
-            self.m_skin = None
+            self.character = self._open("ma_base.gif", "RGB")
+            self.m_skin = self._open("ma_m_skin.gif", "L")
             # Load clothing items
-            self.shirts = [self._open("tshirt_mask.gif", "L")]
-            self.pants = []
-            self.shoes = []
+            self.shirts = [self._open("ma_m_t_shirt.gif", "L"),
+                           self._open("ma_m_long_sleeve.gif", "L")]
+            self.pants = [self._open("ma_m_shorts.gif", "L"),
+                          self._open("ma_m_long_jeans.gif", "L")]
+            self.shoes = [self._open("ma_m_loafers.gif", "L"),
+                          self._open("ma_m_tennis_shoes.gif", "L")]
 
         elif self.species == "Bear" and self.gender == "Male":
             self.character = self._open("bm_base.gif", "RGB")
