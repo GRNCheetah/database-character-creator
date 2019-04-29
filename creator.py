@@ -26,7 +26,7 @@ class Creator(tk.Tk):
         # Frame Stuff
         self.frames = {}
 
-        for F in (MainMenu, CharacterCreate, CharacterView):
+        for F in (MainMenu, CharacterCreate, CharacterView, PersonalityTest):
 
             frame = F(container, self)
 
@@ -99,12 +99,14 @@ class CharacterCreate(tk.Frame):
         self.controller = controller
 
         label = tk.Label(self, text="Time To Design", font=LARGE_FONT)
-        label.pack(pady=10, padx=10)
+        #label.pack(pady=10, padx=10)
+        label.grid(row=0, column=0)
 
         # ----- Information Frame -----
         lfInfo = tk.LabelFrame(self,
                                text="Character Information")
-        lfInfo.pack(fill="both", expand="yes", side="left")
+        #lfInfo.pack(fill="both", expand="yes", side="left")
+        lfInfo.grid(row=1, column=0)
 
         # First name
         lblFName = tk.Label(lfInfo,
@@ -204,17 +206,13 @@ class CharacterCreate(tk.Frame):
         self.entJob.grid(row=10, column=1)
 
 
-        # Info Next
-        butInfoNext = tk.Button(lfInfo,
-                                text="Next",
-                                command=self.infoNextClick)
-        butInfoNext.grid(row=11, column=1)
+
 
         # ----- Visual Frame -----
         lfVisual = tk.LabelFrame(self,
                                  text="Design Character")
-        lfVisual.pack(fill="both", expand="yes", side="right")
-
+        #lfVisual.pack(fill="both", expand="yes", side="right")
+        lfVisual.grid(row=1, column=1)
 
 
         # Asset import
@@ -328,6 +326,21 @@ class CharacterCreate(tk.Frame):
         self.sldBotColor.config(command=self.handleShoesColor)
         self.sldBotColor.grid(row=3, column=3)
 
+        # ----- Forward-Backward Frame -----
+        lfBot = tk.LabelFrame(self,
+                               text="Charactfasdfasdfasder Information")
+        lfBot.grid(row=2, column=0)
+
+        butBack2Main = tk.Button(lfBot,
+                                text="Back",
+                                command=self.back2MainClick)
+        butBack2Main.grid(row=0, column=0)
+
+        butForward2Pers = tk.Button(lfBot,
+                                    text="Next",
+                                    command=self.forward2Pers)
+        butForward2Pers.grid(row=0, column=1)
+
     def set_defaults(self):
         """Sets everything to default when you go back to main menu."""
         self.entFName.delete(0, tk.END)
@@ -435,12 +448,15 @@ class CharacterCreate(tk.Frame):
         self.updateCharLabel()
 
 
-    def infoNextClick(self):
+    def back2MainClick(self):
         print("yo")
         print(self.entFName.get())
         print(self.height.get())
         self.set_defaults()
         self.controller.show_frame(MainMenu)
+
+    def forward2Pers(self):
+        self.controller.show_frame(PersonalityTest)
 
     def updateCharLabel(self):
         self.imgPerson = self.character.returnGIF()
@@ -464,15 +480,7 @@ class PersonalityTest(tk.Frame):
         lfQ1.pack(fill="both", expand="yes", side="left")
 
         lblQ1 = tk.Label(self,
-                         text="")
-
-
-
-
-
-
-
-        pass
+                         text="This is a test question.")
 
 
 
