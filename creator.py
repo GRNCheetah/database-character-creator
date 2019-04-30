@@ -328,7 +328,7 @@ class CharacterCreate(tk.Frame):
 
         # ----- Forward-Backward Frame -----
         lfBot = tk.LabelFrame(self,
-                               text="Charactfasdfasdfasder Information")
+                               text="Ready to Move")
         lfBot.grid(row=2, column=0)
 
         butBack2Main = tk.Button(lfBot,
@@ -338,7 +338,7 @@ class CharacterCreate(tk.Frame):
 
         butForward2Pers = tk.Button(lfBot,
                                     text="Next",
-                                    command=self.forward2Pers)
+                                    command=self.forward2PersClick)
         butForward2Pers.grid(row=0, column=1)
 
     def set_defaults(self):
@@ -455,7 +455,7 @@ class CharacterCreate(tk.Frame):
         self.set_defaults()
         self.controller.show_frame(MainMenu)
 
-    def forward2Pers(self):
+    def forward2PersClick(self):
         self.controller.show_frame(PersonalityTest)
 
     def updateCharLabel(self):
@@ -467,23 +467,256 @@ class PersonalityTest(tk.Frame):
     """The second page of the character creator.
 
     The personality quiz of the character, not the human.
+
+    (OPE)
+    Openness - High scores tend to belong to those who like to learn and experience new things.
+        ex) Insightful and Imaginative
+    (CON)
+    Conscientiousness - High scores belong to those who are reliable and prompt.
+        ex) Organized, methodic, thorough
+    (EXT)
+    Extraversion - Where you get your energy from, others or yourself.
+        ex) Energetic, talkative, assertive
+    (AGR)
+    Agreeableness - High scores trend towards being friendly, cooperative, and compassionate.
+    (NEU)
+    Neuroticism - Emotional stability. High scores experience emotional instability and neg emotions.
+        ex) Moody, tense
     """
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
 
-        label = tk.Label(self, text="Personality Test", font=LARGE_FONT)
-        label.pack(pady=10, padx=10)
+        self.controller = controller
 
+        label = tk.Label(self, text="Personality Test", font=LARGE_FONT)
+        #label.pack(pady=10, padx=10)
+        label.grid(row=0, column=0, columnspan=2)
+
+        instr = """For each question, answer how true the statement is to your character. The \
+results of this quiz will determine the personality of your character."""
+
+        lblInstructions = tk.Label(self, text=instr)
+        #lblInstructions.pack(pady=10, padx=10)
+        lblInstructions.grid(row=1, column=0, columnspan=2)
+
+        labels = []
+        questionFrames = []
+        questions = ["1",
+                     "2",
+                     "3",
+                     "4",
+                     "5",
+                     "6",
+                     "7",
+                     "8",
+                     "9",
+                     "10"]
+        self.rbArray = []
+
+
+        self.answers = [tk.IntVar() for i in range(10)]
+
+        for y in range(10):
+            labels.append(tk.Label(self, text=questions[y]))
+            labels[y].grid(row=2 + y, column=0)
+
+            questionFrames.append(tk.LabelFrame(self))
+            questionFrames[y].grid(row=2 + y, column=1)
+
+            self.rbArray.append([])
+            #print(rbArray)
+
+            for x in range(5):
+                self.rbArray[y].append(tk.Radiobutton(questionFrames[y], variable=self.answers[y], value=x))
+                self.rbArray[y][x].grid(row=0, column=x + 1)
+
+
+        butBack = tk.Button(self, text="Back", command=self.back2CharClick)
+        butBack.grid(row=50,column=0)
+
+        butForward = tk.Button(self, text="Next", command=self.forward2PreviewClick)
+        butForward.grid(row=50, column=1)
+
+        """
         # ----- Q1 -----
         lfQ1 = tk.LabelFrame(self,
-                               text="Question 1")
-        lfQ1.pack(fill="both", expand="yes", side="left")
+                             text="Question 1")
+        #lfQ1.pack(fill="both", expand="yes", side="top")
+        lfQ1.grid(row=2, column=0)
 
-        lblQ1 = tk.Label(self,
+        lblQ1 = tk.Label(lfQ1,
                          text="This is a test question.")
+        lblQ1.grid(row=0, column=0, columnspan=5)
+
+        self.Q1 = tk.IntVar()
+        rbQ1 = []
+        for x in range(5):
+            rbQ1.append(tk.Radiobutton(lfQ1, variable=self.Q1, value=x))
+            rbQ1[x].grid(row=0, column=x+1)
+
+        # ----- Q2 -----
+        lfQ2 = tk.LabelFrame(self,
+                             text="Question 2")
+        lfQ2.grid(row=3, column=0)
+
+        lblQ2 = tk.Label(lfQ2,
+                         text="This is a test question.")
+        lblQ2.grid(row=0, column=0, columnspan=5)
+
+        self.Q2 = tk.IntVar()
+        rbQ2 = []
+        for x in range(5):
+            rbQ2.append(tk.Radiobutton(lfQ2, variable=self.Q2, value=x))
+            rbQ2[x].grid(row=0, column=x+1)
+
+        # ----- Q3 -----
+        lfQ3 = tk.LabelFrame(self,
+                             text="Question 3")
+        lfQ3.grid(row=4, column=0)
+
+        lblQ3 = tk.Label(lfQ3,
+                         text="This is a test question.")
+        lblQ3.grid(row=0, column=0, columnspan=5)
+
+        self.Q3 = tk.IntVar()
+        rbQ3 = []
+        for x in range(5):
+            rbQ3.append(tk.Radiobutton(lfQ3, variable=self.Q3, value=x))
+            rbQ3[x].grid(row=0, column=x+1)
+
+        # ----- Q4 -----
+        lfQ4 = tk.LabelFrame(self,
+                             text="Question 4")
+        lfQ4.grid(row=5, column=0)
+
+        lblQ4 = tk.Label(lfQ4,
+                         text="This is a test question.")
+        lblQ4.grid(row=0, column=0, columnspan=5)
+
+        self.Q4 = tk.IntVar()
+        rbQ4 = []
+        for x in range(5):
+            rbQ4.append(tk.Radiobutton(lfQ4, variable=self.Q4, value=x))
+            rbQ4[x].grid(row=0, column=x+1)
+
+        # ----- Q5 -----
+        lfQ5 = tk.LabelFrame(self,
+                             text="Question 5")
+        lfQ5.grid(row=6, column=0)
+
+        lblQ5 = tk.Label(lfQ5,
+                         text="This is a test question.")
+        lblQ5.grid(row=0, column=0, columnspan=5)
+
+        self.Q5 = tk.IntVar()
+        rbQ5 = []
+        for x in range(5):
+            rbQ5.append(tk.Radiobutton(lfQ5, variable=self.Q5, value=x))
+            rbQ5[x].grid(row=0, column=x+1)
+
+        # ----- Q6 -----
+        lfQ6 = tk.LabelFrame(self,
+                             text="Question 6")
+        lfQ6.grid(row=7, column=0)
+
+        lblQ6 = tk.Label(lfQ6,
+                         text="This is a test question.")
+        lblQ6.grid(row=0, column=0, columnspan=5)
+
+        self.Q6 = tk.IntVar()
+        rbQ6 = []
+        for x in range(5):
+            rbQ6.append(tk.Radiobutton(lfQ6, variable=self.Q6, value=x))
+            rbQ6[x].grid(row=0, column=x+1)
+
+        # ----- Q7 -----
+        lfQ7 = tk.LabelFrame(self,
+                             text="Question 7")
+        lfQ7.grid(row=8, column=0)
+
+        lblQ7 = tk.Label(lfQ7,
+                         text="This is a test question.")
+        lblQ7.grid(row=0, column=0, columnspan=5)
+
+        self.Q7 = tk.IntVar()
+        rbQ7 = []
+        for x in range(5):
+            rbQ7.append(tk.Radiobutton(lfQ7, variable=self.Q7, value=x))
+            rbQ7[x].grid(row=0, column=x+1)
+
+        # ----- Q8 -----
+        lfQ8 = tk.LabelFrame(self,
+                             text="Question 8")
+        lfQ8.grid(row=9, column=0)
+
+        lblQ8 = tk.Label(lfQ8,
+                         text="This is a test question.")
+        lblQ8.grid(row=0, column=0, columnspan=5)
+
+        self.Q8 = tk.IntVar()
+        rbQ8 = []
+        for x in range(5):
+            rbQ8.append(tk.Radiobutton(lfQ8, variable=self.Q8, value=x))
+            rbQ8[x].grid(row=0, column=x+1)
+
+        # ----- Q9 -----
+        lfQ9 = tk.LabelFrame(self,
+                             text="Question 9")
+        lfQ9.grid(row=10, column=0)
+
+        lblQ9 = tk.Label(lfQ9,
+                         text="This is a test question.")
+        lblQ9.grid(row=0, column=0, columnspan=5)
+
+        self.Q9 = tk.IntVar()
+        rbQ9 = []
+        for x in range(5):
+            rbQ9.append(tk.Radiobutton(lfQ9, variable=self.Q9, value=x))
+            rbQ9[x].grid(row=0, column=x+1)
+
+        # ----- Q10 -----
+        lfQ10 = tk.LabelFrame(self,
+                              text="Question 10")
+        lfQ10.grid(row=11, column=0)
+
+        lblQ10 = tk.Label(lfQ10,
+                          text="This is a test question.")
+        lblQ10.grid(row=0, column=0, columnspan=5)
+
+        self.Q10 = tk.IntVar()
+        rbQ10 = []
+        for x in range(5):
+            rbQ10.append(tk.Radiobutton(lfQ10, variable=self.Q10, value=x))
+            rbQ10[x].grid(row=0, column=x+1)
+
+        # Buttons to move forward and backwards
+        """
 
 
 
+
+
+
+
+
+
+
+
+
+    def test(self):
+        # This is how to go back
+        #print(self.Q1.get(), self.Q3.get())
+        for x in range(10):
+            print("Q" + str(x) + ":", self.answers[x].get())
+        print(self.answers[0].get())
+        print("NAME:", self.controller.frames[CharacterCreate].entFName.get())
+
+    def back2CharClick(self):
+        self.controller.show_frame(CharacterCreate)
+
+    def forward2PreviewClick(self):
+        #self.controller.show_frame()
+        pass
 
 
 class CharacterView(tk.Frame):
