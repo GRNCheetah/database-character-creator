@@ -100,7 +100,7 @@ class CharacterCreate(tk.Frame):
 
         label = tk.Label(self, text="Time To Design", font=LARGE_FONT)
         #label.pack(pady=10, padx=10)
-        label.grid(row=0, column=0)
+        label.grid(row=0, column=0, columnspan=2)
 
         # ----- Information Frame -----
         lfInfo = tk.LabelFrame(self,
@@ -221,15 +221,14 @@ class CharacterCreate(tk.Frame):
 
         # Middle Person, needs to be three sections, maybe four
 
-        #imgPerson = tk.PhotoImage(file="person.gif")
         self.character = IE.CharacterManip(self.species.get(), self.gender.get(), self.colorNum.get())
         self.imgPerson = self.character.returnGIF()
         self.lblPerson = tk.Label(lfVisual,
                           image=self.imgPerson)
         self.lblPerson.image = self.imgPerson
         self.lblPerson.grid(row=1,
-                    column=1,
-                    rowspan=3)
+                            column=1,
+                            rowspan=3)
 
         but_dim = 50
 
@@ -292,11 +291,11 @@ class CharacterCreate(tk.Frame):
         self.hexShirtColor = tk.StringVar()
         self.hexShirtColor.set("#ff0000")
         self.sldTopColor = tk.Scale(lfVisual,
-                               variable=self.shirtColor,
-                               from_=0,
-                               to=360,
-                               orient=tk.HORIZONTAL,
-                               background=self.hexShirtColor.get())
+                                    variable=self.shirtColor,
+                                    from_=0,
+                                    to=360,
+                                    orient=tk.HORIZONTAL,
+                                    background=self.hexShirtColor.get())
         self.sldTopColor.config(command=self.handleShirtColor)
         self.sldTopColor.grid(row=1, column=3)
 
@@ -328,12 +327,12 @@ class CharacterCreate(tk.Frame):
 
         # ----- Forward-Backward Frame -----
         lfBot = tk.LabelFrame(self,
-                               text="Ready to Move")
-        lfBot.grid(row=2, column=0)
+                              text="Ready to Move")
+        lfBot.grid(row=2, column=0, columnspan=2)
 
         butBack2Main = tk.Button(lfBot,
-                                text="Back",
-                                command=self.back2MainClick)
+                                 text="Back",
+                                 command=self.back2MainClick)
         butBack2Main.grid(row=0, column=0)
 
         butForward2Pers = tk.Button(lfBot,
@@ -370,8 +369,7 @@ class CharacterCreate(tk.Frame):
     def rgb_to_hex(self, rgb):
         return "#%02x%02x%02x" % rgb
 
-
-    def handleShirtColor(self,  event):
+    def handleShirtColor(self, event):
         """Update the color of the slider and the shirt."""
         # Update the Slider
         rgb = ImageColor.getrgb("hsl(" + str(self.shirtColor.get()) + ", 100%, 50%)")
@@ -705,7 +703,6 @@ results of this quiz will determine the personality of your character."""
 
     def test(self):
         # This is how to go back
-        #print(self.Q1.get(), self.Q3.get())
         for x in range(10):
             print("Q" + str(x) + ":", self.answers[x].get())
         print(self.answers[0].get())
