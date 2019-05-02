@@ -46,6 +46,10 @@ class CharacterManip:
         self.base = Image.new("RGB", (self.max_w, self.max_h))
         self.mod = Image.new("RGB", (self.max_w, self.max_h))
         self.m_skin = Image.new("L", (self.max_w, self.max_h))
+        # List of clothes filenames
+        self.f_shirts = []
+        self.f_pants = []
+        self.f_shoes = []
         # List of clothes masks
         self.shirts = []
         self.pants = []
@@ -89,37 +93,48 @@ class CharacterManip:
         self.curr_pants = 0
         self.curr_shoes = 0
 
+        self.shirts = []
+        self.pants = []
+        self.shoes = []
+
         if self.species == "Human" and self.gender == "Female":
             self.character = self._open("fe_base.gif", "RGB")
             self.m_skin = self._open("fe_m_skin.gif", "L")
-            # Load clothing items
-            self.shirts = [self._open("fe_m_blouse.gif", "L"),
-                           self._open("fe_m_crop.gif", "L")]
-            self.pants = [self._open("fe_m_jeans.gif", "L"),
-                          self._open("fe_m_skirt.gif", "L")]
-            self.shoes = [self._open("fe_m_tennis_shoes.gif", "L"),
-                          self._open("fe_m_boots.gif", "L")]
+            # Load clothing file names
+            self.f_shirts = ["fe_m_blouse.gif",
+                             "fe_m_crop.gif"]
+            self.f_pants = ["fe_m_jeans.gif",
+                            "fe_m_skirt.gif"]
+            self.f_shoes = ["fe_m_tennis_shoes.gif",
+                            "fe_m_boots.gif"]
 
         elif self.species == "Human" and self.gender == "Male":
             self.character = self._open("ma_base.gif", "RGB")
             self.m_skin = self._open("ma_m_skin.gif", "L")
-            # Load clothing items
-            self.shirts = [self._open("ma_m_t_shirt.gif", "L"),
-                           self._open("ma_m_long_sleeve.gif", "L")]
-            self.pants = [self._open("ma_m_shorts.gif", "L"),
-                          self._open("ma_m_long_jeans.gif", "L")]
-            self.shoes = [self._open("ma_m_loafers.gif", "L"),
-                          self._open("ma_m_tennis_shoes.gif", "L")]
+            # Load clothing file names
+            self.f_shirts = ["ma_m_t_shirt.gif",
+                             "ma_m_long_sleeve.gif"]
+            self.f_pants = ["ma_m_shorts.gif",
+                            "ma_m_long_jeans.gif"]
+            self.f_shoes = ["ma_m_loafers.gif",
+                            "ma_m_tennis_shoes.gif"]
 
         elif self.species == "Bear" and self.gender == "Male":
             self.character = self._open("bm_base.gif", "RGB")
             self.m_skin = self._open("bm_m_skin.gif", "L")
-            # Load clothing items
-            self.shirts = [self._open("bm_m_t_shirt.gif", "L"),
-                           self._open("bm_m_button_up.gif", "L")]
-            self.pants = [self._open("bm_m_shorts.gif", "L"),
-                          self._open("bm_m_jeans.gif", "L")]
-            self.shoes = [self._open("bm_m_tennis_shoes.gif", "L")]
+            # Load clothing file names
+            self.f_shirts = ["bm_m_t_shirt.gif",
+                             "bm_m_button_up.gif"]
+            self.f_pants = ["bm_m_shorts.gif",
+                            "bm_m_jeans.gif"]
+            self.f_shoes = ["bm_m_tennis_shoes.gif"]
+
+        for f_name in self.f_shirts:
+            self.shirts.append(self._open(f_name, "L"))
+        for f_name in self.f_pants:
+            self.pants.append(self._open(f_name, "L"))
+        for f_name in self.f_shoes:
+            self.shoes.append(self._open(f_name, "L"))
 
         # Convert so all the same
         #self.character = self.character.convert("RGB")

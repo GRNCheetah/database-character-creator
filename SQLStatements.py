@@ -15,7 +15,7 @@ tbl_clothing = \
 """CREATE TABLE IF NOT EXISTS Clothing (
     char_id INT,
     file_name VARCHAR(255),
-    color INT,
+    color CHAR(7),
     PRIMARY KEY (char_id, file_name),
     FOREIGN KEY (char_id) REFERENCES Character(id)
 );"""
@@ -30,4 +30,20 @@ tbl_personality = \
     neu FLOAT,
     PRIMARY KEY (char_id),
     FOREIGN KEY (char_id) REFERENCES Character(id)
+);"""
+
+tbl_job = \
+"""CREATE TABLE IF NOT EXISTS Job (
+    char_id INT,
+    desc VARCHAR(255),
+    PRIMARY KEY (char_id),
+    FOREIGN KEY (char_id) REFERENCES Character(id)
+);"""
+
+tbl_skill = \
+"""CREATE TABLE IF NOT EXISTS Skill (
+    char_id INT,
+    desc VARCHAR(255),
+    PRIMARY KEY (char_id),
+    FOREIGN KEY(char_id) REFERENCES Character(id)
 );"""

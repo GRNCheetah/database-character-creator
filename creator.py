@@ -26,7 +26,7 @@ class Creator(tk.Tk):
         # Frame Stuff
         self.frames = {}
 
-        for F in (MainMenu, CharacterCreate, CharacterView, PersonalityTest):
+        for F in (MainMenu, CharacterCreate, CharacterView, PersonalityTest, CharacterSubmit):
 
             frame = F(container, self)
 
@@ -224,7 +224,7 @@ class CharacterCreate(tk.Frame):
         self.character = IE.CharacterManip(self.species.get(), self.gender.get(), self.colorNum.get())
         self.imgPerson = self.character.returnGIF()
         self.lblPerson = tk.Label(lfVisual,
-                          image=self.imgPerson)
+                                  image=self.imgPerson)
         self.lblPerson.image = self.imgPerson
         self.lblPerson.grid(row=1,
                             column=1,
@@ -243,10 +243,10 @@ class CharacterCreate(tk.Frame):
 
         # Top Right
         butRightShirt = tk.Button(lfVisual,
-                                 image=imgRightArrow,
-                                 width=but_dim,
-                                 height=but_dim,
-                                 command=self.shirtRight)
+                                  image=imgRightArrow,
+                                  width=but_dim,
+                                  height=but_dim,
+                                  command=self.shirtRight)
         butRightShirt.image = imgRightArrow
         butRightShirt.grid(row=1, column=2)
 
@@ -535,172 +535,6 @@ results of this quiz will determine the personality of your character."""
         butForward = tk.Button(self, text="Next", command=self.forward2PreviewClick)
         butForward.grid(row=50, column=1)
 
-        """
-        # ----- Q1 -----
-        lfQ1 = tk.LabelFrame(self,
-                             text="Question 1")
-        #lfQ1.pack(fill="both", expand="yes", side="top")
-        lfQ1.grid(row=2, column=0)
-
-        lblQ1 = tk.Label(lfQ1,
-                         text="This is a test question.")
-        lblQ1.grid(row=0, column=0, columnspan=5)
-
-        self.Q1 = tk.IntVar()
-        rbQ1 = []
-        for x in range(5):
-            rbQ1.append(tk.Radiobutton(lfQ1, variable=self.Q1, value=x))
-            rbQ1[x].grid(row=0, column=x+1)
-
-        # ----- Q2 -----
-        lfQ2 = tk.LabelFrame(self,
-                             text="Question 2")
-        lfQ2.grid(row=3, column=0)
-
-        lblQ2 = tk.Label(lfQ2,
-                         text="This is a test question.")
-        lblQ2.grid(row=0, column=0, columnspan=5)
-
-        self.Q2 = tk.IntVar()
-        rbQ2 = []
-        for x in range(5):
-            rbQ2.append(tk.Radiobutton(lfQ2, variable=self.Q2, value=x))
-            rbQ2[x].grid(row=0, column=x+1)
-
-        # ----- Q3 -----
-        lfQ3 = tk.LabelFrame(self,
-                             text="Question 3")
-        lfQ3.grid(row=4, column=0)
-
-        lblQ3 = tk.Label(lfQ3,
-                         text="This is a test question.")
-        lblQ3.grid(row=0, column=0, columnspan=5)
-
-        self.Q3 = tk.IntVar()
-        rbQ3 = []
-        for x in range(5):
-            rbQ3.append(tk.Radiobutton(lfQ3, variable=self.Q3, value=x))
-            rbQ3[x].grid(row=0, column=x+1)
-
-        # ----- Q4 -----
-        lfQ4 = tk.LabelFrame(self,
-                             text="Question 4")
-        lfQ4.grid(row=5, column=0)
-
-        lblQ4 = tk.Label(lfQ4,
-                         text="This is a test question.")
-        lblQ4.grid(row=0, column=0, columnspan=5)
-
-        self.Q4 = tk.IntVar()
-        rbQ4 = []
-        for x in range(5):
-            rbQ4.append(tk.Radiobutton(lfQ4, variable=self.Q4, value=x))
-            rbQ4[x].grid(row=0, column=x+1)
-
-        # ----- Q5 -----
-        lfQ5 = tk.LabelFrame(self,
-                             text="Question 5")
-        lfQ5.grid(row=6, column=0)
-
-        lblQ5 = tk.Label(lfQ5,
-                         text="This is a test question.")
-        lblQ5.grid(row=0, column=0, columnspan=5)
-
-        self.Q5 = tk.IntVar()
-        rbQ5 = []
-        for x in range(5):
-            rbQ5.append(tk.Radiobutton(lfQ5, variable=self.Q5, value=x))
-            rbQ5[x].grid(row=0, column=x+1)
-
-        # ----- Q6 -----
-        lfQ6 = tk.LabelFrame(self,
-                             text="Question 6")
-        lfQ6.grid(row=7, column=0)
-
-        lblQ6 = tk.Label(lfQ6,
-                         text="This is a test question.")
-        lblQ6.grid(row=0, column=0, columnspan=5)
-
-        self.Q6 = tk.IntVar()
-        rbQ6 = []
-        for x in range(5):
-            rbQ6.append(tk.Radiobutton(lfQ6, variable=self.Q6, value=x))
-            rbQ6[x].grid(row=0, column=x+1)
-
-        # ----- Q7 -----
-        lfQ7 = tk.LabelFrame(self,
-                             text="Question 7")
-        lfQ7.grid(row=8, column=0)
-
-        lblQ7 = tk.Label(lfQ7,
-                         text="This is a test question.")
-        lblQ7.grid(row=0, column=0, columnspan=5)
-
-        self.Q7 = tk.IntVar()
-        rbQ7 = []
-        for x in range(5):
-            rbQ7.append(tk.Radiobutton(lfQ7, variable=self.Q7, value=x))
-            rbQ7[x].grid(row=0, column=x+1)
-
-        # ----- Q8 -----
-        lfQ8 = tk.LabelFrame(self,
-                             text="Question 8")
-        lfQ8.grid(row=9, column=0)
-
-        lblQ8 = tk.Label(lfQ8,
-                         text="This is a test question.")
-        lblQ8.grid(row=0, column=0, columnspan=5)
-
-        self.Q8 = tk.IntVar()
-        rbQ8 = []
-        for x in range(5):
-            rbQ8.append(tk.Radiobutton(lfQ8, variable=self.Q8, value=x))
-            rbQ8[x].grid(row=0, column=x+1)
-
-        # ----- Q9 -----
-        lfQ9 = tk.LabelFrame(self,
-                             text="Question 9")
-        lfQ9.grid(row=10, column=0)
-
-        lblQ9 = tk.Label(lfQ9,
-                         text="This is a test question.")
-        lblQ9.grid(row=0, column=0, columnspan=5)
-
-        self.Q9 = tk.IntVar()
-        rbQ9 = []
-        for x in range(5):
-            rbQ9.append(tk.Radiobutton(lfQ9, variable=self.Q9, value=x))
-            rbQ9[x].grid(row=0, column=x+1)
-
-        # ----- Q10 -----
-        lfQ10 = tk.LabelFrame(self,
-                              text="Question 10")
-        lfQ10.grid(row=11, column=0)
-
-        lblQ10 = tk.Label(lfQ10,
-                          text="This is a test question.")
-        lblQ10.grid(row=0, column=0, columnspan=5)
-
-        self.Q10 = tk.IntVar()
-        rbQ10 = []
-        for x in range(5):
-            rbQ10.append(tk.Radiobutton(lfQ10, variable=self.Q10, value=x))
-            rbQ10[x].grid(row=0, column=x+1)
-
-        # Buttons to move forward and backwards
-        """
-
-
-
-
-
-
-
-
-
-
-
-
     def test(self):
         # This is how to go back
         for x in range(10):
@@ -712,9 +546,69 @@ results of this quiz will determine the personality of your character."""
         self.controller.show_frame(CharacterCreate)
 
     def forward2PreviewClick(self):
-        #self.controller.show_frame()
-        pass
+        self.controller.frames[CharacterSubmit].aggregate_data()
+        self.controller.show_frame(CharacterSubmit)
 
+
+class CharacterSubmit(tk.Frame):
+    """This will display a character for submission.
+
+    Will show the character information up to this point in the program, and then
+    submit it to the database.
+    """
+
+    def __init__(self, parent, controller):
+        tk.Frame.__init__(self, parent)
+
+        self.controller = controller
+
+        # Title at the top of the screen
+        title = tk.Label(self, text="Finalize Character", font=LARGE_FONT)
+        title.grid(row=0, column=0, columnspan=3)
+
+        # Data setup for databse submission
+        self.d_character = {}
+        self.d_clothing = {}
+        self.aggregate_data()
+
+        # ----- Left side = Character Info -----
+        lblList = []
+        lblList = [tk.Label(self, text="First Name:" + self.d_character['fName']),
+                   tk.Label(self, text="Last Name: " + self.d_character['lName'])]
+        i = 0
+        for label in lblList:
+            label.grid(row=1+i, column=0)
+            i += 0
+        # ----- Middle = Picture of Character -----
+        # ----- Right side = Buttons to go back -----
+        # ----- Bottom = Submit button -----
+
+    def aggregate_data(self):
+        """Accesses all other frames to grab all their data and format it for the database."""
+        # Character Table
+        self.d_character['fName'] = self.controller.frames[CharacterCreate].entFName.get()
+        self.d_character['lName'] = self.controller.frames[CharacterCreate].entLName.get()
+        self.d_character['size'] = self.controller.frames[CharacterCreate].height.get() # Known as height
+        self.d_character['weight'] = self.controller.frames[CharacterCreate].weight.get()
+        self.d_character['species'] = self.controller.frames[CharacterCreate].species.get()
+        self.d_character['race'] = self.controller.frames[CharacterCreate].colorNum.get() # Known as color, int
+        self.d_character['gender'] = self.controller.frames[CharacterCreate].gender.get()
+
+        # Clothing Table
+        # [file_name, rgbHex val]
+        char = self.controller.frames[CharacterCreate].character
+        self.d_clothing['shirt'] = [char.f_shirts[char.curr_shirt], char.col_shirt]
+        self.d_clothing['pants'] = [char.f_pants[char.curr_pants], char.col_pants]
+        self.d_clothing['shoes'] = [char.f_shoes[char.curr_shoes], char.col_shoes]
+
+        # Personality Table
+
+        # Job Table
+        # Skill Table
+
+
+        print(self.d_character)
+        print(self.d_clothing)
 
 class CharacterView(tk.Frame):
 
