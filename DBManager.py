@@ -16,13 +16,15 @@ class DBManager:
         self.cursor.execute(sql.tbl_character)
         self.cursor.execute(sql.tbl_clothing)
         self.cursor.execute(sql.tbl_personality)
+        self.cursor.execute(sql.tbl_job)
+        self.cursor.execute(sql.tbl_skill)
 
     def insert_character(self):
         """Inserts a character into the database.
 
 
-        :param data:
-        :return:
+        :param data: A dictionary of all the data to input into the Character table.
+        :return: None
         """
 
         self.cursor.execute(sql.insert_char)
