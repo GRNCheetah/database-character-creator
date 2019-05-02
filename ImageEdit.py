@@ -15,15 +15,15 @@ class CharacterManip:
     """
 
 
-    def __init__(self, species, gender, color):
+    def __init__(self):
         """Should initialize with the Species, Gender, and Color of the character.
 
 
         :param species:
         """
-        self.species = species
-        self.gender = gender
-        self.color = color # int
+        self.species = ""
+        self.gender = ""
+        self.color = 0 # int
 
         self.human_colors = ["#ffdbac",
                              "#f1c27d",
@@ -35,7 +35,7 @@ class CharacterManip:
                             "#ffde58",
                             "#d76300",
                             "#633800",
-                            "#eff5eb",]
+                            "#eff5eb"]
 
         self.max_w = 300
         self.max_h = 500
@@ -63,9 +63,10 @@ class CharacterManip:
         self.col_shirt = self.def_col
         self.col_pants = self.def_col
         self.col_shoes = self.def_col
-        self.col_skin = self.human_colors[color] # String
+        #self.col_skin = self.human_colors[color] # String
+        self.col_skin = self.human_colors[0]
 
-        self.update_character(species, gender, color)
+        #self.update_character(species, gender, color)
 
 
 
@@ -82,8 +83,36 @@ class CharacterManip:
     def _open(self, f_name, mode):
         return Image.open(os.path.join("assets", f_name)).convert(mode)
 
+
+    def define_character(self, char_data, clothing_data):
+        """Run whenever a character needs to be put back together.
+
+        Usually for the display character at the end of creation or before editing.
+
+        :return:
+        """
+
+        self.species = char_data["species"]
+        self.gender = char_data["gender"]
+        self.color = char_data["race"]
+
+        self._update_clothes_arrays()
+
+        self.curr_shirt = self.f_shirts.index(clothing_data['shirt'][0])
+        self.curr_pants = self.f_pants.index(clothing_data['pants'][0])
+        self.curr_shoes = self.f_shoes.index(clothing_data['shoes'][0])
+
+        self.col_shirt = clothing_data['shirt'][1]
+        self.col_pants = clothing_data['pants'][1]
+        self.col_shoes = clothing_data['shoes'][1]
+
+        self.setAllColor()
+
     def update_character(self, s, g, c):
-        """Run whenever an attribute of the chracter's phyisical being is changed."""
+        """Run whenever an attribute of the chracter's phyisical being is changed.
+
+        Use this function during the character creation process.
+        """
 
         self.species = s
         self.gender = g
@@ -93,6 +122,11 @@ class CharacterManip:
         self.curr_pants = 0
         self.curr_shoes = 0
 
+        self._update_clothes_arrays()
+
+        self.setAllColor()
+
+    def _update_clothes_arrays(self):
         self.shirts = []
         self.pants = []
         self.shoes = []
@@ -136,12 +170,9 @@ class CharacterManip:
         for f_name in self.f_shoes:
             self.shoes.append(self._open(f_name, "L"))
 
-        # Convert so all the same
-        #self.character = self.character.convert("RGB")
         self.w, self.h = self.character.size
-
         # Scaling
-        self.ratio = min(self.max_w/self.w, self.max_h/self.h)
+        self.ratio = min(self.max_w / self.w, self.max_h / self.h)
         self.w = int(self.w * self.ratio)
         self.h = int(self.h * self.ratio)
         # Resize character image
@@ -150,17 +181,18 @@ class CharacterManip:
         if self.m_skin:
             self.m_skin = self.m_skin.resize((self.w, self.h), Image.ANTIALIAS)
 
+
         # Resize clothes
         for i in range(len(self.shirts)):
             self.shirts[i] = self.shirts[i].resize((self.w, self.h), Image.ANTIALIAS)
         for i in range(len(self.pants)):
-            self.pants[i] = self.pants[i].resize((self.w, self.h), Image.ANTIALIAS)
+           self.pants[i] = self.pants[i].resize((self.w, self.h), Image.ANTIALIAS)
         for i in range(len(self.shoes)):
             self.shoes[i] = self.shoes[i].resize((self.w, self.h), Image.ANTIALIAS)
 
 
 
-        self.setAllColor()
+
 
 
     def setAllColor(self):

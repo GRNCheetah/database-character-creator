@@ -28,3 +28,15 @@ class DatabaseManager:
         """
 
         pass
+
+
+if __name__ == "__main__":
+
+    d = DatabaseManager()
+    d.create_tables()
+
+
+    # Other sql
+
+
+    d.close_database()
