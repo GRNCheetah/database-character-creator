@@ -2,8 +2,8 @@ import tkinter as tk
 from PIL import Image, ImageTk, ImageColor
 import numpy as np
 import os
-
 import ImageEdit as IE
+import DBManager as DB
 
 LARGE_FONT = ("Verdana", 12)
 
@@ -19,6 +19,13 @@ class Creator(tk.Tk):
 
         container.grid_rowconfigure(0, weight=1)
         container.grid_columnconfigure(0, weight=1)
+
+        self.d=DB.DBManager()
+        self.d.create_tables()
+        print("HI")
+        self.d.insert_character()
+        self.d.print_all_character()
+
 
         # Pretty Patty
         tk.Tk.wm_title(self, "Character Creator")
@@ -614,9 +621,26 @@ class CharacterView(tk.Frame):
 
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
-
+        row_num=0
         label = tk.Label(self, text="Character View", font=LARGE_FONT)
-        label.pack(pady=10, padx=10)
+        label.grid(row=0, column=1, columnspan=2)
+
+        self.header = tk.Label(self, text="First Name\tLast Name\tSpecies\tGender", font=LARGE_FONT)
+        self.header.grid(row=1,column=1)
+        row_num+=1
+
+        data=controller.d.print_all_character()
+        Chars=[]
+        print(type(data))
+        print(type(data[1]))
+        print(type(data[2][0]))
+
+        for counter, r in enumerate(data):
+            Chars.append([tk.Label(self, text=r[0])])
+            for I, label in enumerate(Chars[counter]):
+                label.grid(row=counter, column=I)
+
+
 
 
 app = Creator()

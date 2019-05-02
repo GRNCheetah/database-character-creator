@@ -1,7 +1,7 @@
 import sqlite3
 import SQLStatements as sql
 
-class DatabaseManager:
+class DBManager:
 
     def __init__(self):
 
@@ -17,7 +17,7 @@ class DatabaseManager:
         self.cursor.execute(sql.tbl_clothing)
         self.cursor.execute(sql.tbl_personality)
 
-    def insert_character(self, data):
+    def insert_character(self):
         """Inserts a character into the database.
 
 
@@ -25,6 +25,22 @@ class DatabaseManager:
         :return:
         """
 
-        sql_statement = '''INSERT INTO me '''
-
+        self.cursor.execute(sql.insert_char)
+        self.cursor.execute(sql.insert_char2)
+        self.cursor.execute(sql.insert_char3)
         pass
+
+
+    def print_all_character(self):
+        #self.cursor.execute(sql.print_all)
+        self.cursor.execute("SELECT * FROM Character")
+        result = self.cursor.fetchall()
+        return result
+        pass
+
+if __name__ == "__main__":
+    d=DBManager()
+    d.create_tables()
+    d.insert_character()
+    r=d.print_all_character()
+    d.close_database()
