@@ -99,7 +99,10 @@ class DBManager:
         self.cursor.execute("SELECT * FROM Character")
         result = self.cursor.fetchall()
         return result
-        pass
+
+    def get_all_characters(self):
+        self.cursor.execute(sql.sel_characters)
+        return self.cursor.fetchall()
 
 if __name__ == "__main__":
     d=DBManager()

@@ -2,10 +2,10 @@ tbl_character = \
 """CREATE TABLE IF NOT EXISTS Character (
     fName VARCHAR(255) NOT NULL,
     lName VARCHAR(255),
-    id INT,
+    id INTEGER,
     size VARCHAR(10),
     weight VARCHAR(10),
-    race INT,
+    race INTEGER,
     species VARCHAR(20),
     gender VARCHAR(6),
     PRIMARY KEY (id)
@@ -13,7 +13,7 @@ tbl_character = \
 
 tbl_clothing = \
 """CREATE TABLE IF NOT EXISTS Clothing (
-    char_id INT,
+    char_id INTEGER,
     file_name VARCHAR(255),
     color CHAR(7),
     PRIMARY KEY (char_id, file_name),
@@ -22,7 +22,7 @@ tbl_clothing = \
 
 tbl_personality = \
 """CREATE TABLE IF NOT EXISTS Personality (
-    char_id INT,
+    char_id INTEGER,
     ope FLOAT,
     con FLOAT,
     ext FLOAT,
@@ -34,7 +34,7 @@ tbl_personality = \
 
 tbl_job = \
 """CREATE TABLE IF NOT EXISTS Job (
-    char_id INT,
+    char_id INTEGER,
     desc VARCHAR(255),
     PRIMARY KEY (char_id),
     FOREIGN KEY (char_id) REFERENCES Character(id)
@@ -42,14 +42,17 @@ tbl_job = \
 
 tbl_skill = \
 """CREATE TABLE IF NOT EXISTS Skill (
-    char_id INT,
+    char_id INTEGER,
     desc VARCHAR(255),
     PRIMARY KEY (char_id),
     FOREIGN KEY(char_id) REFERENCES Character(id)
 );"""
 
-ins_char = \
-"""INSERT INTO Character VALUES();"""
+sel_characters = \
+"""SELECT 
+    fName, lName, species, gender, id
+FROM
+    Character"""
 
 
 

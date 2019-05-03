@@ -104,6 +104,7 @@ class MainMenu(tk.Frame):
 
     def toViewClick(self):
         self.controller.d.set_mode("edit")
+        self.controller.frames[CharacterView].update_page()
         self.controller.show_frame(CharacterView)
 
 
@@ -718,21 +719,45 @@ class CharacterView(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
         row_num = 0
+
         label = tk.Label(self, text="Character View", font=LARGE_FONT)
         label.grid(row=0, column=0, columnspan=2)
 
-        self.header = tk.Label(self, text=("First Name" + "\t" + "Last Name" + "\t" + "Species" + "\t" + "Gender"),
-                               font=LARGE_FONT)
-        self.header.grid(row=1, column=0)
-        row_num += 1
+        self.controller = controller
+        self.data = []
 
-        data = controller.d.print_all_character()
-        Chars = []
 
-        for counter, r in enumerate(data):
-            Chars.append([tk.Label(self, text=(r[0] + "\t" + r[1] + "\t" + r[6] + "\t" + r[7]), font=LARGE_FONT)])
-            for I, label in enumerate(Chars[counter]):
-                label.grid(row=counter + 2, column=0)
+
+    def update_page(self):
+
+        lblHeaders = [tk.Label(self, text="First Name"),
+                      tk.Label(self, text="Last Name"),
+                      tk.Label(self, text="Species"),
+                      tk.Label(self, text="Gender")]
+        for i, label in enumerate(lblHeaders):
+            label.grid(row=1, column=i)
+
+        # List of tuples
+        # Each tuple represents a different character
+        self.data = self.controller.d.get_all_characters()
+        # List of tuples
+        # Each tuple represents a different label full of data
+        lblChars = []
+
+        for charNum, row in enumerate(self.data):
+            lblChars.append([tk.Label(self, text=row[0],),
+                             tk.Label(self, text=row[1]),
+                             tk.Label(self, text=row[2]),
+                             tk.Label(self, text=row[3])])
+
+            # Place on grid
+            for attrNum, label in enumerate(lblChars[charNum]):
+                label.bind("<Button-1>", lambda event, i=row[4]: self.onLabelClick(event, i))
+                label.grid(row=2+charNum, column=attrNum)
+
+    def onLabelClick(self, event, id):
+        """Whenever a label is clicked, will go to that character's submit screen."""
+        print(id)
 
 
 app = Creator()
