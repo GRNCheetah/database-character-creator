@@ -47,3 +47,12 @@ tbl_skill = \
     PRIMARY KEY (char_id),
     FOREIGN KEY(char_id) REFERENCES Character(id)
 );"""
+
+insert_char="""INSERT INTO Character (fname, lname, id, size, weight, race, species, gender)
+    VALUES('Kelsey','Robertson',01,NULL, NULL, 1, 'human', 'f');"""
+
+insert_char2="""INSERT INTO Character (fname, lname, id, size, weight, race, species, gender)
+    VALUES('Jess','Summers',02,NULL, NULL, 1, 'human', 'f');"""
+
+insert_char3="""INSERT INTO Character (fname, lname, id, size, weight, race, species, gender)
+    VALUES('Gavin','Lewis',03,NULL, NULL, 1, 'human', 'm');"""
