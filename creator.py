@@ -23,8 +23,8 @@ class Creator(tk.Tk):
         self.d=DB.DBManager()
         self.d.create_tables()
         print("HI")
-        self.d.insert_character()
-        self.d.print_all_character()
+        #self.d.insert_character()
+        #self.d.print_all_character()
 
 
         # Pretty Patty
@@ -682,6 +682,8 @@ class CharacterSubmit(tk.Frame):
 
     def butSubmitClick(self):
         """Will upload the character to the database and clear all screens used."""
+        self.controller.d.insert_character(self.d_character)
+
         pass
 
 class CharacterView(tk.Frame):
@@ -698,9 +700,6 @@ class CharacterView(tk.Frame):
 
         data=controller.d.print_all_character()
         Chars=[]
-        print(type(data))
-        print(type(data[1]))
-        print(type(data[2][0]))
 
         for counter, r in enumerate(data):
             Chars.append([tk.Label(self, text=r[0])])

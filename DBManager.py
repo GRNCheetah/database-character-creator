@@ -19,7 +19,7 @@ class DBManager:
         self.cursor.execute(sql.tbl_job)
         self.cursor.execute(sql.tbl_skill)
 
-    def insert_character(self):
+    def insert_character(self, data):
         """Inserts a character into the database.
 
 
@@ -27,9 +27,14 @@ class DBManager:
         :return: None
         """
 
-        self.cursor.execute(sql.insert_char)
-        self.cursor.execute(sql.insert_char2)
-        self.cursor.execute(sql.insert_char3)
+        statement = "INSERT INTO Character (fName, lName, id, size, weight, race, species, gender) VALUES ('%s', '%s', %s, '%s', '%s', %s, '%s', '%s')" % (data['fName'], data['lName'], 0, data['size'], data['weight'], data['race'], data['species'], data['gender'])
+        print(statement)
+
+        self.cursor.execute(statement)
+
+        #self.cursor.execute(sql.insert_char)
+        #self.cursor.execute(sql.insert_char2)
+        #self.cursor.execute(sql.insert_char3)
         pass
 
 
