@@ -448,6 +448,9 @@ class CharacterCreate(tk.Frame):
         self.character.update_character(self.species.get(), self.gender.get(), self.colorNum.get())
         self.updateCharLabel()
 
+    def not_null(self):
+        """Makes sure the proper entries are not null for proper SQL statements."""
+        return (self.entFName.get() and self.entLName.get())
 
     def back2MainClick(self):
         # When going back to main, clear this screen and personality choices
@@ -456,7 +459,10 @@ class CharacterCreate(tk.Frame):
         self.controller.show_frame(MainMenu)
 
     def forward2PersClick(self):
-        self.controller.show_frame(PersonalityTest)
+        if self.not_null():
+            self.controller.show_frame(PersonalityTest)
+        else:
+            print("Fill out first and last name.")
 
     def updateCharLabel(self):
         self.imgPerson = self.character.returnGIF()
