@@ -2,7 +2,6 @@ from PIL import Image, ImageTk
 import os
 
 
-
 class CharacterManip:
     """The goal of this object is to represent the Character as a whole.
 
@@ -14,7 +13,6 @@ class CharacterManip:
     whatever we come up with. We want to keep loading to a minumum.
     """
 
-
     def __init__(self):
         """Should initialize with the Species, Gender, and Color of the character.
 
@@ -23,7 +21,7 @@ class CharacterManip:
         """
         self.species = ""
         self.gender = ""
-        self.color = 0 # int
+        self.color = 0  # int
 
         self.human_colors = ["#ffdbac",
                              "#f1c27d",
@@ -63,26 +61,21 @@ class CharacterManip:
         self.col_shirt = self.def_col
         self.col_pants = self.def_col
         self.col_shoes = self.def_col
-        #self.col_skin = self.human_colors[color] # String
+        # self.col_skin = self.human_colors[color] # String
         self.col_skin = self.human_colors[0]
 
-        #self.update_character(species, gender, color)
-
-
+        # self.update_character(species, gender, color)
 
         # Masks for the different clothing items
         # Might need to be in lists or called only when needed
 
-
-        #self.tshirt_mask = Image.open(os.path.join("assets", "tshirt_mask.gif"))
-        #self.tshirt_mask = self.tshirt_mask.convert("L")
+        # self.tshirt_mask = Image.open(os.path.join("assets", "tshirt_mask.gif"))
+        # self.tshirt_mask = self.tshirt_mask.convert("L")
 
         # This is the color that the character is pasted onto.#
 
-
     def _open(self, f_name, mode):
         return Image.open(os.path.join("assets", f_name)).convert(mode)
-
 
     def define_character(self, char_data, clothing_data):
         """Run whenever a character needs to be put back together.
@@ -192,19 +185,13 @@ class CharacterManip:
         if self.m_skin:
             self.m_skin = self.m_skin.resize((self.w, self.h), Image.ANTIALIAS)
 
-
         # Resize clothes
         for i in range(len(self.shirts)):
             self.shirts[i] = self.shirts[i].resize((self.w, self.h), Image.ANTIALIAS)
         for i in range(len(self.pants)):
-           self.pants[i] = self.pants[i].resize((self.w, self.h), Image.ANTIALIAS)
+            self.pants[i] = self.pants[i].resize((self.w, self.h), Image.ANTIALIAS)
         for i in range(len(self.shoes)):
             self.shoes[i] = self.shoes[i].resize((self.w, self.h), Image.ANTIALIAS)
-
-
-
-
-
 
     def setAllColor(self):
         if self.species == "Human" and self.m_skin:
@@ -218,7 +205,7 @@ class CharacterManip:
 
     def setSkinColor(self, rgbHex):
         self.col_skin = rgbHex
-        self.mod=Image.new("RGB", (self.w, self.h), self.col_skin)
+        self.mod = Image.new("RGB", (self.w, self.h), self.col_skin)
         self.character.paste(self.mod, mask=self.m_skin)
 
     def setShirtColor(self, rgbHex):
@@ -254,7 +241,6 @@ class CharacterManip:
         self.character = self.base.copy()
         self.setAllColor()
 
-
     def _shirtRight(self):
         self.curr_shirt += 1
         if (self.curr_shirt >= len(self.shirts)):
@@ -268,7 +254,6 @@ class CharacterManip:
             self.curr_pants = len(self.pants) - 1
         self.character = self.base.copy()
         self.setAllColor()
-
 
     def _pantsRight(self):
         self.curr_pants += 1
@@ -284,7 +269,6 @@ class CharacterManip:
         self.character = self.base.copy()
         self.setAllColor()
 
-
     def _shoesRight(self):
         self.curr_shoes += 1
         if (self.curr_shoes >= len(self.shoes)):
@@ -292,13 +276,5 @@ class CharacterManip:
         self.character = self.base.copy()
         self.setAllColor()
 
-
-
-
     def returnGIF(self):
         return ImageTk.PhotoImage(self.character)
-
-
-
-
-

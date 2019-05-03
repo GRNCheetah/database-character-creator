@@ -7,10 +7,10 @@ import DBManager as DB
 
 LARGE_FONT = ("Verdana", 12)
 
+
 class Creator(tk.Tk):
 
     def __init__(self):
-
         # Initializations
         tk.Tk.__init__(self)
         container = tk.Frame(self)
@@ -20,22 +20,20 @@ class Creator(tk.Tk):
         container.grid_rowconfigure(0, weight=1)
         container.grid_columnconfigure(0, weight=1)
 
-        self.d=DB.DBManager()
+        self.d = DB.DBManager()
         self.d.create_tables()
         print("HI")
-        #self.d.insert_character()
-        #self.d.print_all_character()
-
+        # self.d.insert_character()
+        # self.d.print_all_character()
 
         # Pretty Patty
         tk.Tk.wm_title(self, "Character Creator")
-        #tk.Tk.protocol("WM_DELETE_WINDOW", self.on_close)
+        # tk.Tk.protocol("WM_DELETE_WINDOW", self.on_close)
 
         # Frame Stuff
         self.frames = {}
 
         for F in (MainMenu, CharacterCreate, CharacterView, PersonalityTest, CharacterSubmit):
-
             frame = F(container, self)
 
             self.frames[F] = frame
@@ -48,7 +46,7 @@ class Creator(tk.Tk):
         """Pass a class (page) to bring to the front."""
         frame = self.frames[cont]
         frame.tkraise()
-        #self.frame.tkraise()
+        # self.frame.tkraise()
 
     def on_close(self):
         print("Closing")
@@ -120,13 +118,13 @@ class CharacterCreate(tk.Frame):
         self.controller = controller
 
         label = tk.Label(self, text="Time To Design", font=LARGE_FONT)
-        #label.pack(pady=10, padx=10)
+        # label.pack(pady=10, padx=10)
         label.grid(row=0, column=0, columnspan=2)
 
         # ----- Information Frame -----
         lfInfo = tk.LabelFrame(self,
                                text="Character Information")
-        #lfInfo.pack(fill="both", expand="yes", side="left")
+        # lfInfo.pack(fill="both", expand="yes", side="left")
         lfInfo.grid(row=1, column=0)
 
         # First name
@@ -195,7 +193,7 @@ class CharacterCreate(tk.Frame):
 
         # Gender
         lblGender = tk.Label(lfInfo,
-                            text="Gender:")
+                             text="Gender:")
         lblGender.grid(row=7, column=0)
         self.gender = tk.StringVar()
         self.gender.set("Male")
@@ -229,9 +227,8 @@ class CharacterCreate(tk.Frame):
         # ----- Visual Frame -----
         lfVisual = tk.LabelFrame(self,
                                  text="Design Character")
-        #lfVisual.pack(fill="both", expand="yes", side="right")
+        # lfVisual.pack(fill="both", expand="yes", side="right")
         lfVisual.grid(row=1, column=1)
-
 
         # Asset import
         imgLeftArrow = tk.PhotoImage(file=os.path.join("assets", "butLeft.gif"))
@@ -304,7 +301,7 @@ class CharacterCreate(tk.Frame):
         butRightShoes.grid(row=3, column=2)
 
         # Top Slider
-        self.shirtColor = tk.IntVar(0) # Represents hex number in decimal
+        self.shirtColor = tk.IntVar(0)  # Represents hex number in decimal
         self.hexShirtColor = tk.StringVar()
         self.hexShirtColor.set("#ff0000")
         self.sldTopColor = tk.Scale(lfVisual,
@@ -382,7 +379,6 @@ class CharacterCreate(tk.Frame):
         self.shoesColor.set(0)
         self.hexShoesColor.set("#ff0000")
         self.sldBotColor.config(background=self.hexShoesColor.get())
-
 
     def rgb_to_hex(self, rgb):
         return "#%02x%02x%02x" % rgb
@@ -484,6 +480,7 @@ class CharacterCreate(tk.Frame):
         self.lblPerson.configure(image=self.imgPerson)
         self.lblPerson.image = self.imgPerson
 
+
 class PersonalityTest(tk.Frame):
     """The second page of the character creator.
 
@@ -504,13 +501,14 @@ class PersonalityTest(tk.Frame):
     Neuroticism - Emotional stability. High scores experience emotional instability and neg emotions.
         ex) Moody, tense
     """
+
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
 
         self.controller = controller
 
         label = tk.Label(self, text="Personality Test", font=LARGE_FONT)
-        #label.pack(pady=10, padx=10)
+        # label.pack(pady=10, padx=10)
         label.grid(row=0, column=0, columnspan=2)
 
         instr = """For each question, answer how true the statement is to your character. The \
@@ -519,7 +517,7 @@ results of this quiz will determine the personality of your character.
 """
 
         lblInstructions = tk.Label(self, text=instr)
-        #lblInstructions.pack(pady=10, padx=10)
+        # lblInstructions.pack(pady=10, padx=10)
         lblInstructions.grid(row=1, column=0, columnspan=2)
 
         labels = []
@@ -556,9 +554,8 @@ results of this quiz will determine the personality of your character.
                 self.rbArray[y].append(tk.Radiobutton(questionFrames[y], variable=self.answers[y], value=x))
                 self.rbArray[y][x].grid(row=0, column=x + 1)
 
-
         butBack = tk.Button(self, text="Back", command=self.back2CharClick)
-        butBack.grid(row=50,column=0)
+        butBack.grid(row=50, column=0)
 
         butForward = tk.Button(self, text="Next", command=self.forward2PreviewClick)
         butForward.grid(row=50, column=1)
@@ -600,9 +597,7 @@ class CharacterSubmit(tk.Frame):
         self.d_job = {}
         self.d_skill = {}
 
-        #self.aggregate_data()
-
-
+        # self.aggregate_data()
 
     def aggregate_data(self):
         """Accesses all other frames to grab all their data and format it for the database.
@@ -637,8 +632,6 @@ class CharacterSubmit(tk.Frame):
         self.d_job = self.controller.frames[CharacterCreate].entJob.get()
         # Skill Table
         self.d_skill = self.controller.frames[CharacterCreate].entSkill.get()
-
-
 
         print(self.d_character)
         print(self.d_clothing)
@@ -706,7 +699,6 @@ class CharacterSubmit(tk.Frame):
                               command=self.butSubmitClick)
         butSubmit.grid(row=2, column=1)
 
-
     def butEditCharClick(self):
         self.controller.show_frame(CharacterCreate)
 
@@ -720,27 +712,27 @@ class CharacterSubmit(tk.Frame):
         self.controller.frames[PersonalityTest].set_defaults()
         self.controller.show_frame(MainMenu)
 
+
 class CharacterView(tk.Frame):
 
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
-        row_num=0
+        row_num = 0
         label = tk.Label(self, text="Character View", font=LARGE_FONT)
         label.grid(row=0, column=0, columnspan=2)
 
-        self.header = tk.Label(self, text=("First Name"+"\t"+"Last Name"+"\t"+"Species"+"\t"+"Gender"), font=LARGE_FONT)
-        self.header.grid(row=1,column=0)
-        row_num+=1
+        self.header = tk.Label(self, text=("First Name" + "\t" + "Last Name" + "\t" + "Species" + "\t" + "Gender"),
+                               font=LARGE_FONT)
+        self.header.grid(row=1, column=0)
+        row_num += 1
 
-        data=controller.d.print_all_character()
-        Chars=[]
+        data = controller.d.print_all_character()
+        Chars = []
 
         for counter, r in enumerate(data):
-            Chars.append([tk.Label(self, text=(r[0]+"\t"+r[1]+"\t"+r[6]+"\t"+r[7]),font=LARGE_FONT)])
+            Chars.append([tk.Label(self, text=(r[0] + "\t" + r[1] + "\t" + r[6] + "\t" + r[7]), font=LARGE_FONT)])
             for I, label in enumerate(Chars[counter]):
-                label.grid(row=counter+2, column=0)
-
-
+                label.grid(row=counter + 2, column=0)
 
 
 app = Creator()
