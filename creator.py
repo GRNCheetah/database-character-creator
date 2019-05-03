@@ -703,7 +703,7 @@ class CharacterSubmit(tk.Frame):
 
     def butSubmitClick(self):
         """Will upload the character to the database and clear all screens used."""
-        self.controller.d.insert_character(self.d_character)
+        self.controller.d.insertion(self.d_character, self.d_clothing, self.d_personality, self.d_job, self.d_skill)
 
         pass
 
