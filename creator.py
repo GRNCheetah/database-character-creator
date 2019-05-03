@@ -727,19 +727,19 @@ class CharacterView(tk.Frame):
         tk.Frame.__init__(self, parent)
         row_num=0
         label = tk.Label(self, text="Character View", font=LARGE_FONT)
-        label.grid(row=0, column=1, columnspan=2)
+        label.grid(row=0, column=0, columnspan=2)
 
-        self.header = tk.Label(self, text="First Name\tLast Name\tSpecies\tGender", font=LARGE_FONT)
-        self.header.grid(row=1,column=1)
+        self.header = tk.Label(self, text=("First Name"+"\t"+"Last Name"+"\t"+"Species"+"\t"+"Gender"), font=LARGE_FONT)
+        self.header.grid(row=1,column=0)
         row_num+=1
 
         data=controller.d.print_all_character()
         Chars=[]
 
         for counter, r in enumerate(data):
-            Chars.append([tk.Label(self, text=r[0])])
+            Chars.append([tk.Label(self, text=(r[0]+"\t"+r[1]+"\t"+r[6]+"\t"+r[7]),font=LARGE_FONT)])
             for I, label in enumerate(Chars[counter]):
-                label.grid(row=counter, column=I)
+                label.grid(row=counter+2, column=0)
 
 
 
