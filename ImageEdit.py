@@ -163,6 +163,17 @@ class CharacterManip:
                             "bm_m_jeans.gif"]
             self.f_shoes = ["bm_m_tennis_shoes.gif"]
 
+        elif self.species == "Bear" and self.gender == "Female":
+            self.character = self._open("bf_base.gif", "RGB")
+            self.m_skin = self._open("bf_m_skin.gif", "L")
+            # Load clothing file names
+            # Using the male clothes cuz im lazy
+            self.f_shirts = ["bm_m_t_shirt.gif",
+                             "bm_m_button_up.gif"]
+            self.f_pants = ["bm_m_shorts.gif",
+                            "bm_m_jeans.gif"]
+            self.f_shoes = ["bm_m_tennis_shoes.gif"]
+
         for f_name in self.f_shirts:
             self.shirts.append(self._open(f_name, "L"))
         for f_name in self.f_pants:

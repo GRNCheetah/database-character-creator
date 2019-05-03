@@ -686,8 +686,6 @@ class CharacterSubmit(tk.Frame):
         for c, label in enumerate(lblPers):
             label.grid(row=c, column=0)
 
-
-
         # ----- Right side = Buttons to go back -----
         self.lfRightButt = tk.LabelFrame(self, text="Second Chance")
         self.lfRightButt.grid(row=1, column=3)
@@ -718,8 +716,9 @@ class CharacterSubmit(tk.Frame):
     def butSubmitClick(self):
         """Will upload the character to the database and clear all screens used."""
         self.controller.d.insertion(self.d_character, self.d_clothing, self.d_personality, self.d_job, self.d_skill)
-
-        pass
+        self.controller.frames[CharacterCreate].set_defaults()
+        self.controller.frames[PersonalityTest].set_defaults()
+        self.controller.show_frame(MainMenu)
 
 class CharacterView(tk.Frame):
 
