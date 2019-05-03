@@ -1,9 +1,5 @@
-originals/
 .idea/
-charcreation.db
-diagram-update-updated.png
-diagram-update-updated.xml
-main.py
-person.gif
-pers_pic.png
 __pycache__/
+originals/
+screenshots/
+charcreation.db
