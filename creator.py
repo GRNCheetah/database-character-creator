@@ -627,11 +627,11 @@ class CharacterSubmit(tk.Frame):
 
         # Personality Table
         ans = self.controller.frames[PersonalityTest].answers
-        self.d_personality['ope'] = (ans[0].get() + ans[1].get() + ans[2].get()) / 3
-        self.d_personality['con'] = (ans[3].get() + ans[4].get() + ans[5].get()) / 3
-        self.d_personality['ext'] = (ans[6].get() + ans[7].get() + ans[8].get()) / 3
-        self.d_personality['agr'] = (ans[9].get() + ans[10].get() + ans[11].get()) / 3
-        self.d_personality['neu'] = (ans[12].get() + ans[13].get() + ans[14].get()) / 3
+        self.d_personality['ope'] = (ans[0].get() + ans[1].get() + ans[2].get()) / 12
+        self.d_personality['con'] = (ans[3].get() + ans[4].get() + ans[5].get()) / 12
+        self.d_personality['ext'] = (ans[6].get() + ans[7].get() + ans[8].get()) / 12
+        self.d_personality['agr'] = (ans[9].get() + ans[10].get() + ans[11].get()) / 12
+        self.d_personality['neu'] = (ans[12].get() + ans[13].get() + ans[14].get()) / 12
 
         # Job Table
         self.d_job = self.controller.frames[CharacterCreate].entJob.get()
@@ -674,9 +674,23 @@ class CharacterSubmit(tk.Frame):
         self.lblPerson.image = self.imgPerson
         self.lblPerson.grid(row=0, column=0)
 
+        # ----- Second middle = Personality Results -----
+        self.lfPers = tk.LabelFrame(self, text="Personality")
+        self.lfPers.grid(row=1, column=2)
+
+        lblPers = [tk.Label(self.lfPers, text=str(self.d_personality['ope'])),
+                   tk.Label(self.lfPers, text=str(self.d_personality['con'])),
+                   tk.Label(self.lfPers, text=str(self.d_personality['ext'])),
+                   tk.Label(self.lfPers, text=str(self.d_personality['agr'])),
+                   tk.Label(self.lfPers, text=str(self.d_personality['neu']))]
+        for c, label in enumerate(lblPers):
+            label.grid(row=c, column=0)
+
+
+
         # ----- Right side = Buttons to go back -----
         self.lfRightButt = tk.LabelFrame(self, text="Second Chance")
-        self.lfRightButt.grid(row=1, column=2)
+        self.lfRightButt.grid(row=1, column=3)
 
         butEditChar = tk.Button(self.lfRightButt,
                                 text="To Edit Character",
