@@ -29,6 +29,7 @@ class Creator(tk.Tk):
 
         # Pretty Patty
         tk.Tk.wm_title(self, "Character Creator")
+        #tk.Tk.protocol("WM_DELETE_WINDOW", self.on_close)
 
         # Frame Stuff
         self.frames = {}
@@ -48,6 +49,13 @@ class Creator(tk.Tk):
         frame = self.frames[cont]
         frame.tkraise()
         #self.frame.tkraise()
+
+    def on_close(self):
+        print("Closing")
+        self.d.close_database()
+        tk.Tk.destroy(self)
+
+
 
 
 class MainMenu(tk.Frame):
@@ -716,4 +724,5 @@ class CharacterView(tk.Frame):
 
 
 app = Creator()
+app.protocol("WM_DELETE_WINDOW", app.on_close)
 app.mainloop()
