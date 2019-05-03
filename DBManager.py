@@ -27,10 +27,9 @@ class DBManager:
         :return: None
         """
 
-        statement = "INSERT INTO Character (fName, lName, id, size, weight, race, species, gender) VALUES ('%s', '%s', %s, '%s', '%s', %s, '%s', '%s')" % (data['fName'], data['lName'], 0, data['size'], data['weight'], data['race'], data['species'], data['gender'])
-        print(statement)
-
-        self.cursor.execute(statement)
+        info = (data['fName'], data['lName'], 0, data['size'], data['weight'], data['race'], data['species'], data['gender'])
+        statement = "INSERT INTO Character (fName, lName, id, size, weight, race, species, gender) VALUES (?, ?, ?, ?, ?, ?, ?, ?)"
+        self.cursor.execute(statement, info)
 
         #self.cursor.execute(sql.insert_char)
         #self.cursor.execute(sql.insert_char2)
