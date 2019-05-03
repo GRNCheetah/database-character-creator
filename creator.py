@@ -56,8 +56,6 @@ class Creator(tk.Tk):
         tk.Tk.destroy(self)
 
 
-
-
 class MainMenu(tk.Frame):
     """Shown at the start of the program.
 
@@ -75,6 +73,7 @@ class MainMenu(tk.Frame):
         self.label = tk.Label(self, text="The Character Creator", font=LARGE_FONT)
         self.label.pack()
 
+        self.controller = controller
         # ------ Button attributes -----
         but_width = 16
         but_padx = '2m'
@@ -84,7 +83,7 @@ class MainMenu(tk.Frame):
         self.butCreate = tk.Button(self,
                                    text="Create Character",
                                    background="blue",
-                                   command=lambda: controller.show_frame(CharacterCreate),
+                                   command=self.toCreateClick,
                                    width=but_width,
                                    padx=but_padx,
                                    pady=but_pady)
@@ -95,11 +94,19 @@ class MainMenu(tk.Frame):
         self.butView = tk.Button(self,
                                  text="View Characters",
                                  background="blue",
-                                 command=lambda: controller.show_frame(CharacterView),
+                                 command=self.toViewClick,
                                  width=but_width,
                                  padx=but_padx,
                                  pady=but_pady)
         self.butView.pack()
+
+    def toCreateClick(self):
+        self.controller.d.set_mode("new")
+        self.controller.show_frame(CharacterCreate)
+
+    def toViewClick(self):
+        self.controller.d.set_mode("edit")
+        self.controller.show_frame(CharacterView)
 
 
 class CharacterCreate(tk.Frame):
@@ -138,7 +145,7 @@ class CharacterCreate(tk.Frame):
 
         # Height
         lblHeight = tk.Label(lfInfo,
-                            text="Height:")
+                             text="Height:")
         lblHeight.grid(row=2, column=0)
         height_options = {"Short", "Average", "Tall"}
         self.height = tk.StringVar(lfInfo, value="Short")

@@ -1,6 +1,6 @@
 tbl_character = \
 """CREATE TABLE IF NOT EXISTS Character (
-    fName VARCHAR(255),
+    fName VARCHAR(255) NOT NULL,
     lName VARCHAR(255),
     id INT,
     size VARCHAR(10),
