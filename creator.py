@@ -4,6 +4,7 @@ import numpy as np
 import os
 import ImageEdit as IE
 import DBManager as DB
+import Character
 
 LARGE_FONT = ("Verdana", 12)
 
@@ -28,7 +29,8 @@ class Creator(tk.Tk):
 
         # Pretty Patty
         tk.Tk.wm_title(self, "Character Creator")
-        # tk.Tk.protocol("WM_DELETE_WINDOW", self.on_close)
+
+        self.curr_character = Character.Character()
 
         # Frame Stuff
         self.frames = {}

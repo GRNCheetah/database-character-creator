@@ -39,6 +39,8 @@ class DBManager:
             self.insert_personality(d_personality, self.cursor.lastrowid)
             self.insert_job(d_job, self.cursor.lastrowid)
             self.insert_skill(d_skill, self.cursor.lastrowid)
+        elif self.mode == "edit":
+            print("modify character instead")
 
     def insert_character(self, data):
         """Inserts a character into the database.
