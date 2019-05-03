@@ -1,13 +1,13 @@
 tbl_character = \
 """CREATE TABLE IF NOT EXISTS Character (
-    fName VARCHAR(255),
+    fName VARCHAR(255) NOT NULL,
     lName VARCHAR(255),
     id INT,
     size VARCHAR(10),
     weight VARCHAR(10),
     race INT,
     species VARCHAR(20),
-    gender CHAR(1),
+    gender VARCHAR(6),
     PRIMARY KEY (id)
 );"""
 
@@ -47,6 +47,11 @@ tbl_skill = \
     PRIMARY KEY (char_id),
     FOREIGN KEY(char_id) REFERENCES Character(id)
 );"""
+
+ins_char = \
+"""INSERT INTO Character VALUES();"""
+
+
 
 insert_char="""INSERT INTO Character (fname, lname, id, size, weight, race, species, gender)
     VALUES('Kelsey','Robertson',01,NULL, NULL, 1, 'human', 'f');"""
