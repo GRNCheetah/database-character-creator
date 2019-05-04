@@ -758,8 +758,71 @@ class CharacterView(tk.Frame):
                 label.grid(row=2+charNum, column=attrNum)
 
     def onLabelClick(self, event, id):
-        """Whenever a label is clicked, will go to that character's submit screen."""
+        """Whenever a label is clicked, will go to that character's submit screen.
+
+        Will do so by updating all data on the character creation screen.
+
+        """
         print(id)
+        char = self.controller.d.get_character(id)
+
+        screen = self.controller.frames[CharacterCreate]
+
+        screen.entFName.insert(0, char.fName)
+        screen.entLName.insert(0, char.lName)
+        screen.height.set(char.size)
+        screen.weight.set(char.weight)
+        screen.species.set(char.species)
+        screen.speciesNum.set(screen.species_list.index(char.species))
+        screen.colorNum.set(char.race)
+        screen.gender.set(char.gender)
+        screen.entJob.insert(0, char.job_desc)
+        screen.entSkill.insert(0, char.skill_desc)
+
+        screen.character = IE.CharacterManip()
+        screen.shirtColor.set(self.rgb_to_hsv(char.shirt_color))
+        screen.hexShirtColor.set(char.shirt_color)
+        screen.sldTopColor.config(background=char.shirt_color)
+        screen.pantsColor.set(self.rgb_to_hsv(char.pants_color))
+        screen.hexPantsColor.set(char.pants_color)
+        screen.sldMidColor.config(background=char.pants_color)
+        screen.shoesColor.set(self.rgb_to_hsv(char.shoes_color))
+        screen.hexShoesColor.set(char.shoes_color)
+        screen.sldBotColor.config(background=char.shoes_color)
+
+        char_data = {"species": char.species,
+                     "gender": char.gender,
+                     "race": char.race}
+        clothing_data = {"shirt": [char.shirt_f_name, char.shirt_color],
+                         "pants": [char.pants_f_name, char.pants_color],
+                         "shoes": [char.shoes_f_name, char.shoes_color]}
+
+        screen.character.define_character(char_data, clothing_data)
+
+        screen.updateCharLabel()
+
+        self.controller.show_frame(CharacterCreate)
+
+    def rgb_to_hsv(self, rgb_hex):
+        r = int(rgb_hex[1:3], 16) / 255
+        g = int(rgb_hex[3:5], 16) / 255
+        b = int(rgb_hex[5:], 16) / 255
+
+        c_max = max(r, g, b)
+        c_min = min(r, g, b)
+
+        delta = c_max - c_min
+
+        if c_max == r:
+            hue = 60 * (((g - b) / delta) % 6)
+        elif c_max == g:
+            hue = 60 * (((b - r) / delta) + 2)
+        elif c_max == b:
+            hue = 60 * (((r - g) / delta) + 4)
+
+        return int(hue)
+
+
 
 
 app = Creator()

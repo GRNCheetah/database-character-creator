@@ -1,6 +1,8 @@
 import sqlite3
 import SQLStatements as sql
 
+import Character
+
 class DBManager:
 
     def __init__(self):
@@ -11,6 +13,8 @@ class DBManager:
         # new or edit
         # Change when Create or View button clicked on MainMenu
         self.mode = "new"
+
+        self.C = Character.Character()
 
     def close_database(self):
         self.cursor.close()
@@ -64,10 +68,10 @@ class DBManager:
         """Inserts all clothing into the database."""
 
         # Char_id, f_name, color
-        info = [(char_id, data['shirt'][0], data['shirt'][1]),
-                (char_id, data['pants'][0], data['pants'][1]),
-                (char_id, data['shoes'][0], data['shoes'][1])]
-        statement = "INSERT INTO Clothing (char_id, file_name, color) VALUES (?, ?, ?);"
+        info = [(char_id, "shirt", data['shirt'][0], data['shirt'][1]),
+                (char_id, "pants", data['pants'][0], data['pants'][1]),
+                (char_id, "shoes", data['shoes'][0], data['shoes'][1])]
+        statement = "INSERT INTO Clothing (char_id, type, file_name, color) VALUES (?, ?, ?, ?);"
         self.cursor.executemany(statement, info)
         self.conn.commit()
 
@@ -83,7 +87,7 @@ class DBManager:
         """Inserts job data into the database."""
 
         info = (char_id, data)
-        statement = "INSERT INTO Job (char_id, desc) VALUES (?, ?);"
+        statement = "INSERT INTO Job (char_id, descr) VALUES (?, ?);"
         self.cursor.execute(statement, info)
         self.conn.commit()
 
@@ -91,7 +95,7 @@ class DBManager:
         """Inserts skill data into the database."""
 
         info = (char_id, data)
-        statement = "INSERT INTO Skill (char_id, desc) VALUES (?, ?);"
+        statement = "INSERT INTO Skill (char_id, descr) VALUES (?, ?);"
         self.cursor.execute(statement, info)
         self.conn.commit()
 
@@ -105,6 +109,41 @@ class DBManager:
     def get_all_characters(self):
         self.cursor.execute(sql.sel_characters)
         return self.cursor.fetchall()
+
+    def get_character(self, id):
+        """Gets a single character by it's id.
+
+            Returns a character object.
+        """
+
+#        for row in self.conn.execute(sql.sel_char, (str(id))):
+#            print(row.description)
+#            print(type(row))
+
+        self.cursor.execute(sql.sel_character, str(id))
+        data = self.cursor.fetchone()
+        self.C.settbl_character(data)
+
+        self.cursor.execute(sql.sel_clothing, str(id))
+        data = self.cursor.fetchall()
+        self.C.settbl_clothing(data)
+
+        self.cursor.execute(sql.sel_personality, str(id))
+        data = self.cursor.fetchone()
+        self.C.settbl_personality(data)
+
+        self.cursor.execute(sql.sel_job, str(id))
+        data = self.cursor.fetchone()
+        self.C.settbl_job(data)
+
+        self.cursor.execute(sql.sel_skill, str(id))
+        data = self.cursor.fetchone()
+        self.C.settbl_skill(data)
+
+
+        print(self.C)
+        return self.C
+
 
 if __name__ == "__main__":
     d=DBManager()

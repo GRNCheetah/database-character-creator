@@ -14,9 +14,10 @@ tbl_character = \
 tbl_clothing = \
 """CREATE TABLE IF NOT EXISTS Clothing (
     char_id INTEGER,
+    type VARCHAR(5),
     file_name VARCHAR(255),
     color CHAR(7),
-    PRIMARY KEY (char_id, file_name),
+    PRIMARY KEY (char_id, type),
     FOREIGN KEY (char_id) REFERENCES Character(id)
 );"""
 
@@ -35,7 +36,7 @@ tbl_personality = \
 tbl_job = \
 """CREATE TABLE IF NOT EXISTS Job (
     char_id INTEGER,
-    desc VARCHAR(255),
+    descr VARCHAR(255) DEFAULT "No job",
     PRIMARY KEY (char_id),
     FOREIGN KEY (char_id) REFERENCES Character(id)
 );"""
@@ -43,7 +44,7 @@ tbl_job = \
 tbl_skill = \
 """CREATE TABLE IF NOT EXISTS Skill (
     char_id INTEGER,
-    desc VARCHAR(255),
+    descr VARCHAR(255) DEFAULT "No skill",
     PRIMARY KEY (char_id),
     FOREIGN KEY(char_id) REFERENCES Character(id)
 );"""
@@ -53,6 +54,12 @@ sel_characters = \
     fName, lName, species, gender, id
 FROM
     Character"""
+
+sel_character = "SELECT fName, lName, id, size, weight, race, species, gender FROM Character WHERE id = ?"
+sel_clothing = "SELECT type, file_name, color FROM Clothing WHERE char_id = ?;"
+sel_personality = "SELECT ope, con, ext, agr, neu FROM Personality WHERE char_id = ?;"
+sel_job = "SELECT descr FROM Job WHERE char_id = ?;"
+sel_skill = "SELECT descr FROM Skill WHERE char_id = ?;"
 
 
 
