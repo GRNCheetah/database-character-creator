@@ -95,6 +95,7 @@ class CharacterManip:
         self.curr_pants = self.f_pants.index(clothing_data['pants'][0])
         self.curr_shoes = self.f_shoes.index(clothing_data['shoes'][0])
 
+        print(clothing_data)
         self.col_shirt = clothing_data['shirt'][1]
         self.col_pants = clothing_data['pants'][1]
         self.col_shoes = clothing_data['shoes'][1]
@@ -196,6 +197,7 @@ class CharacterManip:
     def setAllColor(self):
         if self.species == "Human" and self.m_skin:
             self.setSkinColor(self.human_colors[self.color])
+            print("SKIN")
         elif self.species == "Bear" and self.m_skin:
             self.setSkinColor(self.bear_colors[self.color])
 
@@ -207,6 +209,7 @@ class CharacterManip:
         self.col_skin = rgbHex
         self.mod = Image.new("RGB", (self.w, self.h), self.col_skin)
         self.character.paste(self.mod, mask=self.m_skin)
+
 
     def setShirtColor(self, rgbHex):
         """Creates and returns a tKinter image with the correct color shirt."""

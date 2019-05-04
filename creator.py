@@ -474,7 +474,11 @@ class CharacterCreate(tk.Frame):
 
     def forward2PersClick(self):
         if self.not_null():
-            self.controller.show_frame(PersonalityTest)
+            if self.controller.d.mode == "new": # New character
+                self.controller.show_frame(PersonalityTest)
+            elif self.controller.d.mode == "edit": # Skip the personality test
+                self.controller.frames[CharacterSubmit].update_page()
+                self.controller.show_frame(CharacterSubmit)
         else:
             print("Fill out first and last name.")
 
@@ -600,6 +604,37 @@ class CharacterSubmit(tk.Frame):
         self.d_job = {}
         self.d_skill = {}
 
+        self.lblList = []
+        self.lfVisual = tk.LabelFrame(self, text="Visuals")
+        self.lfVisual.grid(row=1, column=1)
+        self.lfPers = tk.LabelFrame(self, text="Personality")
+        self.lfPers.grid(row=1, column=2)
+        self.lfRightButt = tk.LabelFrame(self, text="Second Chance")
+        self.lfRightButt.grid(row=1, column=3)
+
+        '''self.character = IE.CharacterManip()
+        self.imgPerson = self.character.returnGIF()'''
+        self.lblPerson = tk.Label(self.lfVisual)
+        self.lblPerson.grid(row=0, column=0)
+
+        # ----- Bottom = Submit button -----
+        butSubmit = tk.Button(self,
+                              text="Submit",
+                              command=self.butSubmitClick)
+        butSubmit.grid(row=2, column=1)
+
+        # ----- Right side = Buttons to go back -----
+        self.butEditChar = tk.Button(self.lfRightButt,
+                                     text="To Edit Character",
+                                     command=self.butEditCharClick)
+
+        self.butEditPers = tk.Button(self.lfRightButt,
+                                     text="To Edit Personality",
+                                     command=self.butEditPersClick)
+
+        self.butEditChar.grid(row=0, column=0)
+        self.butEditPers.grid(row=0, column=1)
+
         # self.aggregate_data()
 
     def aggregate_data(self):
@@ -640,40 +675,37 @@ class CharacterSubmit(tk.Frame):
         print(self.d_clothing)
         print(self.d_personality)
 
+
+
     def update_page(self):
         self.aggregate_data()
 
         # ----- Left side = Character Info -----
         self.lfCharInfo = tk.LabelFrame(self, text="Character Information")
         self.lfCharInfo.grid(row=1, column=0)
+        for label in self.lblList:
+            label.grid_remove()
         self.lblList = []
         self.lblList = [tk.Label(self.lfCharInfo, text="First Name: " + self.d_character['fName']),
                         tk.Label(self.lfCharInfo, text="Last Name: " + self.d_character['lName']),
                         tk.Label(self.lfCharInfo, text="Size: " + self.d_character['size']),
                         tk.Label(self.lfCharInfo, text="Weight: " + self.d_character['weight']),
                         tk.Label(self.lfCharInfo, text="Gender: " + self.d_character['gender'])]
-        print(self.d_character['fName'])
         i = 0
         for label in self.lblList:
             label.grid(row=i, column=0)
             i += 1
 
         # ----- Middle = Picture of Character -----
-        self.lfVisual = tk.LabelFrame(self, text="Visuals")
-        self.lfVisual.grid(row=1, column=1)
-
+        print("HERER")
         self.character = IE.CharacterManip()
         self.character.define_character(self.d_character, self.d_clothing)
 
         self.imgPerson = self.character.returnGIF()
-        self.lblPerson = tk.Label(self.lfVisual, image=self.imgPerson)
+        self.lblPerson.configure(image=self.imgPerson)
         self.lblPerson.image = self.imgPerson
-        self.lblPerson.grid(row=0, column=0)
 
         # ----- Second middle = Personality Results -----
-        self.lfPers = tk.LabelFrame(self, text="Personality")
-        self.lfPers.grid(row=1, column=2)
-
         lblPers = [tk.Label(self.lfPers, text=str(self.d_personality['ope'])),
                    tk.Label(self.lfPers, text=str(self.d_personality['con'])),
                    tk.Label(self.lfPers, text=str(self.d_personality['ext'])),
@@ -682,25 +714,12 @@ class CharacterSubmit(tk.Frame):
         for c, label in enumerate(lblPers):
             label.grid(row=c, column=0)
 
-        # ----- Right side = Buttons to go back -----
-        self.lfRightButt = tk.LabelFrame(self, text="Second Chance")
-        self.lfRightButt.grid(row=1, column=3)
+        if self.controller.d.mode == "edit":
+            self.butEditPers.grid_remove()
+        elif self.controller.d.mode == "new":
+            self.butEditPers.grid(row=1, column=0)
 
-        butEditChar = tk.Button(self.lfRightButt,
-                                text="To Edit Character",
-                                command=self.butEditCharClick)
-        butEditChar.grid(row=0, column=0)
 
-        butEditPers = tk.Button(self.lfRightButt,
-                                text="To Edit Personality",
-                                command=self.butEditPersClick)
-        butEditPers.grid(row=1, column=0)
-
-        # ----- Bottom = Submit button -----
-        butSubmit = tk.Button(self,
-                              text="Submit",
-                              command=self.butSubmitClick)
-        butSubmit.grid(row=2, column=1)
 
     def butEditCharClick(self):
         self.controller.show_frame(CharacterCreate)
@@ -727,8 +746,6 @@ class CharacterView(tk.Frame):
 
         self.controller = controller
         self.data = []
-
-
 
     def update_page(self):
 
@@ -821,9 +838,6 @@ class CharacterView(tk.Frame):
             hue = 60 * (((r - g) / delta) + 4)
 
         return int(hue)
-
-
-
 
 app = Creator()
 app.protocol("WM_DELETE_WINDOW", app.on_close)
