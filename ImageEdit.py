@@ -197,7 +197,6 @@ class CharacterManip:
     def setAllColor(self):
         if self.species == "Human" and self.m_skin:
             self.setSkinColor(self.human_colors[self.color])
-            print("SKIN")
         elif self.species == "Bear" and self.m_skin:
             self.setSkinColor(self.bear_colors[self.color])
 

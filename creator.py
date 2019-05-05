@@ -1,6 +1,5 @@
 import tkinter as tk
 from PIL import Image, ImageTk, ImageColor
-import numpy as np
 import os
 import ImageEdit as IE
 import DBManager as DB
@@ -23,9 +22,6 @@ class Creator(tk.Tk):
 
         self.d = DB.DBManager()
         self.d.create_tables()
-        print("HI")
-        # self.d.insert_character()
-        # self.d.print_all_character()
 
         # Pretty Patty
         tk.Tk.wm_title(self, "Character Creator")
@@ -55,6 +51,14 @@ class Creator(tk.Tk):
         self.d.close_database()
         tk.Tk.destroy(self)
 
+    def popup(self, msg):
+        pop = tk.Tk()
+        pop.wm_title("Wait")
+        lbl = tk.Label(pop, text=msg)
+        lbl.grid(row=0, column=0)
+        button = tk.Button(pop, text="Ok", command=pop.destroy)
+        button.grid(row=1, column=0)
+        pop.mainloop()
 
 class MainMenu(tk.Frame):
     """Shown at the start of the program.
@@ -82,7 +86,7 @@ class MainMenu(tk.Frame):
         # ----- Create Character -------
         self.butCreate = tk.Button(self,
                                    text="Create Character",
-                                   background="blue",
+                                   background="yellow",
                                    command=self.toCreateClick,
                                    width=but_width,
                                    padx=but_padx,
@@ -93,7 +97,7 @@ class MainMenu(tk.Frame):
         # ----- View Characters --------
         self.butView = tk.Button(self,
                                  text="View Characters",
-                                 background="blue",
+                                 background="yellow",
                                  command=self.toViewClick,
                                  width=but_width,
                                  padx=but_padx,
@@ -480,7 +484,7 @@ class CharacterCreate(tk.Frame):
                 self.controller.frames[CharacterSubmit].update_page()
                 self.controller.show_frame(CharacterSubmit)
         else:
-            print("Fill out first and last name.")
+            self.controller.popup("First and Last name must have a value.")
 
     def updateCharLabel(self):
         self.imgPerson = self.character.returnGIF()
@@ -624,6 +628,10 @@ class CharacterSubmit(tk.Frame):
         butSubmit.grid(row=2, column=1)
 
         # ----- Right side = Buttons to go back -----
+        self.butHome = tk.Button(self.lfRightButt,
+                                 text="Quit",
+                                 command=self.butHomeClick)
+
         self.butEditChar = tk.Button(self.lfRightButt,
                                      text="To Edit Character",
                                      command=self.butEditCharClick)
@@ -633,7 +641,8 @@ class CharacterSubmit(tk.Frame):
                                      command=self.butEditPersClick)
 
         self.butEditChar.grid(row=0, column=0)
-        self.butEditPers.grid(row=0, column=1)
+        self.butEditPers.grid(row=1, column=0)
+        self.butHome.grid(row=2, column=0)
 
         # self.aggregate_data()
 
@@ -671,12 +680,6 @@ class CharacterSubmit(tk.Frame):
         # Skill Table
         self.d_skill = self.controller.frames[CharacterCreate].entSkill.get()
 
-        print(self.d_character)
-        print(self.d_clothing)
-        print(self.d_personality)
-
-
-
     def update_page(self):
         self.aggregate_data()
 
@@ -697,7 +700,6 @@ class CharacterSubmit(tk.Frame):
             i += 1
 
         # ----- Middle = Picture of Character -----
-        print("HERER")
         self.character = IE.CharacterManip()
         self.character.define_character(self.d_character, self.d_clothing)
 
@@ -726,6 +728,11 @@ class CharacterSubmit(tk.Frame):
 
     def butEditPersClick(self):
         self.controller.show_frame(PersonalityTest)
+
+    def butHomeClick(self):
+        self.controller.frames[CharacterCreate].set_defaults()
+        self.controller.frames[PersonalityTest].set_defaults()
+        self.controller.show_frame(MainMenu)
 
     def butSubmitClick(self):
         """Will upload the character to the database and clear all screens used."""
