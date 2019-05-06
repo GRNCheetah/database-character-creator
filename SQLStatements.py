@@ -78,4 +78,23 @@ update_character = \
 SET fName = ?, lName = ?, size = ?, weight = ?, race = ?, species = ?, gender = ?
 WHERE id = ?;"""
 
+update_clothing = \
+"""UPDATE Clothing
+SET file_name = ?, color = ?
+WHERE char_id = ? AND type = ?;"""
+
+update_personality = \
+"""UPDATE Personality
+SET ope = ?, con = ?, ext = ?, agr = ?, neu = ?
+WHERE char_id = ?;"""
+
+update_job = \
+"""UPDATE Job
+SET descr = ?
+WHERE char_id = ?;"""
+
+update_skill = \
+"""UPDATE Skill
+SET descr = ?
+WHERE char_id = ?;"""
 

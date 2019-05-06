@@ -28,7 +28,6 @@ class DBManager:
         self.cursor.execute(sql.tbl_skill)
 
     def set_mode(self, mode):
-        print(mode)
         self.mode = mode
 
     def insertion(self, char):
@@ -38,17 +37,13 @@ class DBManager:
         """
 
         if self.mode == "new":
-            print("Installing")
             self.insert_character(char.get_character_tuple("new"))
             char.id = self.cursor.lastrowid
-            self.insert_clothing(char.get_clothing_list())
-            self.insert_personality(char.get_personality_tuple())
-            self.insert_job(char.get_job_tuple())
-            self.insert_skill(char.get_skill_tuple())
+            self.insert_clothing(char.get_clothing_list("new"))
+            self.insert_personality(char.get_personality_tuple("new"))
+            self.insert_job(char.get_job_tuple("new"))
+            self.insert_skill(char.get_skill_tuple("new"))
         elif self.mode == "edit":
-            print("Updating")
-            print(char.lName)
-            print(char.id)
             self.update_all(char)
 
     def insert_character(self, data):
@@ -87,14 +82,12 @@ class DBManager:
         self.conn.commit()
 
     def update_all(self, char):
-
         self.cursor.execute(sql.update_character, char.get_character_tuple("edit"))
-
-
-
-
-
-
+        self.cursor.executemany(sql.update_clothing, char.get_clothing_list("edit"))
+        self.cursor.execute(sql.update_personality, char.get_personality_tuple("edit"))
+        self.cursor.execute(sql.update_job, char.get_job_tuple("edit"))
+        self.cursor.execute(sql.update_skill, char.get_skill_tuple("edit"))
+        self.conn.commit()
 
     def print_all_character(self):
         #self.cursor.execute(sql.print_all)
@@ -111,10 +104,6 @@ class DBManager:
 
             Returns a character object.
         """
-
-#        for row in self.conn.execute(sql.sel_char, (str(id))):
-#            print(row.description)
-#            print(type(row))
 
         self.cursor.execute(sql.sel_character, str(id))
         data = self.cursor.fetchone()

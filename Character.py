@@ -90,19 +90,33 @@ class Character:
         elif mode == "edit":
             return (self.fName, self.lName, self.size, self.weight, self.race, self.species, self.gender, self.id)
 
-    def get_clothing_list(self):
-        return [(self.id, "shirt", self.shirt_f_name, self.shirt_color),
-                (self.id, "pants", self.pants_f_name, self.pants_color),
-                (self.id, "shoes", self.shoes_f_name, self.shoes_color)]
+    def get_clothing_list(self, mode):
+        if mode == "new":
+            return [(self.id, "shirt", self.shirt_f_name, self.shirt_color),
+                    (self.id, "pants", self.pants_f_name, self.pants_color),
+                    (self.id, "shoes", self.shoes_f_name, self.shoes_color)]
+        elif mode == "edit":
+            return [(self.shirt_f_name, self.shirt_color, self.id, "shirt"),
+                    (self.pants_f_name, self.pants_color, self.id, "pants"),
+                    (self.shoes_f_name, self.shoes_color, self.id, "shoes")]
 
-    def get_personality_tuple(self):
-        return (self.id, self.ope, self.con, self.ext, self.agr, self.neu)
+    def get_personality_tuple(self, mode):
+        if mode == "new":
+            return (self.id, self.ope, self.con, self.ext, self.agr, self.neu)
+        elif mode == "edit":
+            return (self.ope, self.con, self.ext, self.agr, self.neu, self.id)
 
-    def get_job_tuple(self):
-        return (self.id, self.job_desc)
+    def get_job_tuple(self, mode):
+        if mode == "new":
+            return (self.id, self.job_desc)
+        elif mode == "edit":
+            return (self.job_desc, self.id)
 
-    def get_skill_tuple(self):
-        return (self.id, self.skill_desc)
+    def get_skill_tuple(self, mode):
+        if mode == "new":
+            return (self.id, self.skill_desc)
+        elif mode == "edit":
+            return (self.skill_desc, self.id)
 
     def __str__(self):
         return self.fName + " " + self.lName + " " + str(self.id)
