@@ -39,10 +39,13 @@ class Character:
         # Skill
         self.skill_desc = ""
 
+
+    # Used to set information when data is gotten from the database
     def settbl_character(self, data):
         """data is a tuple"""
         self.fName = data[0]
         self.lName = data[1]
+        print("WHATE ", data[2])
         self.id = data[2]
         self.size = data[3]
         self.weight = data[4]
@@ -78,6 +81,28 @@ class Character:
     def settbl_skill(self, data):
         """data is a tuple"""
         self.skill_desc = data[0]
+
+    # Used to insert data into the database
+    # Needs to be in the right order
+    def get_character_tuple(self, mode):
+        if mode == "new":
+            return (self.fName, self.lName, self.size, self.weight, self.race, self.species, self.gender)
+        elif mode == "edit":
+            return (self.fName, self.lName, self.size, self.weight, self.race, self.species, self.gender, self.id)
+
+    def get_clothing_list(self):
+        return [(self.id, "shirt", self.shirt_f_name, self.shirt_color),
+                (self.id, "pants", self.pants_f_name, self.pants_color),
+                (self.id, "shoes", self.shoes_f_name, self.shoes_color)]
+
+    def get_personality_tuple(self):
+        return (self.id, self.ope, self.con, self.ext, self.agr, self.neu)
+
+    def get_job_tuple(self):
+        return (self.id, self.job_desc)
+
+    def get_skill_tuple(self):
+        return (self.id, self.skill_desc)
 
     def __str__(self):
         return self.fName + " " + self.lName + " " + str(self.id)

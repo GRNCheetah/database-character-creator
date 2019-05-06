@@ -31,20 +31,25 @@ class DBManager:
         print(mode)
         self.mode = mode
 
-    def insertion(self, d_character, d_clothing, d_personality, d_job, d_skill):
+    def insertion(self, char):
         """Insert all information into the database.
 
         Will decide what id this character has or will have.
         """
 
         if self.mode == "new":
-            self.insert_character(d_character)
-            self.insert_clothing(d_clothing, self.cursor.lastrowid)
-            self.insert_personality(d_personality, self.cursor.lastrowid)
-            self.insert_job(d_job, self.cursor.lastrowid)
-            self.insert_skill(d_skill, self.cursor.lastrowid)
+            print("Installing")
+            self.insert_character(char.get_character_tuple("new"))
+            char.id = self.cursor.lastrowid
+            self.insert_clothing(char.get_clothing_list())
+            self.insert_personality(char.get_personality_tuple())
+            self.insert_job(char.get_job_tuple())
+            self.insert_skill(char.get_skill_tuple())
         elif self.mode == "edit":
-            print("modify character instead")
+            print("Updating")
+            print(char.lName)
+            print(char.id)
+            self.update_all(char)
 
     def insert_character(self, data):
         """Inserts a character into the database.
@@ -52,52 +57,43 @@ class DBManager:
         :param data: A dictionary of all the data to input into the Character table.
         :return: True if the statement went through
         """
-
-        print(self.cursor.lastrowid)
-        info = (data['fName'], data['lName'], data['size'], data['weight'], data['race'], data['species'], data['gender'])
-        statement = "INSERT INTO Character (fName, lName, size, weight, race, species, gender) VALUES (?, ?, ?, ?, ?, ?, ?);"
-        self.cursor.execute(statement, info)
+        self.cursor.execute(sql.ins_character, data)
         self.conn.commit()
 
-        #self.cursor.execute(sql.insert_char)
-        #self.cursor.execute(sql.insert_char2)
-        #self.cursor.execute(sql.insert_char3)
-        pass
 
-    def insert_clothing(self, data, char_id):
+    def insert_clothing(self, data):
         """Inserts all clothing into the database."""
 
         # Char_id, f_name, color
-        info = [(char_id, "shirt", data['shirt'][0], data['shirt'][1]),
-                (char_id, "pants", data['pants'][0], data['pants'][1]),
-                (char_id, "shoes", data['shoes'][0], data['shoes'][1])]
-        statement = "INSERT INTO Clothing (char_id, type, file_name, color) VALUES (?, ?, ?, ?);"
-        self.cursor.executemany(statement, info)
+        self.cursor.executemany(sql.ins_clothing, data)
         self.conn.commit()
 
-    def insert_personality(self, data, char_id):
+    def insert_personality(self, data):
         """Inserts personality data into the database."""
 
-        info = (char_id, data['ope'], data['con'], data['ext'], data['agr'], data['neu'])
-        statement = "INSERT INTO Personality (char_id, ope, con, ext, agr, neu) VALUES (?, ?, ?, ?, ?, ?);"
-        self.cursor.execute(statement, info)
+        self.cursor.execute(sql.ins_personality, data)
         self.conn.commit()
 
-    def insert_job(self, data, char_id):
+    def insert_job(self, data):
         """Inserts job data into the database."""
 
-        info = (char_id, data)
-        statement = "INSERT INTO Job (char_id, descr) VALUES (?, ?);"
-        self.cursor.execute(statement, info)
+        self.cursor.execute(sql.ins_job, data)
         self.conn.commit()
 
-    def insert_skill(self, data, char_id):
+    def insert_skill(self, data):
         """Inserts skill data into the database."""
 
-        info = (char_id, data)
-        statement = "INSERT INTO Skill (char_id, descr) VALUES (?, ?);"
-        self.cursor.execute(statement, info)
+        self.cursor.execute(sql.ins_skill, data)
         self.conn.commit()
+
+    def update_all(self, char):
+
+        self.cursor.execute(sql.update_character, char.get_character_tuple("edit"))
+
+
+
+
+
 
 
     def print_all_character(self):
@@ -140,8 +136,6 @@ class DBManager:
         data = self.cursor.fetchone()
         self.C.settbl_skill(data)
 
-
-        print(self.C)
         return self.C
 
 

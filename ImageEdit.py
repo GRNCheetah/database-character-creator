@@ -1,6 +1,7 @@
 from PIL import Image, ImageTk
 import os
 
+import Character
 
 class CharacterManip:
     """The goal of this object is to represent the Character as a whole.
@@ -77,7 +78,7 @@ class CharacterManip:
     def _open(self, f_name, mode):
         return Image.open(os.path.join("assets", f_name)).convert(mode)
 
-    def define_character(self, char_data, clothing_data):
+    def define_character(self, char):
         """Run whenever a character needs to be put back together.
 
         Usually for the display character at the end of creation or before editing.
@@ -85,20 +86,19 @@ class CharacterManip:
         :return:
         """
 
-        self.species = char_data["species"]
-        self.gender = char_data["gender"]
-        self.color = char_data["race"]
+        self.species = char.species
+        self.gender = char.gender
+        self.color = char.race
 
         self._update_clothes_arrays()
 
-        self.curr_shirt = self.f_shirts.index(clothing_data['shirt'][0])
-        self.curr_pants = self.f_pants.index(clothing_data['pants'][0])
-        self.curr_shoes = self.f_shoes.index(clothing_data['shoes'][0])
+        self.curr_shirt = self.f_shirts.index(char.shirt_f_name)
+        self.curr_pants = self.f_pants.index(char.pants_f_name)
+        self.curr_shoes = self.f_shoes.index(char.shoes_f_name)
 
-        print(clothing_data)
-        self.col_shirt = clothing_data['shirt'][1]
-        self.col_pants = clothing_data['pants'][1]
-        self.col_shoes = clothing_data['shoes'][1]
+        self.col_shirt = char.shirt_color
+        self.col_pants = char.pants_color
+        self.col_shoes = char.shoes_color
 
         self.setAllColor()
 

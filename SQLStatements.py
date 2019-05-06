@@ -1,3 +1,4 @@
+# Table Creation
 tbl_character = \
 """CREATE TABLE IF NOT EXISTS Character (
     fName VARCHAR(255) NOT NULL,
@@ -55,19 +56,26 @@ sel_characters = \
 FROM
     Character"""
 
+
+# Inserting into the database
+ins_character = "INSERT INTO Character (fName, lName, size, weight, race, species, gender) VALUES (?, ?, ?, ?, ?, ?, ?);"
+ins_clothing = "INSERT INTO Clothing (char_id, type, file_name, color) VALUES (?, ?, ?, ?);"
+ins_personality = "INSERT INTO Personality (char_id, ope, con, ext, agr, neu) VALUES (?, ?, ?, ?, ?, ?);"
+ins_job = "INSERT INTO Job (char_id, descr) VALUES (?, ?);"
+ins_skill = "INSERT INTO Skill (char_id, descr) VALUES (?, ?);"
+
+# Selecting rows from each table
+# Could have done a combo statement but it would have messed up on the clothing, I think.
 sel_character = "SELECT fName, lName, id, size, weight, race, species, gender FROM Character WHERE id = ?"
 sel_clothing = "SELECT type, file_name, color FROM Clothing WHERE char_id = ?;"
 sel_personality = "SELECT ope, con, ext, agr, neu FROM Personality WHERE char_id = ?;"
 sel_job = "SELECT descr FROM Job WHERE char_id = ?;"
 sel_skill = "SELECT descr FROM Skill WHERE char_id = ?;"
 
+# Used to update data in the db when a character is updated.
+update_character = \
+"""UPDATE Character
+SET fName = ?, lName = ?, size = ?, weight = ?, race = ?, species = ?, gender = ?
+WHERE id = ?;"""
 
 
-insert_char="""INSERT INTO Character (fname, lname, id, size, weight, race, species, gender)
-    VALUES('Kelsey','Robertson',01,NULL, NULL, 1, 'human', 'f');"""
-
-insert_char2="""INSERT INTO Character (fname, lname, id, size, weight, race, species, gender)
-    VALUES('Jess','Summers',02,NULL, NULL, 1, 'human', 'f');"""
-
-insert_char3="""INSERT INTO Character (fname, lname, id, size, weight, race, species, gender)
-    VALUES('Gavin','Lewis',03,NULL, NULL, 1, 'human', 'm');"""

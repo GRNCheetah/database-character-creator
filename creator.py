@@ -15,11 +15,21 @@ class Creator(tk.Tk):
         tk.Tk.__init__(self)
         container = tk.Frame(self)
 
+        # Centering
+        w = 800
+        h = 600
+        screen_w = container.winfo_screenwidth()
+        screen_h = container.winfo_screenheight()
+        self.geometry('%dx%d+%d+%d' % (w, h, int((screen_w/2) - (w/2)), int((screen_h/2) - (h/2))))
+
+
         container.pack(side="top", fill="both", expand=True)
 
         container.grid_rowconfigure(0, weight=1)
         container.grid_columnconfigure(0, weight=1)
 
+
+        # Database stuff
         self.d = DB.DBManager()
         self.d.create_tables()
 
@@ -47,13 +57,18 @@ class Creator(tk.Tk):
         # self.frame.tkraise()
 
     def on_close(self):
-        print("Closing")
         self.d.close_database()
         tk.Tk.destroy(self)
 
     def popup(self, msg):
         pop = tk.Tk()
         pop.wm_title("Wait")
+
+        w = 220
+        h = 50
+
+        pop.geometry('%dx%d+%d+%d' % (w, h, int((pop.winfo_screenwidth()/2) - (w/2)), int((pop.winfo_screenheight()/2) - (h/2))))
+
         lbl = tk.Label(pop, text=msg)
         lbl.grid(row=0, column=0)
         button = tk.Button(pop, text="Ok", command=pop.destroy)
@@ -616,8 +631,6 @@ class CharacterSubmit(tk.Frame):
         self.lfRightButt = tk.LabelFrame(self, text="Second Chance")
         self.lfRightButt.grid(row=1, column=3)
 
-        '''self.character = IE.CharacterManip()
-        self.imgPerson = self.character.returnGIF()'''
         self.lblPerson = tk.Label(self.lfVisual)
         self.lblPerson.grid(row=0, column=0)
 
@@ -651,34 +664,39 @@ class CharacterSubmit(tk.Frame):
 
         Use when creating the characters.
         """
+
         # Character Table
-        self.d_character['fName'] = self.controller.frames[CharacterCreate].entFName.get()
-        self.d_character['lName'] = self.controller.frames[CharacterCreate].entLName.get()
-        self.d_character['size'] = self.controller.frames[CharacterCreate].height.get()  # Known as height
-        self.d_character['weight'] = self.controller.frames[CharacterCreate].weight.get()
-        self.d_character['species'] = self.controller.frames[CharacterCreate].species.get()
-        self.d_character['race'] = self.controller.frames[CharacterCreate].colorNum.get()  # Known as color, int
-        self.d_character['gender'] = self.controller.frames[CharacterCreate].gender.get()
+        self.controller.curr_character.fName = self.controller.frames[CharacterCreate].entFName.get()
+        self.controller.curr_character.lName = self.controller.frames[CharacterCreate].entLName.get()
+        self.controller.curr_character.size = self.controller.frames[CharacterCreate].height.get()  # Known as height
+        self.controller.curr_character.weight = self.controller.frames[CharacterCreate].weight.get()
+        self.controller.curr_character.species = self.controller.frames[CharacterCreate].species.get()
+        self.controller.curr_character.race = self.controller.frames[CharacterCreate].colorNum.get()  # Known as color, int
+        self.controller.curr_character.gender = self.controller.frames[CharacterCreate].gender.get()
 
         # Clothing Table
         # [file_name, rgbHex val]
-        char = self.controller.frames[CharacterCreate].character
-        self.d_clothing['shirt'] = [char.f_shirts[char.curr_shirt], char.col_shirt]
-        self.d_clothing['pants'] = [char.f_pants[char.curr_pants], char.col_pants]
-        self.d_clothing['shoes'] = [char.f_shoes[char.curr_shoes], char.col_shoes]
+        ieChar = self.controller.frames[CharacterCreate].character
+        self.controller.curr_character.shirt_f_name = ieChar.f_shirts[ieChar.curr_shirt]
+        self.controller.curr_character.shirt_color = ieChar.col_shirt
+        self.controller.curr_character.pants_f_name = ieChar.f_pants[ieChar.curr_pants]
+        self.controller.curr_character.pants_color = ieChar.col_pants
+        self.controller.curr_character.shoes_f_name = ieChar.f_shoes[ieChar.curr_shoes]
+        self.controller.curr_character.shoes_color = ieChar.col_shoes
 
-        # Personality Table
-        ans = self.controller.frames[PersonalityTest].answers
-        self.d_personality['ope'] = (ans[0].get() + ans[1].get() + ans[2].get()) / 12
-        self.d_personality['con'] = (ans[3].get() + ans[4].get() + ans[5].get()) / 12
-        self.d_personality['ext'] = (ans[6].get() + ans[7].get() + ans[8].get()) / 12
-        self.d_personality['agr'] = (ans[9].get() + ans[10].get() + ans[11].get()) / 12
-        self.d_personality['neu'] = (ans[12].get() + ans[13].get() + ans[14].get()) / 12
+        if self.controller.d.mode == "new":
+            # Personality Table
+            ans = self.controller.frames[PersonalityTest].answers
+            self.controller.curr_character.ope = (ans[0].get() + ans[1].get() + ans[2].get()) / 12
+            self.controller.curr_character.con = (ans[3].get() + ans[4].get() + ans[5].get()) / 12
+            self.controller.curr_character.ext = (ans[6].get() + ans[7].get() + ans[8].get()) / 12
+            self.controller.curr_character.agr = (ans[9].get() + ans[10].get() + ans[11].get()) / 12
+            self.controller.curr_character.neu = (ans[12].get() + ans[13].get() + ans[14].get()) / 12
 
         # Job Table
-        self.d_job = self.controller.frames[CharacterCreate].entJob.get()
+        self.controller.curr_character.job_desc = self.controller.frames[CharacterCreate].entJob.get()
         # Skill Table
-        self.d_skill = self.controller.frames[CharacterCreate].entSkill.get()
+        self.controller.curr_character.skill_desc = self.controller.frames[CharacterCreate].entSkill.get()
 
     def update_page(self):
         self.aggregate_data()
@@ -689,11 +707,11 @@ class CharacterSubmit(tk.Frame):
         for label in self.lblList:
             label.grid_remove()
         self.lblList = []
-        self.lblList = [tk.Label(self.lfCharInfo, text="First Name: " + self.d_character['fName']),
-                        tk.Label(self.lfCharInfo, text="Last Name: " + self.d_character['lName']),
-                        tk.Label(self.lfCharInfo, text="Size: " + self.d_character['size']),
-                        tk.Label(self.lfCharInfo, text="Weight: " + self.d_character['weight']),
-                        tk.Label(self.lfCharInfo, text="Gender: " + self.d_character['gender'])]
+        self.lblList = [tk.Label(self.lfCharInfo, text="First Name: " + self.controller.curr_character.fName),
+                        tk.Label(self.lfCharInfo, text="Last Name: " + self.controller.curr_character.lName),
+                        tk.Label(self.lfCharInfo, text="Size: " + self.controller.curr_character.size),
+                        tk.Label(self.lfCharInfo, text="Weight: " + self.controller.curr_character.weight),
+                        tk.Label(self.lfCharInfo, text="Gender: " + self.controller.curr_character.gender)]
         i = 0
         for label in self.lblList:
             label.grid(row=i, column=0)
@@ -701,18 +719,18 @@ class CharacterSubmit(tk.Frame):
 
         # ----- Middle = Picture of Character -----
         self.character = IE.CharacterManip()
-        self.character.define_character(self.d_character, self.d_clothing)
+        self.character.define_character(self.controller.curr_character)
 
         self.imgPerson = self.character.returnGIF()
         self.lblPerson.configure(image=self.imgPerson)
         self.lblPerson.image = self.imgPerson
 
         # ----- Second middle = Personality Results -----
-        lblPers = [tk.Label(self.lfPers, text=str(self.d_personality['ope'])),
-                   tk.Label(self.lfPers, text=str(self.d_personality['con'])),
-                   tk.Label(self.lfPers, text=str(self.d_personality['ext'])),
-                   tk.Label(self.lfPers, text=str(self.d_personality['agr'])),
-                   tk.Label(self.lfPers, text=str(self.d_personality['neu']))]
+        lblPers = [tk.Label(self.lfPers, text=str(self.controller.curr_character.ope)),
+                   tk.Label(self.lfPers, text=str(self.controller.curr_character.con)),
+                   tk.Label(self.lfPers, text=str(self.controller.curr_character.ext)),
+                   tk.Label(self.lfPers, text=str(self.controller.curr_character.agr)),
+                   tk.Label(self.lfPers, text=str(self.controller.curr_character.neu))]
         for c, label in enumerate(lblPers):
             label.grid(row=c, column=0)
 
@@ -736,7 +754,7 @@ class CharacterSubmit(tk.Frame):
 
     def butSubmitClick(self):
         """Will upload the character to the database and clear all screens used."""
-        self.controller.d.insertion(self.d_character, self.d_clothing, self.d_personality, self.d_job, self.d_skill)
+        self.controller.d.insertion(self.controller.curr_character)
         self.controller.frames[CharacterCreate].set_defaults()
         self.controller.frames[PersonalityTest].set_defaults()
         self.controller.show_frame(MainMenu)
@@ -787,44 +805,38 @@ class CharacterView(tk.Frame):
         Will do so by updating all data on the character creation screen.
 
         """
-        print(id)
-        char = self.controller.d.get_character(id)
-
+        # A character object
+        self.controller.curr_character = self.controller.d.get_character(id)
+        print("ID> ", self.controller.curr_character.id)
         screen = self.controller.frames[CharacterCreate]
 
-        screen.entFName.insert(0, char.fName)
-        screen.entLName.insert(0, char.lName)
-        screen.height.set(char.size)
-        screen.weight.set(char.weight)
-        screen.species.set(char.species)
-        screen.speciesNum.set(screen.species_list.index(char.species))
-        screen.colorNum.set(char.race)
-        screen.gender.set(char.gender)
-        screen.entJob.insert(0, char.job_desc)
-        screen.entSkill.insert(0, char.skill_desc)
+        screen.entFName.insert(0, self.controller.curr_character.fName)
+        screen.entLName.insert(0, self.controller.curr_character.lName)
+        screen.height.set(self.controller.curr_character.size)
+        screen.weight.set(self.controller.curr_character.weight)
+        screen.species.set(self.controller.curr_character.species)
+        screen.speciesNum.set(screen.species_list.index(self.controller.curr_character.species))
+        screen.colorNum.set(self.controller.curr_character.race)
+        screen.gender.set(self.controller.curr_character.gender)
+        screen.entJob.insert(0, self.controller.curr_character.job_desc)
+        screen.entSkill.insert(0, self.controller.curr_character.skill_desc)
 
         screen.character = IE.CharacterManip()
-        screen.shirtColor.set(self.rgb_to_hsv(char.shirt_color))
-        screen.hexShirtColor.set(char.shirt_color)
-        screen.sldTopColor.config(background=char.shirt_color)
-        screen.pantsColor.set(self.rgb_to_hsv(char.pants_color))
-        screen.hexPantsColor.set(char.pants_color)
-        screen.sldMidColor.config(background=char.pants_color)
-        screen.shoesColor.set(self.rgb_to_hsv(char.shoes_color))
-        screen.hexShoesColor.set(char.shoes_color)
-        screen.sldBotColor.config(background=char.shoes_color)
+        screen.shirtColor.set(self.rgb_to_hsv(self.controller.curr_character.shirt_color))
+        screen.hexShirtColor.set(self.controller.curr_character.shirt_color)
+        screen.sldTopColor.config(background=self.controller.curr_character.shirt_color)
+        screen.pantsColor.set(self.rgb_to_hsv(self.controller.curr_character.pants_color))
+        screen.hexPantsColor.set(self.controller.curr_character.pants_color)
+        screen.sldMidColor.config(background=self.controller.curr_character.pants_color)
+        screen.shoesColor.set(self.rgb_to_hsv(self.controller.curr_character.shoes_color))
+        screen.hexShoesColor.set(self.controller.curr_character.shoes_color)
+        screen.sldBotColor.config(background=self.controller.curr_character.shoes_color)
 
-        char_data = {"species": char.species,
-                     "gender": char.gender,
-                     "race": char.race}
-        clothing_data = {"shirt": [char.shirt_f_name, char.shirt_color],
-                         "pants": [char.pants_f_name, char.pants_color],
-                         "shoes": [char.shoes_f_name, char.shoes_color]}
-
-        screen.character.define_character(char_data, clothing_data)
+        screen.character.define_character(self.controller.curr_character)
 
         screen.updateCharLabel()
 
+        print("ID HERE", self.controller.curr_character.id)
         self.controller.show_frame(CharacterCreate)
 
     def rgb_to_hsv(self, rgb_hex):
