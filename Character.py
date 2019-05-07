@@ -45,7 +45,6 @@ class Character:
         """data is a tuple"""
         self.fName = data[0]
         self.lName = data[1]
-        print("WHATE ", data[2])
         self.id = data[2]
         self.size = data[3]
         self.weight = data[4]

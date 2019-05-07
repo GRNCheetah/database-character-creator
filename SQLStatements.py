@@ -3,7 +3,7 @@ tbl_character = \
 """CREATE TABLE IF NOT EXISTS Character (
     fName VARCHAR(255) NOT NULL,
     lName VARCHAR(255),
-    id INTEGER,
+    id INTEGER UNIQUE,
     size VARCHAR(10),
     weight VARCHAR(10),
     race INTEGER,
@@ -18,36 +18,36 @@ tbl_clothing = \
     type VARCHAR(5),
     file_name VARCHAR(255),
     color CHAR(7),
-    PRIMARY KEY (char_id, type),
-    FOREIGN KEY (char_id) REFERENCES Character(id)
+    PRIMARY KEY (char_id, type) ON CONFLICT IGNORE,
+    FOREIGN KEY (char_id) REFERENCES Character(id) ON DELETE CASCADE
 );"""
 
 tbl_personality = \
 """CREATE TABLE IF NOT EXISTS Personality (
-    char_id INTEGER,
+    char_id INTEGER UNIQUE,
     ope FLOAT,
     con FLOAT,
     ext FLOAT,
     agr FLOAT,
     neu FLOAT,
-    PRIMARY KEY (char_id),
-    FOREIGN KEY (char_id) REFERENCES Character(id)
+    PRIMARY KEY (char_id) ON CONFLICT IGNORE,
+    FOREIGN KEY (char_id) REFERENCES Character(id) ON DELETE CASCADE
 );"""
 
 tbl_job = \
 """CREATE TABLE IF NOT EXISTS Job (
-    char_id INTEGER,
+    char_id INTEGER UNIQUE,
     descr VARCHAR(255) DEFAULT "No job",
-    PRIMARY KEY (char_id),
-    FOREIGN KEY (char_id) REFERENCES Character(id)
+    PRIMARY KEY (char_id) ON CONFLICT IGNORE,
+    FOREIGN KEY (char_id) REFERENCES Character(id) ON DELETE CASCADE
 );"""
 
 tbl_skill = \
 """CREATE TABLE IF NOT EXISTS Skill (
-    char_id INTEGER,
+    char_id INTEGER UNIQUE,
     descr VARCHAR(255) DEFAULT "No skill",
-    PRIMARY KEY (char_id),
-    FOREIGN KEY(char_id) REFERENCES Character(id)
+    PRIMARY KEY (char_id) ON CONFLICT IGNORE,
+    FOREIGN KEY(char_id) REFERENCES Character(id) ON DELETE CASCADE
 );"""
 
 sel_characters = \
@@ -81,7 +81,7 @@ WHERE id = ?;"""
 update_clothing = \
 """UPDATE Clothing
 SET file_name = ?, color = ?
-WHERE char_id = ? AND type = ?;"""
+WHERE id = ? AND type = ?;"""
 
 update_personality = \
 """UPDATE Personality
@@ -98,3 +98,14 @@ update_skill = \
 SET descr = ?
 WHERE char_id = ?;"""
 
+# Character deleting
+del_character = \
+"""DELETE FROM Character WHERE id = ?;"""
+del_character2 = \
+"""DELETE C 
+FROM Character C 
+INNER JOIN Clothing AS CL ON C.id = CL.char_id
+INNER JOIN Personality AS P ON C.id = P.char_id
+INNER JOIN Job AS J ON C.id = J.char_id
+INNER JOIN Skill AS S ON C.id = S.char_id
+WHERE C.id = ?;"""

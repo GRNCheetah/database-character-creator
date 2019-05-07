@@ -16,12 +16,11 @@ class Creator(tk.Tk):
         container = tk.Frame(self)
 
         # Centering
-        w = 800
-        h = 600
+        self.w = 800
+        self.h = 600
         screen_w = container.winfo_screenwidth()
         screen_h = container.winfo_screenheight()
-        self.geometry('%dx%d+%d+%d' % (w, h, int((screen_w/2) - (w/2)), int((screen_h/2) - (h/2))))
-
+        self.geometry('%dx%d+%d+%d' % (self.w, self.h, int((screen_w/2) - (self.w/2)), int((screen_h/2) - (self.h/2))))
 
         container.pack(side="top", fill="both", expand=True)
 
@@ -140,13 +139,12 @@ class CharacterCreate(tk.Frame):
         self.controller = controller
 
         label = tk.Label(self, text="Time To Design", font=LARGE_FONT)
-        # label.pack(pady=10, padx=10)
         label.grid(row=0, column=0, columnspan=2)
 
         # ----- Information Frame -----
         lfInfo = tk.LabelFrame(self,
-                               text="Character Information")
-        # lfInfo.pack(fill="both", expand="yes", side="left")
+                               text="Character Information",
+                               bg="white")
         lfInfo.grid(row=1, column=0)
 
         # First name
@@ -248,8 +246,8 @@ class CharacterCreate(tk.Frame):
 
         # ----- Visual Frame -----
         lfVisual = tk.LabelFrame(self,
-                                 text="Design Character")
-        # lfVisual.pack(fill="both", expand="yes", side="right")
+                                 text="Design Character",
+                                 bg="white")
         lfVisual.grid(row=1, column=1)
 
         # Asset import
@@ -260,7 +258,8 @@ class CharacterCreate(tk.Frame):
         self.character.update_character(self.species.get(), self.gender.get(), self.colorNum.get())
         self.imgPerson = self.character.returnGIF()
         self.lblPerson = tk.Label(lfVisual,
-                                  image=self.imgPerson)
+                                  image=self.imgPerson,
+                                  bg="white")
         self.lblPerson.image = self.imgPerson
         self.lblPerson.grid(row=1,
                             column=1,
@@ -363,17 +362,20 @@ class CharacterCreate(tk.Frame):
 
         # ----- Forward-Backward Frame -----
         lfBot = tk.LabelFrame(self,
-                              text="Ready to Move")
+                              text="Ready to Move",
+                              bg="white")
         lfBot.grid(row=2, column=0, columnspan=2)
 
         butBack2Main = tk.Button(lfBot,
                                  text="Back",
-                                 command=self.back2MainClick)
+                                 command=self.back2MainClick,
+                                 bg="#f46e42")
         butBack2Main.grid(row=0, column=0)
 
         butForward2Pers = tk.Button(lfBot,
                                     text="Next",
-                                    command=self.forward2PersClick)
+                                    command=self.forward2PersClick,
+                                    bg="#4af441")
         butForward2Pers.grid(row=0, column=1)
 
     def set_defaults(self):
@@ -792,12 +794,21 @@ class CharacterView(tk.Frame):
             lblChars.append([tk.Label(self, text=row[0],),
                              tk.Label(self, text=row[1]),
                              tk.Label(self, text=row[2]),
-                             tk.Label(self, text=row[3])])
+                             tk.Label(self, text=row[3]),
+                             tk.Button(self, text="Delete", command=lambda: self.del_char(row[4]))])
 
             # Place on grid
             for attrNum, label in enumerate(lblChars[charNum]):
-                label.bind("<Button-1>", lambda event, i=row[4]: self.onLabelClick(event, i))
-                label.grid(row=2+charNum, column=attrNum)
+                if attrNum < len(lblChars[charNum]) - 1:
+                    label.bind("<Button-1>", lambda event, x=row[4]: self.onLabelClick(event, x))
+                    label.grid(row=2+charNum, column=attrNum)
+                else:
+                    label.grid(row=2+charNum, column=attrNum)
+
+    def del_char(self, id):
+        """Delete character with id."""
+        self.controller.d.del_char(id)
+        self.update_page()
 
     def onLabelClick(self, event, id):
         """Whenever a label is clicked, will go to that character's submit screen.
@@ -836,7 +847,6 @@ class CharacterView(tk.Frame):
 
         screen.updateCharLabel()
 
-        print("ID HERE", self.controller.curr_character.id)
         self.controller.show_frame(CharacterCreate)
 
     def rgb_to_hsv(self, rgb_hex):

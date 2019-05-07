@@ -9,7 +9,7 @@ class DBManager:
 
         self.conn = sqlite3.connect('charcreation.db')
         self.cursor = self.conn.cursor()
-
+        self.conn.execute("pragma foreign_keys=on;")
         # new or edit
         # Change when Create or View button clicked on MainMenu
         self.mode = "new"
@@ -89,12 +89,6 @@ class DBManager:
         self.cursor.execute(sql.update_skill, char.get_skill_tuple("edit"))
         self.conn.commit()
 
-    def print_all_character(self):
-        #self.cursor.execute(sql.print_all)
-        self.cursor.execute("SELECT * FROM Character")
-        result = self.cursor.fetchall()
-        return result
-
     def get_all_characters(self):
         self.cursor.execute(sql.sel_characters)
         return self.cursor.fetchall()
@@ -126,6 +120,16 @@ class DBManager:
         self.C.settbl_skill(data)
 
         return self.C
+
+    def del_char(self, id):
+        """Deletes a charcter with a given id."""
+
+        self.cursor.execute(sql.del_character, str(id))
+        self.conn.commit()
+        '''self.cursor.execute(sql.del_clothing, str(id))
+        self.cursor.execute(sql.del_personality, str(id))
+        self.cursor.execute(sql.del_, str(id))
+        self.cursor.execute(sql.del_character, str(id))'''
 
 
 if __name__ == "__main__":
