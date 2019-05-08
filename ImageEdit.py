@@ -34,8 +34,8 @@ class CharacterManip:
                             "#633800",
                             "#eff5eb"]
 
-        self.max_w = 300
-        self.max_h = 500
+        self.max_w = 250
+        self.max_h = 400
         self.w = 0
         self.h = 0
         # Original image of the character
