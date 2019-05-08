@@ -6,7 +6,7 @@ import DBManager as DB
 import Character
 
 LARGE_FONT = ("Verdana", 12)
-
+CLR_WHITE = "#ffffff"
 
 class Creator(tk.Tk):
 
@@ -139,50 +139,50 @@ class CharacterCreate(tk.Frame):
         tk.Frame.__init__(self, parent, bg="green")
         self.controller = controller
 
-        label = tk.Label(self, text="Time To Design", font=LARGE_FONT)
-        label.grid(row=0, column=0, columnspan=2)
+        label = tk.Label(self, text="Time To Design", font=("fixedsys", 20, "bold"), bg="green")
+        label.grid(row=0, column=1, columnspan=2)
 
         # ----- Information Frame -----
         lfInfo = tk.LabelFrame(self,
-                               text="Character Information",
-                               bg="white")
+                               text="Character Information", font=("fixedsys", 16, "bold"),
+                               bg="white", borderwidth=0, highlightthickness=0)
         lfInfo.grid(row=1, column=0)
 
         # First name
         lblFName = tk.Label(lfInfo,
-                            text="First Name:")
+                            text="First Name:", bg=CLR_WHITE)
         lblFName.grid(row=0, column=0)
         self.entFName = tk.Entry(lfInfo)
         self.entFName.grid(row=0, column=1)
-
         # Last name
         lblLName = tk.Label(lfInfo,
-                            text="Last Name:")
+                            text="Last Name:", bg=CLR_WHITE)
         lblLName.grid(row=1, column=0)
         self.entLName = tk.Entry(lfInfo)
         self.entLName.grid(row=1, column=1)
-
         # Height
         lblHeight = tk.Label(lfInfo,
-                             text="Height:")
+                             text="Height:", bg=CLR_WHITE)
         lblHeight.grid(row=2, column=0)
         height_options = {"Short", "Average", "Tall"}
         self.height = tk.StringVar(lfInfo, value="Short")
         dropHeight = tk.OptionMenu(lfInfo, self.height, *height_options)
+        dropHeight.configure(bg=CLR_WHITE,borderwidth=0, highlightthickness=0)
         dropHeight.grid(row=2, column=1)
 
         # Weight
         lblWeight = tk.Label(lfInfo,
-                             text="Weight:")
+                             text="Weight:", bg=CLR_WHITE)
         lblWeight.grid(row=3, column=0)
         weight_options = {"Light", "Average", "Heavy"}
         self.weight = tk.StringVar(lfInfo, value="Light")
         dropWeight = tk.OptionMenu(lfInfo, self.weight, *weight_options)
+        dropWeight.configure(bg=CLR_WHITE,borderwidth=0, highlightthickness=0)
         dropWeight.grid(row=3, column=1)
 
         # Species
         lblSpecies = tk.Label(lfInfo,
-                              text="Species:")
+                              text="Species:", bg=CLR_WHITE)
         lblSpecies.grid(row=4, column=0)
         self.speciesNum = tk.IntVar(0)
         self.species_list = ["Human", "Bear", "Alien"]
@@ -193,15 +193,16 @@ class CharacterCreate(tk.Frame):
                               from_=0,
                               to=(len(self.species_list) - 1),
                               orient=tk.HORIZONTAL,
-                              command=self.setSpecies)
-        sldSpecies.grid(row=5, column=1)
+                              command=self.setSpecies,
+                              bg=CLR_WHITE,borderwidth=0, highlightthickness=0, showvalue=0)
+        sldSpecies.grid(row=5, column=1, pady=5)
         lblSpeciesDisp = tk.Label(lfInfo,
-                                  textvariable=self.species)
+                                  textvariable=self.species, bg=CLR_WHITE,borderwidth=0, highlightthickness=0)
         lblSpeciesDisp.grid(row=4, column=1)
 
         # Color
         lblColor = tk.Label(lfInfo,
-                            text="Color:")
+                            text="Skin Tone:", bg=CLR_WHITE,borderwidth=0, highlightthickness=0)
         lblColor.grid(row=6, column=0)
         self.colorNum = tk.IntVar(0)
         sldColor = tk.Scale(lfInfo,
@@ -209,12 +210,13 @@ class CharacterCreate(tk.Frame):
                             from_=0,
                             to=4,
                             orient=tk.HORIZONTAL,
-                            command=self.setColor)
-        sldColor.grid(row=6, column=1)
+                            command=self.setColor,
+                            bg=CLR_WHITE,borderwidth=0, highlightthickness=0, showvalue=0)
+        sldColor.grid(row=6, column=1, pady=5)
 
         # Gender
         lblGender = tk.Label(lfInfo,
-                             text="Gender:")
+                             text="Gender:", bg=CLR_WHITE,borderwidth=0, highlightthickness=0)
         lblGender.grid(row=7, column=0)
         self.gender = tk.StringVar()
         self.gender.set("Male")
@@ -222,25 +224,27 @@ class CharacterCreate(tk.Frame):
                                 text="Male",
                                 variable=self.gender,
                                 value="Male",
-                                command=self.setGender)
+                                command=self.setGender,
+                                bg=CLR_WHITE,borderwidth=0, highlightthickness=0)
         rbMale.grid(row=7, column=1)
         rbFemale = tk.Radiobutton(lfInfo,
                                   text="Female",
                                   variable=self.gender,
                                   value="Female",
-                                  command=self.setGender)
+                                  command=self.setGender,
+                                  bg=CLR_WHITE, borderwidth=0, highlightthickness=0)
         rbFemale.grid(row=8, column=1)
 
         # Skill
         lblSkill = tk.Label(lfInfo,
-                            text="Skill:")
+                            text="Skill:", bg=CLR_WHITE, borderwidth=0, highlightthickness=0)
         lblSkill.grid(row=9, column=0)
         self.entSkill = tk.Entry(lfInfo)
         self.entSkill.grid(row=9, column=1)
 
         # Job
         lblJob = tk.Label(lfInfo,
-                          text="Job:")
+                          text="Job:", bg=CLR_WHITE, borderwidth=0, highlightthickness=0)
         lblJob.grid(row=10, column=0)
         self.entJob = tk.Entry(lfInfo)
         self.entJob.grid(row=10, column=1)
@@ -248,8 +252,9 @@ class CharacterCreate(tk.Frame):
         # ----- Visual Frame -----
         lfVisual = tk.LabelFrame(self,
                                  text="Design Character",
-                                 bg="white")
-        lfVisual.grid(row=1, column=1)
+                                 font=("fixedsys", 16, "bold"),
+                                 bg="white", borderwidth=0, highlightthickness=0)
+        lfVisual.grid(row=1, column=2)
 
         # Asset import
         imgLeftArrow = tk.PhotoImage(file=os.path.join("assets", "butLeft.gif"))
@@ -273,7 +278,7 @@ class CharacterCreate(tk.Frame):
                                  image=imgLeftArrow,
                                  width=but_dim,
                                  height=but_dim,
-                                 command=self.shirtLeft)
+                                 command=self.shirtLeft, bg=CLR_WHITE, borderwidth=0, highlightthickness=0)
         butLeftShirt.image = imgLeftArrow
         butLeftShirt.grid(row=1, column=0)
 
@@ -282,7 +287,7 @@ class CharacterCreate(tk.Frame):
                                   image=imgRightArrow,
                                   width=but_dim,
                                   height=but_dim,
-                                  command=self.shirtRight)
+                                  command=self.shirtRight, bg=CLR_WHITE, borderwidth=0, highlightthickness=0)
         butRightShirt.image = imgRightArrow
         butRightShirt.grid(row=1, column=2)
 
@@ -291,7 +296,7 @@ class CharacterCreate(tk.Frame):
                                  image=imgLeftArrow,
                                  width=but_dim,
                                  height=but_dim,
-                                 command=self.pantsLeft)
+                                 command=self.pantsLeft, bg=CLR_WHITE, borderwidth=0, highlightthickness=0)
         butLeftPants.immge = imgLeftArrow
         butLeftPants.grid(row=2, column=0)
 
@@ -300,7 +305,7 @@ class CharacterCreate(tk.Frame):
                                   image=imgRightArrow,
                                   width=but_dim,
                                   height=but_dim,
-                                  command=self.pantsRight)
+                                  command=self.pantsRight, bg=CLR_WHITE, borderwidth=0, highlightthickness=0)
         butRightPants.image = imgRightArrow
         butRightPants.grid(row=2, column=2)
 
@@ -309,7 +314,7 @@ class CharacterCreate(tk.Frame):
                                  image=imgLeftArrow,
                                  width=but_dim,
                                  height=but_dim,
-                                 command=self.shoesLeft)
+                                 command=self.shoesLeft, bg=CLR_WHITE, borderwidth=0, highlightthickness=0)
         butLeftShoes.image = imgLeftArrow
         butLeftShoes.grid(row=3, column=0)
 
@@ -318,7 +323,7 @@ class CharacterCreate(tk.Frame):
                                   image=imgRightArrow,
                                   width=but_dim,
                                   height=but_dim,
-                                  command=self.shoesRight)
+                                  command=self.shoesRight, bg=CLR_WHITE, borderwidth=0, highlightthickness=0)
         butRightShoes.image = imgRightArrow
         butRightShoes.grid(row=3, column=2)
 
@@ -331,7 +336,7 @@ class CharacterCreate(tk.Frame):
                                     from_=0,
                                     to=360,
                                     orient=tk.HORIZONTAL,
-                                    background=self.hexShirtColor.get())
+                                    background=self.hexShirtColor.get(),  borderwidth=0, highlightthickness=0, showvalue=0)
         self.sldTopColor.config(command=self.handleShirtColor)
         self.sldTopColor.grid(row=1, column=3)
 
@@ -344,7 +349,7 @@ class CharacterCreate(tk.Frame):
                                     from_=0,
                                     to=360,
                                     orient=tk.HORIZONTAL,
-                                    background=self.hexPantsColor.get())
+                                    background=self.hexPantsColor.get(), borderwidth=0, highlightthickness=0, showvalue=0)
         self.sldMidColor.config(command=self.handlePantsColor)
         self.sldMidColor.grid(row=2, column=3)
 
@@ -357,7 +362,7 @@ class CharacterCreate(tk.Frame):
                                     from_=0,
                                     to=360,
                                     orient=tk.HORIZONTAL,
-                                    background=self.hexShoesColor.get())
+                                    background=self.hexShoesColor.get(), borderwidth=0, highlightthickness=0, showvalue=0)
         self.sldBotColor.config(command=self.handleShoesColor)
         self.sldBotColor.grid(row=3, column=3)
 
@@ -532,17 +537,18 @@ class PersonalityTest(tk.Frame):
     """
 
     def __init__(self, parent, controller):
-        tk.Frame.__init__(self, parent)
+        tk.Frame.__init__(self, parent, bg="white", borderwidth=0, highlightthickness=0)
 
         self.controller = controller
 
-        label = tk.Label(self, text="Personality Test", font=LARGE_FONT)
+        label = tk.Label(self, text="Personality Test", font=("fixedsys", 20, "bold"),
+        bg="white", borderwidth=0, highlightthickness=0)
         # label.pack(pady=10, padx=10)
         label.grid(row=0, column=0, columnspan=2)
 
         instr = """For each question, answer how true the statement is to your character. The \
 results of this quiz will determine the personality of your character.
-(Very Much Disagree, Neutral, Very Much Agree)
+(Very Disagree, Disagree, Neutral, Agree, Very Agree)
 """
 
         lblInstructions = tk.Label(self, text=instr)
