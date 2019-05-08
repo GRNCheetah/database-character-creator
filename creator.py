@@ -177,7 +177,7 @@ class CharacterCreate(tk.Frame):
 
         # Top most part of the screen
         img = Image.open(os.path.join("assets", "design_lab.png"))
-        img = img.resize((int(controller.w * .8), int(controller.h * .20)), Image.ANTIALIAS)
+        img = img.resize((int(controller.w * .8), int(controller.h * .15)), Image.ANTIALIAS)
         img = ImageTk.PhotoImage(img)
         self.title = tk.Label(topFrame,
                               image=img,
@@ -486,7 +486,7 @@ class CharacterCreate(tk.Frame):
         pop.wm_title("Wait!")
         pop.focus_force()
 
-        w = 200
+        w = 190
         h = 75
 
         pop.geometry('%dx%d+%d+%d' % (w, h, int((pop.winfo_screenwidth()/2) - (w/2)), int((pop.winfo_screenheight()/2) - (h/2))))
@@ -641,7 +641,7 @@ class PersonalityTest(tk.Frame):
 
         # Top most part of the screen
         img = Image.open(os.path.join("assets", "personality_test.png"))
-        img = img.resize((int(controller.w * .8), int(controller.h * .20)), Image.ANTIALIAS)
+        img = img.resize((int(controller.w * .8), int(controller.h * .15)), Image.ANTIALIAS)
         img = ImageTk.PhotoImage(img)
         self.title = tk.Label(topFrame,
                               image=img,
@@ -736,35 +736,75 @@ class CharacterSubmit(tk.Frame):
 
         self.controller = controller
 
-        # Title at the top of the screen
-        title = tk.Label(self, text="Finalize Character", font=("fixedsys", 20, "bold"),
-        bg="white", borderwidth=0, highlightthickness=0)
-        title.grid(row=0, column=0, columnspan=3)
+        # Sandwich frames
+        topFrame = tk.Frame(self, bg="white")
+        topFrame.pack(fill="x", expand="true", side="top")
+        midFrame = tk.Frame(self, bg="white")
+        midFrame.pack(expand="true", side="top")
+        botFrame = tk.Frame(self, bg="white")
+        botFrame.pack(expand="true", side="top")
 
-        # Data setup for database submission
-        self.d_character = {}
-        self.d_clothing = {}
-        self.d_personality = {}
-        self.d_job = {}
-        self.d_skill = {}
+        # Top most part of the screen
+        img = Image.open(os.path.join("assets", "finished_product.png"))
+        img = img.resize((int(controller.w * .8), int(controller.h * .15)), Image.ANTIALIAS)
+        img = ImageTk.PhotoImage(img)
+        self.title = tk.Label(topFrame,
+                              image=img,
+                              borderwidth=0,
+                              highlightthickness=0)
+        self.title.image = img
+        self.title.pack()
 
         self.lblList = []
-        self.lfVisual = tk.LabelFrame(self, text="Visuals", font=("fixedsys", 16, "bold"),
-        bg="white", borderwidth=0, highlightthickness=0)
-        self.lfVisual.grid(row=1, column=1)
-        self.lfPers = tk.LabelFrame(self, text="Personality", font=("fixedsys", 16, "bold"),
-        bg="white", borderwidth=0, highlightthickness=0)
-        self.lfPers.grid(row=1, column=2)
-        self.lfRightButt = tk.LabelFrame(self, text="Second Chance", font=("fixedsys", 16, "bold"),
-        bg="white", borderwidth=0, highlightthickness=0)
-        self.lfRightButt.grid(row=1, column=3)
 
-        self.lblPerson = tk.Label(self.lfVisual, font=("fixedsys", 16, "bold"),
-        bg="white", borderwidth=0, highlightthickness=0)
+        # ----- Left side = Character Info -----
+        self.lfCharInfo = tk.LabelFrame(midFrame,
+                                        text="Character\nInformation",
+                                        font=("fixedsys", 16, "bold"),
+                                        bg="white",
+                                        borderwidth=0,
+                                        highlightthickness=0)
+        # self.lfCharInfo.grid(row=1, column=0)
+        self.lfCharInfo.pack(side="left", padx=5)
+
+        # ----- Visual left middle
+        self.lfVisual = tk.LabelFrame(midFrame,
+                                      text="Visuals",
+                                      font=("fixedsys", 16, "bold"),
+                                      bg="white",
+                                      borderwidth=0,
+                                      highlightthickness=0)
+        #self.lfVisual.grid(row=1, column=1)
+        self.lfVisual.pack(side="left", padx=5)
+
+        # ----- Personality Right Middle
+        self.lfPers = tk.LabelFrame(midFrame,
+                                    text="Personality",
+                                    font=("fixedsys", 16, "bold"),
+                                    bg="white",
+                                    borderwidth=0,
+                                    highlightthickness=0)
+        #self.lfPers.grid(row=1, column=2)
+        self.lfPers.pack(side="left", padx=5)
+
+        self.lfRightButt = tk.LabelFrame(midFrame,
+                                         text="Second Chance",
+                                         font=("fixedsys", 16, "bold"),
+                                         bg="white",
+                                         borderwidth=0,
+                                         highlightthickness=0)
+        #self.lfRightButt.grid(row=1, column=3)
+        self.lfRightButt.pack(side="left", padx=5)
+
+        self.lblPerson = tk.Label(self.lfVisual,
+                                  font=("fixedsys", 16, "bold"),
+                                  bg="white",
+                                  borderwidth=0,
+                                  highlightthickness=0)
         self.lblPerson.grid(row=0, column=0)
 
         # ----- Bottom = Submit button -----
-        butSubmit = tk.Button(self,
+        butSubmit = tk.Button(botFrame,
                               text="Submit",
                               command=self.butSubmitClick,
                               bg="#4af441", borderwidth=1, highlightthickness=0)
@@ -844,10 +884,8 @@ class CharacterSubmit(tk.Frame):
     def update_page(self):
         self.aggregate_data()
 
-        # ----- Left side = Character Info -----
-        self.lfCharInfo = tk.LabelFrame(self, text="Character\nInformation", font=("fixedsys", 16, "bold"),
-        bg="white", borderwidth=0, highlightthickness=0)
-        self.lfCharInfo.grid(row=1, column=0)
+
+
         for label in self.lblList:
             label.grid_remove()
         self.lblList = []
@@ -945,7 +983,7 @@ class CharacterView(tk.Frame):
 
         # Top most part of the screen
         img = Image.open(os.path.join("assets", "character_view.png"))
-        img = img.resize((int(controller.w * .8), int(controller.h * .20)), Image.ANTIALIAS)
+        img = img.resize((int(controller.w * .8), int(controller.h * .15)), Image.ANTIALIAS)
         img = ImageTk.PhotoImage(img)
         self.title = tk.Label(topFrame,
                               image=img,
@@ -972,7 +1010,6 @@ class CharacterView(tk.Frame):
         butMain = tk.Button(botFrame, text="Back", command=self.onBackClick,
         bg=CLR_LAVENDER, highlightthickness=0, borderwidth=1)
         butMain.pack()
-        #butMain.grid(row=90, column=0, columnspan=20)
 
     def update_page(self):
         """Updates all the widgets on this page when something updates."""
