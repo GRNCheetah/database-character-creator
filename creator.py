@@ -6,7 +6,7 @@ import DBManager as DB
 import Character
 
 LARGE_FONT = ("Verdana", 12)
-
+COL_WHITE = "#ffffff"
 
 class Creator(tk.Tk):
 
@@ -145,7 +145,7 @@ class CharacterCreate(tk.Frame):
         # ----- Information Frame -----
         lfInfo = tk.LabelFrame(self,
                                text="Character Information",
-                               bg="white")
+                               bg=COL_WHITE)
         lfInfo.grid(row=1, column=0)
 
         # First name
@@ -489,10 +489,14 @@ class CharacterCreate(tk.Frame):
         return (self.entFName.get() and self.entLName.get())
 
     def back2MainClick(self):
+        """Will go to Main Menu or View screen depending on the database mode."""
         # When going back to main, clear this screen and personality choices
         self.set_defaults()
         self.controller.frames[PersonalityTest].set_defaults()
-        self.controller.show_frame(MainMenu)
+        if self.controller.d.mode == "new":
+            self.controller.show_frame(MainMenu)
+        elif self.controller.d.mode == "edit":
+            self.controller.show_frame(CharacterView)
 
     def forward2PersClick(self):
         if self.not_null():
@@ -646,7 +650,7 @@ class CharacterSubmit(tk.Frame):
         # ----- Right side = Buttons to go back -----
         self.butHome = tk.Button(self.lfRightButt,
                                  text="Quit",
-                                 command=self.butHomeClick)
+                                 command=self.are_you_sure)
 
         self.butEditChar = tk.Button(self.lfRightButt,
                                      text="To Edit Character",
@@ -743,6 +747,24 @@ class CharacterSubmit(tk.Frame):
             self.butEditPers.grid(row=1, column=0)
 
 
+    def are_you_sure(self):
+        """Pop up to make sure user knows progress will be lost."""
+
+        pop = tk.Tk()
+        pop.wm_title("Wait!")
+        pop.focus_force()
+
+        w = 200
+        h = 75
+
+        pop.geometry('%dx%d+%d+%d' % (w, h, int((pop.winfo_screenwidth()/2) - (w/2)), int((pop.winfo_screenheight()/2) - (h/2))))
+        msg = tk.Label(pop, text="Are you sure you want quit?\nProgress will be lost.")
+        msg.grid(row=0, column=0, columnspan=2)
+        butYes = tk.Button(pop, text="Yes", bg="#4af441", command=lambda: self.butHomeClick(pop))
+        butYes.grid(row=1, column=0)
+        butNo = tk.Button(pop, text="No", bg="#f46e42", command=pop.destroy)
+        butNo.grid(row=1, column=1)
+
 
     def butEditCharClick(self):
         self.controller.show_frame(CharacterCreate)
@@ -750,17 +772,27 @@ class CharacterSubmit(tk.Frame):
     def butEditPersClick(self):
         self.controller.show_frame(PersonalityTest)
 
-    def butHomeClick(self):
+    def butHomeClick(self, pop):
+        pop.destroy()
         self.controller.frames[CharacterCreate].set_defaults()
         self.controller.frames[PersonalityTest].set_defaults()
-        self.controller.show_frame(MainMenu)
+        if self.controller.d.mode == "new":
+            self.controller.show_frame(MainMenu)
+        elif self.controller.d.mode == "edit":
+            self.controller.show_frame(CharacterView)
 
     def butSubmitClick(self):
         """Will upload the character to the database and clear all screens used."""
         self.controller.d.insertion(self.controller.curr_character)
         self.controller.frames[CharacterCreate].set_defaults()
         self.controller.frames[PersonalityTest].set_defaults()
-        self.controller.show_frame(MainMenu)
+
+
+        if self.controller.d.mode == "new": # Go to Main
+            self.controller.show_frame(MainMenu)
+        elif self.controller.d.mode == "edit": # Go back to the view after editing
+            self.controller.frames[CharacterView].update_page()
+            self.controller.show_frame(CharacterView)
 
 
 class CharacterView(tk.Frame):
@@ -813,7 +845,6 @@ class CharacterView(tk.Frame):
                                   tk.Label(self, text=row[2]),
                                   tk.Label(self, text=row[3]),
                                   tk.Button(self, text="Delete: "+str(row[4]), command=lambda x=row[4]: self.are_you_sure(x))])
-                                  #tk.Button(self, text="Delete", command=lambda: self.del_char(row[4]))])
 
             # Place on grid
             for attrNum, label in enumerate(self.lblChars[charNum]):
@@ -828,7 +859,7 @@ class CharacterView(tk.Frame):
         pop.wm_title("Wait!")
         pop.focus_force()
 
-        w = 220
+        w = 300
         h = 50
 
         pop.geometry('%dx%d+%d+%d' % (w, h, int((pop.winfo_screenwidth()/2) - (w/2)), int((pop.winfo_screenheight()/2) - (h/2))))
