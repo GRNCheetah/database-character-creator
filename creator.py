@@ -162,10 +162,10 @@ class CharacterCreate(tk.Frame):
     """
 
     def __init__(self, parent, controller):
-        tk.Frame.__init__(self, parent, bg="green")
+        tk.Frame.__init__(self, parent, bg=CLR_MAIN)
         self.controller = controller
 
-        label = tk.Label(self, text="Time To Design", font=("fixedsys", 20, "bold"), bg="green")
+        label = tk.Label(self, text="Time To Design", font=("fixedsys", 20, "bold"), bg=CLR_MAIN)
         label.grid(row=0, column=1, columnspan=2)
 
         # ----- Information Frame -----
@@ -650,7 +650,7 @@ results of this quiz will determine the personality of your character.
         self.answers = [tk.IntVar(value=2) for i in range(len(questions))]
 
         for y in range(len(questions)):
-            labels.append(tk.Label(self, text=questions[y],bg="white", borderwidth=0, highlightthickness=0))
+            labels.append(tk.Label(self, text=questions[y], bg="white", borderwidth=0, highlightthickness=0))
             labels[y].grid(row=3 + y, column=0)
 
             questionFrames.append(tk.LabelFrame(self))
@@ -741,17 +741,17 @@ class CharacterSubmit(tk.Frame):
         self.butHome = tk.Button(self.lfRightButt,
                                  text="Quit",
                                  command=self.are_you_sure,
-                                 bg="CLR_LAVENDER", borderwidth=0, highlightthickness=0)
+                                 bg=CLR_LAVENDER, borderwidth=0, highlightthickness=0)
 
         self.butEditChar = tk.Button(self.lfRightButt,
                                      text="To Edit Character",
                                      command=self.butEditCharClick,
-                                     bg="CLR_LAVENDER", borderwidth=0, highlightthickness=0)
+                                     bg=CLR_LAVENDER, borderwidth=0, highlightthickness=0)
 
         self.butEditPers = tk.Button(self.lfRightButt,
                                      text="To Edit Personality",
                                      command=self.butEditPersClick,
-                                     bg="CLR_LAVENDER", borderwidth=0, highlightthickness=0)
+                                     bg=CLR_LAVENDER, borderwidth=0, highlightthickness=0)
 
         self.butEditChar.grid(row=0, column=0)
         self.butEditPers.grid(row=1, column=0)
