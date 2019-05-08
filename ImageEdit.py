@@ -1,8 +1,6 @@
 from PIL import Image, ImageTk
 import os
 
-import Character
-
 class CharacterManip:
     """The goal of this object is to represent the Character as a whole.
 

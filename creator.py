@@ -949,6 +949,8 @@ class CharacterView(tk.Frame):
         c_max = max(r, g, b)
         c_min = min(r, g, b)
 
+        hue = 0
+
         delta = c_max - c_min
 
         if c_max == r:
