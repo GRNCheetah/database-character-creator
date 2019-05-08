@@ -1,5 +1,5 @@
 import tkinter as tk
-from PIL import ImageColor
+from PIL import ImageColor, Image, ImageTk
 import os
 import ImageEdit as IE
 import DBManager as DB
@@ -8,6 +8,8 @@ import Character
 LARGE_FONT = ("Verdana", 12)
 LITTLE_FONT = ("fixedsys", 10)
 CLR_WHITE = "#ffffff"
+CLR_MAIN = "#f6dd95"
+CLR_LAVENDER = "#f2d9ff"
 
 
 class Creator(tk.Tk):
@@ -90,49 +92,57 @@ class MainMenu(tk.Frame):
         :param parent: The frame of the Creator
         :param controller: Creator self
         """
-        tk.Frame.__init__(self, parent, bg="green")
+        tk.Frame.__init__(self, parent, bg=CLR_MAIN)
         # Top most part of the screen
-        self.label = tk.Label(self, text="The Character Creator", font=("fixedsys", 24, "bold"))
-        self.label.pack()
+        img = Image.open(os.path.join("assets", "title.jpg"))
+        img = img.resize((int(controller.w*.8), int(controller.h*.45)), Image.ANTIALIAS)
+        img = ImageTk.PhotoImage(img)
+        self.title = tk.Label(self,
+                              image=img,
+                              borderwidth=0,
+                              highlightthickness=0)
+        self.title.image = img
+        self.title.pack()
+
 
         self.controller = controller
         # ------ Button attributes -----
         but_width = 16
         but_padx = '2m'
-        but_pady = '1m'
+        but_pady = '5m'
 
         # ----- Create Character -------
         self.butCreate = tk.Button(self,
                                    text="Create Character",
-                                   background="yellow",
+                                   background=CLR_LAVENDER,
                                    command=self.toCreateClick,
                                    width=but_width,
                                    padx=but_padx,
                                    pady=but_pady,
-                                   font=("fixedsys", 16))
+                                   font=("fixedsys", 20))
         self.butCreate.pack()
         self.butCreate.focus_force()
 
         # ----- View Characters --------
         self.butView = tk.Button(self,
                                  text="View Characters",
-                                 background="yellow",
+                                 background=CLR_LAVENDER,
                                  command=self.toViewClick,
                                  width=but_width,
                                  padx=but_padx,
                                  pady=but_pady,
-                                 font=("fixedsys", 16))
+                                 font=("fixedsys", 20))
         self.butView.pack()
 
         # ----- Quit --------
         self.butQuit = tk.Button(self,
                                  text="Quit",
-                                 background="yellow",
+                                 background=CLR_LAVENDER,
                                  command=controller.on_close,
                                  width=but_width,
                                  padx=but_padx,
                                  pady=but_pady,
-                                 font=("fixedsys", 16))
+                                 font=("fixedsys", 20))
         self.butQuit.pack()
 
     def toCreateClick(self):
