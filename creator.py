@@ -1,41 +1,46 @@
 import tkinter as tk
-from PIL import Image, ImageTk, ImageColor
-import numpy as np
+from PIL import ImageColor
 import os
 import ImageEdit as IE
 import DBManager as DB
+import Character
 
 LARGE_FONT = ("Verdana", 12)
+
 
 class Creator(tk.Tk):
 
     def __init__(self):
-
         # Initializations
         tk.Tk.__init__(self)
         container = tk.Frame(self)
+
+        # Centering
+        self.w = 800
+        self.h = 600
+        screen_w = container.winfo_screenwidth()
+        screen_h = container.winfo_screenheight()
+        self.geometry('%dx%d+%d+%d' % (self.w, self.h, int((screen_w/2) - (self.w/2)), int((screen_h/2) - (self.h/2))))
 
         container.pack(side="top", fill="both", expand=True)
 
         container.grid_rowconfigure(0, weight=1)
         container.grid_columnconfigure(0, weight=1)
 
-        self.d=DB.DBManager()
-        self.d.create_tables()
-        print("HI")
-        #self.d.insert_character()
-        #self.d.print_all_character()
 
+        # Database stuff
+        self.d = DB.DBManager()
+        self.d.create_tables()
 
         # Pretty Patty
         tk.Tk.wm_title(self, "Character Creator")
-        #tk.Tk.protocol("WM_DELETE_WINDOW", self.on_close)
+
+        self.curr_character = Character.Character()
 
         # Frame Stuff
         self.frames = {}
 
         for F in (MainMenu, CharacterCreate, CharacterView, PersonalityTest, CharacterSubmit):
-
             frame = F(container, self)
 
             self.frames[F] = frame
@@ -48,13 +53,27 @@ class Creator(tk.Tk):
         """Pass a class (page) to bring to the front."""
         frame = self.frames[cont]
         frame.tkraise()
-        #self.frame.tkraise()
+        # self.frame.tkraise()
 
     def on_close(self):
-        print("Closing")
         self.d.close_database()
         tk.Tk.destroy(self)
 
+    def popup(self, msg):
+        pop = tk.Tk()
+        pop.wm_title("Wait!")
+        pop.focus_force()
+
+        w = 220
+        h = 50
+
+        pop.geometry('%dx%d+%d+%d' % (w, h, int((pop.winfo_screenwidth()/2) - (w/2)), int((pop.winfo_screenheight()/2) - (h/2))))
+
+        lbl = tk.Label(pop, text=msg)
+        lbl.grid(row=0, column=0)
+        button = tk.Button(pop, text="Ok", command=pop.destroy)
+        button.grid(row=1, column=0)
+        pop.mainloop()
 
 class MainMenu(tk.Frame):
     """Shown at the start of the program.
@@ -82,7 +101,7 @@ class MainMenu(tk.Frame):
         # ----- Create Character -------
         self.butCreate = tk.Button(self,
                                    text="Create Character",
-                                   background="blue",
+                                   background="yellow",
                                    command=self.toCreateClick,
                                    width=but_width,
                                    padx=but_padx,
@@ -93,7 +112,7 @@ class MainMenu(tk.Frame):
         # ----- View Characters --------
         self.butView = tk.Button(self,
                                  text="View Characters",
-                                 background="blue",
+                                 background="yellow",
                                  command=self.toViewClick,
                                  width=but_width,
                                  padx=but_padx,
@@ -106,6 +125,7 @@ class MainMenu(tk.Frame):
 
     def toViewClick(self):
         self.controller.d.set_mode("edit")
+        self.controller.frames[CharacterView].update_page()
         self.controller.show_frame(CharacterView)
 
 
@@ -120,13 +140,12 @@ class CharacterCreate(tk.Frame):
         self.controller = controller
 
         label = tk.Label(self, text="Time To Design", font=LARGE_FONT)
-        #label.pack(pady=10, padx=10)
         label.grid(row=0, column=0, columnspan=2)
 
         # ----- Information Frame -----
         lfInfo = tk.LabelFrame(self,
-                               text="Character Information")
-        #lfInfo.pack(fill="both", expand="yes", side="left")
+                               text="Character Information",
+                               bg="white")
         lfInfo.grid(row=1, column=0)
 
         # First name
@@ -195,7 +214,7 @@ class CharacterCreate(tk.Frame):
 
         # Gender
         lblGender = tk.Label(lfInfo,
-                            text="Gender:")
+                             text="Gender:")
         lblGender.grid(row=7, column=0)
         self.gender = tk.StringVar()
         self.gender.set("Male")
@@ -228,10 +247,9 @@ class CharacterCreate(tk.Frame):
 
         # ----- Visual Frame -----
         lfVisual = tk.LabelFrame(self,
-                                 text="Design Character")
-        #lfVisual.pack(fill="both", expand="yes", side="right")
+                                 text="Design Character",
+                                 bg="white")
         lfVisual.grid(row=1, column=1)
-
 
         # Asset import
         imgLeftArrow = tk.PhotoImage(file=os.path.join("assets", "butLeft.gif"))
@@ -241,7 +259,8 @@ class CharacterCreate(tk.Frame):
         self.character.update_character(self.species.get(), self.gender.get(), self.colorNum.get())
         self.imgPerson = self.character.returnGIF()
         self.lblPerson = tk.Label(lfVisual,
-                                  image=self.imgPerson)
+                                  image=self.imgPerson,
+                                  bg="white")
         self.lblPerson.image = self.imgPerson
         self.lblPerson.grid(row=1,
                             column=1,
@@ -304,7 +323,7 @@ class CharacterCreate(tk.Frame):
         butRightShoes.grid(row=3, column=2)
 
         # Top Slider
-        self.shirtColor = tk.IntVar(0) # Represents hex number in decimal
+        self.shirtColor = tk.IntVar(0)  # Represents hex number in decimal
         self.hexShirtColor = tk.StringVar()
         self.hexShirtColor.set("#ff0000")
         self.sldTopColor = tk.Scale(lfVisual,
@@ -344,17 +363,20 @@ class CharacterCreate(tk.Frame):
 
         # ----- Forward-Backward Frame -----
         lfBot = tk.LabelFrame(self,
-                              text="Ready to Move")
+                              text="Ready to Move",
+                              bg="white")
         lfBot.grid(row=2, column=0, columnspan=2)
 
         butBack2Main = tk.Button(lfBot,
                                  text="Back",
-                                 command=self.back2MainClick)
+                                 command=self.back2MainClick,
+                                 bg="#f46e42")
         butBack2Main.grid(row=0, column=0)
 
         butForward2Pers = tk.Button(lfBot,
                                     text="Next",
-                                    command=self.forward2PersClick)
+                                    command=self.forward2PersClick,
+                                    bg="#4af441")
         butForward2Pers.grid(row=0, column=1)
 
     def set_defaults(self):
@@ -382,7 +404,6 @@ class CharacterCreate(tk.Frame):
         self.shoesColor.set(0)
         self.hexShoesColor.set("#ff0000")
         self.sldBotColor.config(background=self.hexShoesColor.get())
-
 
     def rgb_to_hex(self, rgb):
         return "#%02x%02x%02x" % rgb
@@ -475,14 +496,19 @@ class CharacterCreate(tk.Frame):
 
     def forward2PersClick(self):
         if self.not_null():
-            self.controller.show_frame(PersonalityTest)
+            if self.controller.d.mode == "new": # New character
+                self.controller.show_frame(PersonalityTest)
+            elif self.controller.d.mode == "edit": # Skip the personality test
+                self.controller.frames[CharacterSubmit].update_page()
+                self.controller.show_frame(CharacterSubmit)
         else:
-            print("Fill out first and last name.")
+            self.controller.popup("First and Last name must have a value.")
 
     def updateCharLabel(self):
         self.imgPerson = self.character.returnGIF()
         self.lblPerson.configure(image=self.imgPerson)
         self.lblPerson.image = self.imgPerson
+
 
 class PersonalityTest(tk.Frame):
     """The second page of the character creator.
@@ -504,13 +530,14 @@ class PersonalityTest(tk.Frame):
     Neuroticism - Emotional stability. High scores experience emotional instability and neg emotions.
         ex) Moody, tense
     """
+
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
 
         self.controller = controller
 
         label = tk.Label(self, text="Personality Test", font=LARGE_FONT)
-        #label.pack(pady=10, padx=10)
+        # label.pack(pady=10, padx=10)
         label.grid(row=0, column=0, columnspan=2)
 
         instr = """For each question, answer how true the statement is to your character. The \
@@ -519,7 +546,7 @@ results of this quiz will determine the personality of your character.
 """
 
         lblInstructions = tk.Label(self, text=instr)
-        #lblInstructions.pack(pady=10, padx=10)
+        # lblInstructions.pack(pady=10, padx=10)
         lblInstructions.grid(row=1, column=0, columnspan=2)
 
         labels = []
@@ -556,9 +583,8 @@ results of this quiz will determine the personality of your character.
                 self.rbArray[y].append(tk.Radiobutton(questionFrames[y], variable=self.answers[y], value=x))
                 self.rbArray[y][x].grid(row=0, column=x + 1)
 
-
         butBack = tk.Button(self, text="Back", command=self.back2CharClick)
-        butBack.grid(row=50,column=0)
+        butBack.grid(row=50, column=0)
 
         butForward = tk.Button(self, text="Next", command=self.forward2PreviewClick)
         butForward.grid(row=50, column=1)
@@ -600,49 +626,80 @@ class CharacterSubmit(tk.Frame):
         self.d_job = {}
         self.d_skill = {}
 
-        #self.aggregate_data()
+        self.lblList = []
+        self.lfVisual = tk.LabelFrame(self, text="Visuals")
+        self.lfVisual.grid(row=1, column=1)
+        self.lfPers = tk.LabelFrame(self, text="Personality")
+        self.lfPers.grid(row=1, column=2)
+        self.lfRightButt = tk.LabelFrame(self, text="Second Chance")
+        self.lfRightButt.grid(row=1, column=3)
 
+        self.lblPerson = tk.Label(self.lfVisual)
+        self.lblPerson.grid(row=0, column=0)
 
+        # ----- Bottom = Submit button -----
+        butSubmit = tk.Button(self,
+                              text="Submit",
+                              command=self.butSubmitClick)
+        butSubmit.grid(row=2, column=1)
+
+        # ----- Right side = Buttons to go back -----
+        self.butHome = tk.Button(self.lfRightButt,
+                                 text="Quit",
+                                 command=self.butHomeClick)
+
+        self.butEditChar = tk.Button(self.lfRightButt,
+                                     text="To Edit Character",
+                                     command=self.butEditCharClick)
+
+        self.butEditPers = tk.Button(self.lfRightButt,
+                                     text="To Edit Personality",
+                                     command=self.butEditPersClick)
+
+        self.butEditChar.grid(row=0, column=0)
+        self.butEditPers.grid(row=1, column=0)
+        self.butHome.grid(row=2, column=0)
+
+        # self.aggregate_data()
 
     def aggregate_data(self):
         """Accesses all other frames to grab all their data and format it for the database.
 
         Use when creating the characters.
         """
+
         # Character Table
-        self.d_character['fName'] = self.controller.frames[CharacterCreate].entFName.get()
-        self.d_character['lName'] = self.controller.frames[CharacterCreate].entLName.get()
-        self.d_character['size'] = self.controller.frames[CharacterCreate].height.get()  # Known as height
-        self.d_character['weight'] = self.controller.frames[CharacterCreate].weight.get()
-        self.d_character['species'] = self.controller.frames[CharacterCreate].species.get()
-        self.d_character['race'] = self.controller.frames[CharacterCreate].colorNum.get()  # Known as color, int
-        self.d_character['gender'] = self.controller.frames[CharacterCreate].gender.get()
+        self.controller.curr_character.fName = self.controller.frames[CharacterCreate].entFName.get()
+        self.controller.curr_character.lName = self.controller.frames[CharacterCreate].entLName.get()
+        self.controller.curr_character.size = self.controller.frames[CharacterCreate].height.get()  # Known as height
+        self.controller.curr_character.weight = self.controller.frames[CharacterCreate].weight.get()
+        self.controller.curr_character.species = self.controller.frames[CharacterCreate].species.get()
+        self.controller.curr_character.race = self.controller.frames[CharacterCreate].colorNum.get()  # Known as color, int
+        self.controller.curr_character.gender = self.controller.frames[CharacterCreate].gender.get()
 
         # Clothing Table
         # [file_name, rgbHex val]
-        char = self.controller.frames[CharacterCreate].character
-        self.d_clothing['shirt'] = [char.f_shirts[char.curr_shirt], char.col_shirt]
-        self.d_clothing['pants'] = [char.f_pants[char.curr_pants], char.col_pants]
-        self.d_clothing['shoes'] = [char.f_shoes[char.curr_shoes], char.col_shoes]
+        ieChar = self.controller.frames[CharacterCreate].character
+        self.controller.curr_character.shirt_f_name = ieChar.f_shirts[ieChar.curr_shirt]
+        self.controller.curr_character.shirt_color = ieChar.col_shirt
+        self.controller.curr_character.pants_f_name = ieChar.f_pants[ieChar.curr_pants]
+        self.controller.curr_character.pants_color = ieChar.col_pants
+        self.controller.curr_character.shoes_f_name = ieChar.f_shoes[ieChar.curr_shoes]
+        self.controller.curr_character.shoes_color = ieChar.col_shoes
 
-        # Personality Table
-        ans = self.controller.frames[PersonalityTest].answers
-        self.d_personality['ope'] = (ans[0].get() + ans[1].get() + ans[2].get()) / 3
-        self.d_personality['con'] = (ans[3].get() + ans[4].get() + ans[5].get()) / 3
-        self.d_personality['ext'] = (ans[6].get() + ans[7].get() + ans[8].get()) / 3
-        self.d_personality['agr'] = (ans[9].get() + ans[10].get() + ans[11].get()) / 3
-        self.d_personality['neu'] = (ans[12].get() + ans[13].get() + ans[14].get()) / 3
+        if self.controller.d.mode == "new":
+            # Personality Table
+            ans = self.controller.frames[PersonalityTest].answers
+            self.controller.curr_character.ope = (ans[0].get() + ans[1].get() + ans[2].get()) / 12
+            self.controller.curr_character.con = (ans[3].get() + ans[4].get() + ans[5].get()) / 12
+            self.controller.curr_character.ext = (ans[6].get() + ans[7].get() + ans[8].get()) / 12
+            self.controller.curr_character.agr = (ans[9].get() + ans[10].get() + ans[11].get()) / 12
+            self.controller.curr_character.neu = (ans[12].get() + ans[13].get() + ans[14].get()) / 12
 
         # Job Table
-        self.d_job = self.controller.frames[CharacterCreate].entJob.get()
+        self.controller.curr_character.job_desc = self.controller.frames[CharacterCreate].entJob.get()
         # Skill Table
-        self.d_skill = self.controller.frames[CharacterCreate].entSkill.get()
-
-
-
-        print(self.d_character)
-        print(self.d_clothing)
-        print(self.d_personality)
+        self.controller.curr_character.skill_desc = self.controller.frames[CharacterCreate].entSkill.get()
 
     def update_page(self):
         self.aggregate_data()
@@ -650,49 +707,41 @@ class CharacterSubmit(tk.Frame):
         # ----- Left side = Character Info -----
         self.lfCharInfo = tk.LabelFrame(self, text="Character Information")
         self.lfCharInfo.grid(row=1, column=0)
+        for label in self.lblList:
+            label.grid_remove()
         self.lblList = []
-        self.lblList = [tk.Label(self.lfCharInfo, text="First Name: " + self.d_character['fName']),
-                        tk.Label(self.lfCharInfo, text="Last Name: " + self.d_character['lName']),
-                        tk.Label(self.lfCharInfo, text="Size: " + self.d_character['size']),
-                        tk.Label(self.lfCharInfo, text="Weight: " + self.d_character['weight']),
-                        tk.Label(self.lfCharInfo, text="Gender: " + self.d_character['gender'])]
-        print(self.d_character['fName'])
+        self.lblList = [tk.Label(self.lfCharInfo, text="First Name: " + self.controller.curr_character.fName),
+                        tk.Label(self.lfCharInfo, text="Last Name: " + self.controller.curr_character.lName),
+                        tk.Label(self.lfCharInfo, text="Size: " + self.controller.curr_character.size),
+                        tk.Label(self.lfCharInfo, text="Weight: " + self.controller.curr_character.weight),
+                        tk.Label(self.lfCharInfo, text="Gender: " + self.controller.curr_character.gender)]
         i = 0
         for label in self.lblList:
             label.grid(row=i, column=0)
             i += 1
 
         # ----- Middle = Picture of Character -----
-        self.lfVisual = tk.LabelFrame(self, text="Visuals")
-        self.lfVisual.grid(row=1, column=1)
-
         self.character = IE.CharacterManip()
-        self.character.define_character(self.d_character, self.d_clothing)
+        self.character.define_character(self.controller.curr_character)
 
         self.imgPerson = self.character.returnGIF()
-        self.lblPerson = tk.Label(self.lfVisual, image=self.imgPerson)
+        self.lblPerson.configure(image=self.imgPerson)
         self.lblPerson.image = self.imgPerson
-        self.lblPerson.grid(row=0, column=0)
 
-        # ----- Right side = Buttons to go back -----
-        self.lfRightButt = tk.LabelFrame(self, text="Second Chance")
-        self.lfRightButt.grid(row=1, column=2)
+        # ----- Second middle = Personality Results -----
+        lblPers = [tk.Label(self.lfPers, text=str(self.controller.curr_character.ope)),
+                   tk.Label(self.lfPers, text=str(self.controller.curr_character.con)),
+                   tk.Label(self.lfPers, text=str(self.controller.curr_character.ext)),
+                   tk.Label(self.lfPers, text=str(self.controller.curr_character.agr)),
+                   tk.Label(self.lfPers, text=str(self.controller.curr_character.neu))]
+        for c, label in enumerate(lblPers):
+            label.grid(row=c, column=0)
 
-        butEditChar = tk.Button(self.lfRightButt,
-                                text="To Edit Character",
-                                command=self.butEditCharClick)
-        butEditChar.grid(row=0, column=0)
+        if self.controller.d.mode == "edit":
+            self.butEditPers.grid_remove()
+        elif self.controller.d.mode == "new":
+            self.butEditPers.grid(row=1, column=0)
 
-        butEditPers = tk.Button(self.lfRightButt,
-                                text="To Edit Personality",
-                                command=self.butEditPersClick)
-        butEditPers.grid(row=1, column=0)
-
-        # ----- Bottom = Submit button -----
-        butSubmit = tk.Button(self,
-                              text="Submit",
-                              command=self.butSubmitClick)
-        butSubmit.grid(row=2, column=1)
 
 
     def butEditCharClick(self):
@@ -701,34 +750,164 @@ class CharacterSubmit(tk.Frame):
     def butEditPersClick(self):
         self.controller.show_frame(PersonalityTest)
 
+    def butHomeClick(self):
+        self.controller.frames[CharacterCreate].set_defaults()
+        self.controller.frames[PersonalityTest].set_defaults()
+        self.controller.show_frame(MainMenu)
+
     def butSubmitClick(self):
         """Will upload the character to the database and clear all screens used."""
-        self.controller.d.insertion(self.d_character, self.d_clothing, self.d_personality, self.d_job, self.d_skill)
+        self.controller.d.insertion(self.controller.curr_character)
+        self.controller.frames[CharacterCreate].set_defaults()
+        self.controller.frames[PersonalityTest].set_defaults()
+        self.controller.show_frame(MainMenu)
 
-        pass
 
 class CharacterView(tk.Frame):
 
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
-        row_num=0
+
         label = tk.Label(self, text="Character View", font=LARGE_FONT)
         label.grid(row=0, column=0, columnspan=2)
 
-        self.header = tk.Label(self, text=("First Name"+"\t"+"Last Name"+"\t"+"Species"+"\t"+"Gender"), font=LARGE_FONT)
-        self.header.grid(row=1,column=0)
-        row_num+=1
-
-        data=controller.d.print_all_character()
-        Chars=[]
-
-        for counter, r in enumerate(data):
-            Chars.append([tk.Label(self, text=(r[0]+"\t"+r[1]+"\t"+r[6]+"\t"+r[7]),font=LARGE_FONT)])
-            for I, label in enumerate(Chars[counter]):
-                label.grid(row=counter+2, column=0)
+        self.controller = controller
+        self.data = []
+        self.lblChars = []
 
 
+        # Top level headers
+        lblHeaders = [tk.Label(self, text="First Name"),
+                      tk.Label(self, text="Last Name"),
+                      tk.Label(self, text="Species"),
+                      tk.Label(self, text="Gender")]
+        for i, label in enumerate(lblHeaders):
+            label.bind("<Button-1>", lambda event, e=i: self.sort_chars(event, e))
+            label.grid(row=1, column=i)
 
+        # Back button
+        butMain = tk.Button(self, text="Back", command=self.onBackClick)
+        butMain.grid(row=90, column=0, columnspan=20)
+
+    def update_page(self):
+        """Updates all the widgets on this page when something updates."""
+
+        # List of tuples
+        # Each tuple represents a different character
+        self.data = self.controller.d.get_all_characters()
+        # List of tuples
+        # Each tuple represents a different label full of data
+        self.show_labels()
+
+    def show_labels(self):
+
+        # Get rid of all the old labels
+        for lbl in self.lblChars:
+            for lblbl in lbl:
+                lblbl.grid_forget()
+        self.lblChars = []
+
+        for charNum, row in enumerate(self.data):
+            self.lblChars.append([tk.Label(self, text=row[0],),
+                                  tk.Label(self, text=row[1]),
+                                  tk.Label(self, text=row[2]),
+                                  tk.Label(self, text=row[3]),
+                                  tk.Button(self, text="Delete: "+str(row[4]), command=lambda x=row[4]: self.are_you_sure(x))])
+                                  #tk.Button(self, text="Delete", command=lambda: self.del_char(row[4]))])
+
+            # Place on grid
+            for attrNum, label in enumerate(self.lblChars[charNum]):
+                if attrNum < len(self.lblChars[charNum]) - 1:
+                    label.bind("<Button-1>", lambda event, x=row[4]: self.onLabelClick(event, x))
+                    label.grid(row=2+charNum, column=attrNum)
+                else:
+                    label.grid(row=2+charNum, column=attrNum)
+
+    def are_you_sure(self, id):
+        pop = tk.Tk()
+        pop.wm_title("Wait!")
+        pop.focus_force()
+
+        w = 220
+        h = 50
+
+        pop.geometry('%dx%d+%d+%d' % (w, h, int((pop.winfo_screenwidth()/2) - (w/2)), int((pop.winfo_screenheight()/2) - (h/2))))
+        msg = tk.Label(pop, text="Are you sure you want to delete this character?")
+        msg.grid(row=0, column=0, columnspan=2)
+        butYes = tk.Button(pop, text="Yes", bg="#4af441", command=lambda: self.del_char(id, pop))
+        butYes.grid(row=1, column=0)
+        butNo = tk.Button(pop, text="No", bg="#f46e42", command=pop.destroy)
+        butNo.grid(row=1, column=1)
+
+    def sort_chars(self, event, num):
+        self.data = sorted(self.data, key=lambda li: li[num].lower())
+        self.show_labels()
+
+    def del_char(self, id, pop):
+        """Delete character with id."""
+        pop.destroy()
+        self.controller.d.del_char(id)
+        self.update_page()
+
+    def onBackClick(self):
+        self.controller.show_frame(MainMenu)
+
+    def onLabelClick(self, event, id):
+        """Whenever a label is clicked, will go to that character's submit screen.
+
+        Will do so by updating all data on the character creation screen.
+
+        """
+        # A character object
+        self.controller.curr_character = self.controller.d.get_character(id)
+        screen = self.controller.frames[CharacterCreate]
+
+        screen.entFName.insert(0, self.controller.curr_character.fName)
+        screen.entLName.insert(0, self.controller.curr_character.lName)
+        screen.height.set(self.controller.curr_character.size)
+        screen.weight.set(self.controller.curr_character.weight)
+        screen.species.set(self.controller.curr_character.species)
+        screen.speciesNum.set(screen.species_list.index(self.controller.curr_character.species))
+        screen.colorNum.set(self.controller.curr_character.race)
+        screen.gender.set(self.controller.curr_character.gender)
+        screen.entJob.insert(0, self.controller.curr_character.job_desc)
+        screen.entSkill.insert(0, self.controller.curr_character.skill_desc)
+
+        screen.character = IE.CharacterManip()
+        screen.shirtColor.set(self.rgb_to_hsv(self.controller.curr_character.shirt_color))
+        screen.hexShirtColor.set(self.controller.curr_character.shirt_color)
+        screen.sldTopColor.config(background=self.controller.curr_character.shirt_color)
+        screen.pantsColor.set(self.rgb_to_hsv(self.controller.curr_character.pants_color))
+        screen.hexPantsColor.set(self.controller.curr_character.pants_color)
+        screen.sldMidColor.config(background=self.controller.curr_character.pants_color)
+        screen.shoesColor.set(self.rgb_to_hsv(self.controller.curr_character.shoes_color))
+        screen.hexShoesColor.set(self.controller.curr_character.shoes_color)
+        screen.sldBotColor.config(background=self.controller.curr_character.shoes_color)
+
+        screen.character.define_character(self.controller.curr_character)
+
+        screen.updateCharLabel()
+
+        self.controller.show_frame(CharacterCreate)
+
+    def rgb_to_hsv(self, rgb_hex):
+        r = int(rgb_hex[1:3], 16) / 255
+        g = int(rgb_hex[3:5], 16) / 255
+        b = int(rgb_hex[5:], 16) / 255
+
+        c_max = max(r, g, b)
+        c_min = min(r, g, b)
+
+        delta = c_max - c_min
+
+        if c_max == r:
+            hue = 60 * (((g - b) / delta) % 6)
+        elif c_max == g:
+            hue = 60 * (((b - r) / delta) + 2)
+        elif c_max == b:
+            hue = 60 * (((r - g) / delta) + 4)
+
+        return int(hue)
 
 app = Creator()
 app.protocol("WM_DELETE_WINDOW", app.on_close)
