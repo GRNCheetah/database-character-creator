@@ -58,6 +58,7 @@ class Creator(tk.Tk):
     def on_close(self):
         self.d.close_database()
         tk.Tk.destroy(self)
+        exit() # Kills all windows, maybe not the best way but it works
 
     def popup(self, msg):
         pop = tk.Tk()
@@ -647,6 +648,15 @@ class CharacterSubmit(tk.Frame):
                               command=self.butSubmitClick)
         butSubmit.grid(row=2, column=1)
 
+        # ----- Second middle
+        self.lblPers = [tk.Label(self.lfPers, text=str(self.controller.curr_character.ope)),
+                        tk.Label(self.lfPers, text=str(self.controller.curr_character.con)),
+                        tk.Label(self.lfPers, text=str(self.controller.curr_character.ext)),
+                        tk.Label(self.lfPers, text=str(self.controller.curr_character.agr)),
+                        tk.Label(self.lfPers, text=str(self.controller.curr_character.neu))]
+        for c, label in enumerate(self.lblPers):
+            label.grid(row=c, column=0)
+
         # ----- Right side = Buttons to go back -----
         self.butHome = tk.Button(self.lfRightButt,
                                  text="Quit",
@@ -694,11 +704,11 @@ class CharacterSubmit(tk.Frame):
         if self.controller.d.mode == "new":
             # Personality Table
             ans = self.controller.frames[PersonalityTest].answers
-            self.controller.curr_character.ope = (ans[0].get() + ans[1].get() + ans[2].get()) / 12
-            self.controller.curr_character.con = (ans[3].get() + ans[4].get() + ans[5].get()) / 12
-            self.controller.curr_character.ext = (ans[6].get() + ans[7].get() + ans[8].get()) / 12
-            self.controller.curr_character.agr = (ans[9].get() + ans[10].get() + ans[11].get()) / 12
-            self.controller.curr_character.neu = (ans[12].get() + ans[13].get() + ans[14].get()) / 12
+            self.controller.curr_character.ope = round((ans[0].get() + ans[1].get() + ans[2].get()) / 12, 2)
+            self.controller.curr_character.con = round((ans[3].get() + ans[4].get() + ans[5].get()) / 12, 2)
+            self.controller.curr_character.ext = round((ans[6].get() + ans[7].get() + ans[8].get()) / 12, 2)
+            self.controller.curr_character.agr = round((ans[9].get() + ans[10].get() + ans[11].get()) / 12, 2)
+            self.controller.curr_character.neu = round((ans[12].get() + ans[13].get() + ans[14].get()) / 12, 2)
 
         # Job Table
         self.controller.curr_character.job_desc = self.controller.frames[CharacterCreate].entJob.get()
@@ -733,13 +743,12 @@ class CharacterSubmit(tk.Frame):
         self.lblPerson.image = self.imgPerson
 
         # ----- Second middle = Personality Results -----
-        lblPers = [tk.Label(self.lfPers, text=str(self.controller.curr_character.ope)),
-                   tk.Label(self.lfPers, text=str(self.controller.curr_character.con)),
-                   tk.Label(self.lfPers, text=str(self.controller.curr_character.ext)),
-                   tk.Label(self.lfPers, text=str(self.controller.curr_character.agr)),
-                   tk.Label(self.lfPers, text=str(self.controller.curr_character.neu))]
-        for c, label in enumerate(lblPers):
-            label.grid(row=c, column=0)
+        self.lblPers[0].configure(text=str(self.controller.curr_character.ope))
+        self.lblPers[1].configure(text=str(self.controller.curr_character.con))
+        self.lblPers[2].configure(text=str(self.controller.curr_character.ext))
+        self.lblPers[3].configure(text=str(self.controller.curr_character.agr))
+        self.lblPers[4].configure(text=str(self.controller.curr_character.neu))
+
 
         if self.controller.d.mode == "edit":
             self.butEditPers.grid_remove()
