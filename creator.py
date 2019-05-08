@@ -195,7 +195,7 @@ class CharacterCreate(tk.Frame):
         self.height = tk.StringVar(lfInfo, value="Short")
         dropHeight = tk.OptionMenu(lfInfo, self.height, *height_options)
         dropHeight.configure(bg=CLR_WHITE,
-                             borderwidth=0,
+                             borderwidth=1,
                              highlightthickness=0,
                              font=LITTLE_FONT)
         dropHeight.grid(row=2, column=1)
@@ -208,7 +208,7 @@ class CharacterCreate(tk.Frame):
         self.weight = tk.StringVar(lfInfo, value="Light")
         dropWeight = tk.OptionMenu(lfInfo, self.weight, *weight_options)
         dropWeight.configure(bg=CLR_WHITE,
-                             borderwidth=0,
+                             borderwidth=1,
                              highlightthickness=0,
                              font=LITTLE_FONT)
         dropWeight.grid(row=3, column=1)
@@ -725,7 +725,7 @@ class CharacterSubmit(tk.Frame):
         butSubmit = tk.Button(self,
                               text="Submit",
                               command=self.butSubmitClick,
-                              bg="#4af441", borderwidth=0, highlightthickness=0)
+                              bg="#4af441", borderwidth=1, highlightthickness=0)
         butSubmit.grid(row=2, column=1)
 
         # ----- Second middle
@@ -741,17 +741,17 @@ class CharacterSubmit(tk.Frame):
         self.butHome = tk.Button(self.lfRightButt,
                                  text="Quit",
                                  command=self.are_you_sure,
-                                 bg=CLR_LAVENDER, borderwidth=0, highlightthickness=0)
+                                 bg=CLR_LAVENDER, borderwidth=1, highlightthickness=0)
 
         self.butEditChar = tk.Button(self.lfRightButt,
                                      text="To Edit Character",
                                      command=self.butEditCharClick,
-                                     bg=CLR_LAVENDER, borderwidth=0, highlightthickness=0)
+                                     bg=CLR_LAVENDER, borderwidth=1, highlightthickness=0)
 
         self.butEditPers = tk.Button(self.lfRightButt,
                                      text="To Edit Personality",
                                      command=self.butEditPersClick,
-                                     bg=CLR_LAVENDER, borderwidth=0, highlightthickness=0)
+                                     bg=CLR_LAVENDER, borderwidth=1, highlightthickness=0)
 
         self.butEditChar.grid(row=0, column=0)
         self.butEditPers.grid(row=1, column=0)
@@ -892,9 +892,9 @@ class CharacterSubmit(tk.Frame):
 class CharacterView(tk.Frame):
 
     def __init__(self, parent, controller):
-        tk.Frame.__init__(self, parent)
+        tk.Frame.__init__(self, parent, bg=CLR_MAIN)
 
-        label = tk.Label(self, text="Character View", font=LARGE_FONT)
+        label = tk.Label(self, text="Character View", font=("fixedsys", 20, "bold"))
         label.grid(row=0, column=0, columnspan=2)
 
         self.controller = controller
@@ -903,16 +903,17 @@ class CharacterView(tk.Frame):
 
 
         # Top level headers
-        lblHeaders = [tk.Label(self, text="First Name"),
-                      tk.Label(self, text="Last Name"),
-                      tk.Label(self, text="Species"),
-                      tk.Label(self, text="Gender")]
+        lblHeaders = [tk.Label(self, text="First Name",bg=CLR_MAIN, highlightthickness=0, borderwidth=0),
+                      tk.Label(self, text="Last Name",bg=CLR_MAIN, highlightthickness=0, borderwidth=0),
+                      tk.Label(self, text="Species",bg=CLR_MAIN, highlightthickness=0, borderwidth=0),
+                      tk.Label(self, text="Gender",bg=CLR_MAIN, highlightthickness=0, borderwidth=0)]
         for i, label in enumerate(lblHeaders):
             label.bind("<Button-1>", lambda event, e=i: self.sort_chars(event, e))
             label.grid(row=1, column=i)
 
         # Back button
-        butMain = tk.Button(self, text="Back", command=self.onBackClick)
+        butMain = tk.Button(self, text="Back", command=self.onBackClick,
+        bg=CLR_LAVENDER, highlightthickness=0, borderwidth=1)
         butMain.grid(row=90, column=0, columnspan=20)
 
     def update_page(self):
@@ -934,11 +935,11 @@ class CharacterView(tk.Frame):
         self.lblChars = []
 
         for charNum, row in enumerate(self.data):
-            self.lblChars.append([tk.Label(self, text=row[0],),
-                                  tk.Label(self, text=row[1]),
-                                  tk.Label(self, text=row[2]),
-                                  tk.Label(self, text=row[3]),
-                                  tk.Button(self, text="Delete", command=lambda x=row[4]: self.are_you_sure(x))])
+            self.lblChars.append([tk.Label(self, text=row[0],bg=CLR_MAIN, highlightthickness=0, borderwidth=0),
+                                  tk.Label(self, text=row[1],bg=CLR_MAIN, highlightthickness=0, borderwidth=0),
+                                  tk.Label(self, text=row[2],bg=CLR_MAIN, highlightthickness=0, borderwidth=0),
+                                  tk.Label(self, text=row[3],bg=CLR_MAIN, highlightthickness=0, borderwidth=0),
+                                  tk.Button(self, text="Delete",bg=CLR_LAVENDER, highlightthickness=0, borderwidth=1, command=lambda x=row[4]: self.are_you_sure(x))])
 
             # Place on grid
             for attrNum, label in enumerate(self.lblChars[charNum]):
