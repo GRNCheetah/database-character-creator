@@ -6,6 +6,7 @@ import DBManager as DB
 import Character
 
 LARGE_FONT = ("Verdana", 12)
+LITTLE_FONT = ("fixedsys", 10)
 CLR_WHITE = "#ffffff"
 
 
@@ -89,9 +90,9 @@ class MainMenu(tk.Frame):
         :param parent: The frame of the Creator
         :param controller: Creator self
         """
-        tk.Frame.__init__(self, parent)
+        tk.Frame.__init__(self, parent, bg="green")
         # Top most part of the screen
-        self.label = tk.Label(self, text="The Character Creator", font=LARGE_FONT)
+        self.label = tk.Label(self, text="The Character Creator", font=("fixedsys", 24, "bold"))
         self.label.pack()
 
         self.controller = controller
@@ -107,7 +108,8 @@ class MainMenu(tk.Frame):
                                    command=self.toCreateClick,
                                    width=but_width,
                                    padx=but_padx,
-                                   pady=but_pady)
+                                   pady=but_pady,
+                                   font=("fixedsys", 16))
         self.butCreate.pack()
         self.butCreate.focus_force()
 
@@ -118,7 +120,8 @@ class MainMenu(tk.Frame):
                                  command=self.toViewClick,
                                  width=but_width,
                                  padx=but_padx,
-                                 pady=but_pady)
+                                 pady=but_pady,
+                                 font=("fixedsys", 16))
         self.butView.pack()
 
         # ----- Quit --------
@@ -128,7 +131,8 @@ class MainMenu(tk.Frame):
                                  command=controller.on_close,
                                  width=but_width,
                                  padx=but_padx,
-                                 pady=but_pady)
+                                 pady=but_pady,
+                                 font=("fixedsys", 16))
         self.butQuit.pack()
 
     def toCreateClick(self):
@@ -163,39 +167,45 @@ class CharacterCreate(tk.Frame):
 
         # First name
         lblFName = tk.Label(lfInfo,
-                            text="First Name:", bg=CLR_WHITE)
+                            text="First Name:", bg=CLR_WHITE, font=LITTLE_FONT)
         lblFName.grid(row=0, column=0)
         self.entFName = tk.Entry(lfInfo)
         self.entFName.grid(row=0, column=1)
         # Last name
         lblLName = tk.Label(lfInfo,
-                            text="Last Name:", bg=CLR_WHITE)
+                            text="Last Name:", bg=CLR_WHITE, font=LITTLE_FONT)
         lblLName.grid(row=1, column=0)
         self.entLName = tk.Entry(lfInfo)
         self.entLName.grid(row=1, column=1)
         # Height
         lblHeight = tk.Label(lfInfo,
-                             text="Height:", bg=CLR_WHITE)
+                             text="Height:", bg=CLR_WHITE, font=LITTLE_FONT)
         lblHeight.grid(row=2, column=0)
         height_options = {"Short", "Average", "Tall"}
         self.height = tk.StringVar(lfInfo, value="Short")
         dropHeight = tk.OptionMenu(lfInfo, self.height, *height_options)
-        dropHeight.configure(bg=CLR_WHITE,borderwidth=0, highlightthickness=0)
+        dropHeight.configure(bg=CLR_WHITE,
+                             borderwidth=0,
+                             highlightthickness=0,
+                             font=LITTLE_FONT)
         dropHeight.grid(row=2, column=1)
 
         # Weight
         lblWeight = tk.Label(lfInfo,
-                             text="Weight:", bg=CLR_WHITE)
+                             text="Weight:", bg=CLR_WHITE, font=LITTLE_FONT)
         lblWeight.grid(row=3, column=0)
         weight_options = {"Light", "Average", "Heavy"}
         self.weight = tk.StringVar(lfInfo, value="Light")
         dropWeight = tk.OptionMenu(lfInfo, self.weight, *weight_options)
-        dropWeight.configure(bg=CLR_WHITE,borderwidth=0, highlightthickness=0)
+        dropWeight.configure(bg=CLR_WHITE,
+                             borderwidth=0,
+                             highlightthickness=0,
+                             font=LITTLE_FONT)
         dropWeight.grid(row=3, column=1)
 
         # Species
         lblSpecies = tk.Label(lfInfo,
-                              text="Species:", bg=CLR_WHITE)
+                              text="Species:", bg=CLR_WHITE, font=LITTLE_FONT)
         lblSpecies.grid(row=4, column=0)
         self.speciesNum = tk.IntVar(0)
         self.species_list = ["Human", "Bear", "Alien"]
@@ -204,18 +214,26 @@ class CharacterCreate(tk.Frame):
         sldSpecies = tk.Scale(lfInfo,
                               variable=self.speciesNum,
                               from_=0,
-                              to=(len(self.species_list) - 1),
+                              to=(len(self.species_list) - 2),
                               orient=tk.HORIZONTAL,
                               command=self.setSpecies,
-                              bg=CLR_WHITE,borderwidth=0, highlightthickness=0, showvalue=0)
+                              bg=CLR_WHITE,
+                              borderwidth=0,
+                              highlightthickness=0,
+                              showvalue=0,
+                              font=LITTLE_FONT)
         sldSpecies.grid(row=5, column=1, pady=5)
         lblSpeciesDisp = tk.Label(lfInfo,
-                                  textvariable=self.species, bg=CLR_WHITE,borderwidth=0, highlightthickness=0)
+                                  textvariable=self.species,
+                                  bg=CLR_WHITE,
+                                  borderwidth=0,
+                                  highlightthickness=0,
+                                  font=LITTLE_FONT)
         lblSpeciesDisp.grid(row=4, column=1)
 
         # Color
         lblColor = tk.Label(lfInfo,
-                            text="Skin Tone:", bg=CLR_WHITE,borderwidth=0, highlightthickness=0)
+                            text="Skin Tone:", bg=CLR_WHITE, borderwidth=0, highlightthickness=0, font=LITTLE_FONT)
         lblColor.grid(row=6, column=0)
         self.colorNum = tk.IntVar(0)
         sldColor = tk.Scale(lfInfo,
@@ -224,12 +242,15 @@ class CharacterCreate(tk.Frame):
                             to=4,
                             orient=tk.HORIZONTAL,
                             command=self.setColor,
-                            bg=CLR_WHITE,borderwidth=0, highlightthickness=0, showvalue=0)
+                            bg=CLR_WHITE,
+                            borderwidth=0,
+                            highlightthickness=0,
+                            showvalue=0)
         sldColor.grid(row=6, column=1, pady=5)
 
         # Gender
         lblGender = tk.Label(lfInfo,
-                             text="Gender:", bg=CLR_WHITE,borderwidth=0, highlightthickness=0)
+                             text="Gender:", bg=CLR_WHITE, borderwidth=0, highlightthickness=0, font=LITTLE_FONT)
         lblGender.grid(row=7, column=0)
         self.gender = tk.StringVar()
         self.gender.set("Male")
@@ -238,26 +259,28 @@ class CharacterCreate(tk.Frame):
                                 variable=self.gender,
                                 value="Male",
                                 command=self.setGender,
-                                bg=CLR_WHITE,borderwidth=0, highlightthickness=0)
+                                bg=CLR_WHITE,borderwidth=0, highlightthickness=0,
+                                font=LITTLE_FONT)
         rbMale.grid(row=7, column=1)
         rbFemale = tk.Radiobutton(lfInfo,
                                   text="Female",
                                   variable=self.gender,
                                   value="Female",
                                   command=self.setGender,
-                                  bg=CLR_WHITE, borderwidth=0, highlightthickness=0)
+                                  bg=CLR_WHITE, borderwidth=0, highlightthickness=0,
+                                  font=LITTLE_FONT)
         rbFemale.grid(row=8, column=1)
 
         # Skill
         lblSkill = tk.Label(lfInfo,
-                            text="Skill:", bg=CLR_WHITE, borderwidth=0, highlightthickness=0)
+                            text="Skill:", bg=CLR_WHITE, borderwidth=0, highlightthickness=0, font=LITTLE_FONT)
         lblSkill.grid(row=9, column=0)
         self.entSkill = tk.Entry(lfInfo)
         self.entSkill.grid(row=9, column=1)
 
         # Job
         lblJob = tk.Label(lfInfo,
-                          text="Job:", bg=CLR_WHITE, borderwidth=0, highlightthickness=0)
+                          text="Job:", bg=CLR_WHITE, borderwidth=0, highlightthickness=0, font=LITTLE_FONT)
         lblJob.grid(row=10, column=0)
         self.entJob = tk.Entry(lfInfo)
         self.entJob.grid(row=10, column=1)
@@ -387,7 +410,7 @@ class CharacterCreate(tk.Frame):
 
         butBack2Main = tk.Button(lfBot,
                                  text="Back",
-                                 command=self.back2MainClick,
+                                 command=lambda: self.are_you_sure(),
                                  bg="#f46e42")
         butBack2Main.grid(row=0, column=0)
 
@@ -422,6 +445,24 @@ class CharacterCreate(tk.Frame):
         self.shoesColor.set(0)
         self.hexShoesColor.set("#ff0000")
         self.sldBotColor.config(background=self.hexShoesColor.get())
+
+    def are_you_sure(self):
+        """Pop up to make sure user knows progress will be lost."""
+
+        pop = tk.Tk()
+        pop.wm_title("Wait!")
+        pop.focus_force()
+
+        w = 200
+        h = 75
+
+        pop.geometry('%dx%d+%d+%d' % (w, h, int((pop.winfo_screenwidth()/2) - (w/2)), int((pop.winfo_screenheight()/2) - (h/2))))
+        msg = tk.Label(pop, text="Are you sure you want quit?\nProgress will be lost.")
+        msg.grid(row=0, column=0, columnspan=2)
+        butYes = tk.Button(pop, text="Yes", bg="#4af441", command=lambda: self.back2MainClick(pop))
+        butYes.grid(row=1, column=0)
+        butNo = tk.Button(pop, text="No", bg="#f46e42", command=pop.destroy)
+        butNo.grid(row=1, column=1)
 
     def rgb_to_hex(self, rgb):
         return "#%02x%02x%02x" % rgb
@@ -506,11 +547,13 @@ class CharacterCreate(tk.Frame):
         """Makes sure the proper entries are not null for proper SQL statements."""
         return (self.entFName.get() and self.entLName.get())
 
-    def back2MainClick(self):
+    def back2MainClick(self, pop):
         """Will go to Main Menu or View screen depending on the database mode."""
         # When going back to main, clear this screen and personality choices
         self.set_defaults()
         self.controller.frames[PersonalityTest].set_defaults()
+        pop.destroy()
+
         if self.controller.d.mode == "new":
             self.controller.show_frame(MainMenu)
         elif self.controller.d.mode == "edit":
