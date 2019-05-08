@@ -21,7 +21,7 @@ class Creator(tk.Tk):
 
         # Centering
         self.w = 800
-        self.h = 600
+        self.h = 800
         screen_w = container.winfo_screenwidth()
         screen_h = container.winfo_screenheight()
         self.geometry('%dx%d+%d+%d' % (self.w, self.h, int((screen_w/2) - (self.w/2)), int((screen_h/2) - (self.h/2))))
@@ -175,17 +175,22 @@ class CharacterCreate(tk.Frame):
         botFrame = tk.Frame(self, bg=CLR_MAIN)
         botFrame.pack(fill="x", expand="true", side="top")
 
-        label = tk.Label(topFrame, text="Time To Design", font=("fixedsys", 20, "bold"), bg=CLR_MAIN)
-        label.pack()
-        #label.grid(row=0, column=1, columnspan=2)
-
+        # Top most part of the screen
+        img = Image.open(os.path.join("assets", "design_lab.png"))
+        img = img.resize((int(controller.w * .8), int(controller.h * .20)), Image.ANTIALIAS)
+        img = ImageTk.PhotoImage(img)
+        self.title = tk.Label(topFrame,
+                              image=img,
+                              borderwidth=0,
+                              highlightthickness=0)
+        self.title.image = img
+        self.title.pack()
 
         # ----- Information Frame -----
         lfInfo = tk.LabelFrame(midFrame,
                                text="Character Information", font=("fixedsys", 16, "bold"),
                                bg="white", borderwidth=0, highlightthickness=0)
         lfInfo.pack(expand="true", side="left")
-        #lfInfo.grid(row=1, column=0)
 
         # First name
         lblFName = tk.Label(lfInfo,
@@ -313,7 +318,6 @@ class CharacterCreate(tk.Frame):
                                  font=("fixedsys", 16, "bold"),
                                  bg=CLR_MAIN, borderwidth=0, highlightthickness=0)
         lfVisual.pack(expand="true", side="right")
-        #lfVisual.grid(row=1, column=2)
 
         # Asset import
         imgLeftArrow = tk.PhotoImage(file=os.path.join("assets", "butLeft.gif"))
@@ -635,13 +639,16 @@ class PersonalityTest(tk.Frame):
         leftFrame = tk.Frame(self, bg=CLR_MAIN)
         leftFrame.pack(expand="true", side="left")
 
-        label = tk.Label(topFrame, text="Personality Test",
-                         font=("fixedsys", 20, "bold"),
-                         bg=CLR_MAIN,
-                         borderwidth=0,
-                         highlightthickness=0)
-        label.pack(pady=10, padx=10)
-        #label.grid(row=0, column=0, columnspan=2)
+        # Top most part of the screen
+        img = Image.open(os.path.join("assets", "personality_test.png"))
+        img = img.resize((int(controller.w * .8), int(controller.h * .20)), Image.ANTIALIAS)
+        img = ImageTk.PhotoImage(img)
+        self.title = tk.Label(topFrame,
+                              image=img,
+                              borderwidth=0,
+                              highlightthickness=0)
+        self.title.image = img
+        self.title.pack()
 
         instr = """For each question, answer how true the statement is to your character. The \
 results of this quiz will determine the personality of your character.
@@ -654,7 +661,6 @@ results of this quiz will determine the personality of your character.
                                    borderwidth=0,
                                    highlightthickness=0)
         lblInstructions.pack(pady=10, padx=10)
-        #lblInstructions.grid(row=1, column=0, columnspan=2)
 
         lblIHateTkinter = tk.Label(leftFrame, bg=CLR_MAIN)
         lblIHateTkinter.grid(row=0, column=0)
@@ -663,7 +669,6 @@ results of this quiz will determine the personality of your character.
                         bg=CLR_MAIN,
                         borderwidth=0,
                         highlightthickness=0)
-        #lblCat.pack()
         lblCat.grid(row=0, column=1)
         labels = []
         questionFrames = []
@@ -688,11 +693,9 @@ results of this quiz will determine the personality of your character.
 
         for y in range(len(questions)):
             labels.append(tk.Label(leftFrame, text=questions[y], bg=CLR_MAIN, borderwidth=0, highlightthickness=0))
-            #labels[y].pack()
             labels[y].grid(row=3 + y, column=0)
 
             questionFrames.append(tk.LabelFrame(leftFrame))
-            #questionFrames[y].pack()
             questionFrames[y].grid(row=3 + y, column=1)
 
             self.rbArray.append([])
@@ -702,11 +705,9 @@ results of this quiz will determine the personality of your character.
                 self.rbArray[y][x].grid(row=0, column=x + 1)
 
         butBack = tk.Button(leftFrame, text="Back", command=self.back2CharClick, bg="#f46e42")
-        #butBack.pack()
         butBack.grid(row=50, column=0)
 
         butForward = tk.Button(leftFrame, text="Next", command=self.forward2PreviewClick, bg="#4af441")
-        #butForward.pack()
         butForward.grid(row=50, column=1)
 
     def set_defaults(self):
