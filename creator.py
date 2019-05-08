@@ -630,23 +630,41 @@ class PersonalityTest(tk.Frame):
 
         self.controller = controller
 
-        label = tk.Label(self, text="Personality Test", font=("fixedsys", 20, "bold"),
-        bg=CLR_MAIN, borderwidth=0, highlightthickness=0)
-        # label.pack(pady=10, padx=10)
-        label.grid(row=0, column=0, columnspan=2)
+        topFrame = tk.Frame(self, bg=CLR_MAIN)
+        topFrame.pack(fill="x", side="top")
+        leftFrame = tk.Frame(self, bg=CLR_MAIN)
+        leftFrame.pack(expand="true", side="left")
+
+        label = tk.Label(topFrame, text="Personality Test",
+                         font=("fixedsys", 20, "bold"),
+                         bg=CLR_MAIN,
+                         borderwidth=0,
+                         highlightthickness=0)
+        label.pack(pady=10, padx=10)
+        #label.grid(row=0, column=0, columnspan=2)
 
         instr = """For each question, answer how true the statement is to your character. The \
 results of this quiz will determine the personality of your character.
 
 """
 
-        lblInstructions = tk.Label(self, text=instr,
-        bg=CLR_MAIN, borderwidth=0, highlightthickness=0)
-        # lblInstructions.pack(pady=10, padx=10)
-        lblInstructions.grid(row=1, column=0, columnspan=2)
-        lblCat=tk.Label(self, text="(Very Disagree, Disagree, Neutral, Agree, Very Agree)",
-        bg=CLR_MAIN, borderwidth=0, highlightthickness=0)
-        lblCat.grid(row=2, column=1)
+        lblInstructions = tk.Label(topFrame,
+                                   text=instr,
+                                   bg=CLR_MAIN,
+                                   borderwidth=0,
+                                   highlightthickness=0)
+        lblInstructions.pack(pady=10, padx=10)
+        #lblInstructions.grid(row=1, column=0, columnspan=2)
+
+        lblIHateTkinter = tk.Label(leftFrame, bg=CLR_MAIN)
+        lblIHateTkinter.grid(row=0, column=0)
+        lblCat=tk.Label(leftFrame,
+                        text="(Very Disagree, Disagree, Neutral, Agree, Very Agree)",
+                        bg=CLR_MAIN,
+                        borderwidth=0,
+                        highlightthickness=0)
+        #lblCat.pack()
+        lblCat.grid(row=0, column=1)
         labels = []
         questionFrames = []
         questions = ["I have a rich imagination.",
@@ -669,10 +687,12 @@ results of this quiz will determine the personality of your character.
         self.answers = [tk.IntVar(value=2) for i in range(len(questions))]
 
         for y in range(len(questions)):
-            labels.append(tk.Label(self, text=questions[y], bg=CLR_MAIN, borderwidth=0, highlightthickness=0))
+            labels.append(tk.Label(leftFrame, text=questions[y], bg=CLR_MAIN, borderwidth=0, highlightthickness=0))
+            #labels[y].pack()
             labels[y].grid(row=3 + y, column=0)
 
-            questionFrames.append(tk.LabelFrame(self))
+            questionFrames.append(tk.LabelFrame(leftFrame))
+            #questionFrames[y].pack()
             questionFrames[y].grid(row=3 + y, column=1)
 
             self.rbArray.append([])
@@ -681,10 +701,12 @@ results of this quiz will determine the personality of your character.
                 self.rbArray[y].append(tk.Radiobutton(questionFrames[y], variable=self.answers[y], value=x, bg="white", borderwidth=0, highlightthickness=0))
                 self.rbArray[y][x].grid(row=0, column=x + 1)
 
-        butBack = tk.Button(self, text="Back", command=self.back2CharClick, bg="#f46e42")
+        butBack = tk.Button(leftFrame, text="Back", command=self.back2CharClick, bg="#f46e42")
+        #butBack.pack()
         butBack.grid(row=50, column=0)
 
-        butForward = tk.Button(self, text="Next", command=self.forward2PreviewClick, bg="#4af441")
+        butForward = tk.Button(leftFrame, text="Next", command=self.forward2PreviewClick, bg="#4af441")
+        #butForward.pack()
         butForward.grid(row=50, column=1)
 
     def set_defaults(self):
