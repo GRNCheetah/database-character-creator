@@ -731,17 +731,17 @@ class CharacterSubmit(tk.Frame):
         self.butHome = tk.Button(self.lfRightButt,
                                  text="Quit",
                                  command=self.are_you_sure,
-                                 bg="CLR_LAVENDER", borderwidth=0, highlightthickness=0)
+                                 bg=CLR_LAVENDER, borderwidth=0, highlightthickness=0)
 
         self.butEditChar = tk.Button(self.lfRightButt,
                                      text="To Edit Character",
                                      command=self.butEditCharClick,
-                                     bg="CLR_LAVENDER", borderwidth=0, highlightthickness=0)
+                                     bg=CLR_LAVENDER, borderwidth=0, highlightthickness=0)
 
         self.butEditPers = tk.Button(self.lfRightButt,
                                      text="To Edit Personality",
                                      command=self.butEditPersClick,
-                                     bg="CLR_LAVENDER", borderwidth=0, highlightthickness=0)
+                                     bg=CLR_LAVENDER, borderwidth=0, highlightthickness=0)
 
         self.butEditChar.grid(row=0, column=0)
         self.butEditPers.grid(row=1, column=0)
