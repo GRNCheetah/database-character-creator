@@ -618,13 +618,16 @@ class PersonalityTest(tk.Frame):
 
         instr = """For each question, answer how true the statement is to your character. The \
 results of this quiz will determine the personality of your character.
-(Very Disagree, Disagree, Neutral, Agree, Very Agree)
+
 """
 
-        lblInstructions = tk.Label(self, text=instr)
+        lblInstructions = tk.Label(self, text=instr,
+        bg="white", borderwidth=0, highlightthickness=0)
         # lblInstructions.pack(pady=10, padx=10)
         lblInstructions.grid(row=1, column=0, columnspan=2)
-
+        lblCat=tk.Label(self, text="(Very Disagree, Disagree, Neutral, Agree, Very Agree)",
+        bg="white", borderwidth=0, highlightthickness=0)
+        lblCat.grid(row=2, column=1)
         labels = []
         questionFrames = []
         questions = ["I have a rich imagination.",
@@ -647,22 +650,22 @@ results of this quiz will determine the personality of your character.
         self.answers = [tk.IntVar(value=2) for i in range(len(questions))]
 
         for y in range(len(questions)):
-            labels.append(tk.Label(self, text=questions[y]))
-            labels[y].grid(row=2 + y, column=0)
+            labels.append(tk.Label(self, text=questions[y],bg="white", borderwidth=0, highlightthickness=0))
+            labels[y].grid(row=3 + y, column=0)
 
             questionFrames.append(tk.LabelFrame(self))
-            questionFrames[y].grid(row=2 + y, column=1)
+            questionFrames[y].grid(row=3 + y, column=1)
 
             self.rbArray.append([])
 
             for x in range(5):
-                self.rbArray[y].append(tk.Radiobutton(questionFrames[y], variable=self.answers[y], value=x))
+                self.rbArray[y].append(tk.Radiobutton(questionFrames[y], variable=self.answers[y], value=x, bg="white", borderwidth=0, highlightthickness=0))
                 self.rbArray[y][x].grid(row=0, column=x + 1)
 
-        butBack = tk.Button(self, text="Back", command=self.back2CharClick)
+        butBack = tk.Button(self, text="Back", command=self.back2CharClick, bg="#f46e42")
         butBack.grid(row=50, column=0)
 
-        butForward = tk.Button(self, text="Next", command=self.forward2PreviewClick)
+        butForward = tk.Button(self, text="Next", command=self.forward2PreviewClick, bg="#4af441")
         butForward.grid(row=50, column=1)
 
     def set_defaults(self):
@@ -687,12 +690,13 @@ class CharacterSubmit(tk.Frame):
     """
 
     def __init__(self, parent, controller):
-        tk.Frame.__init__(self, parent)
+        tk.Frame.__init__(self, parent, bg="white")
 
         self.controller = controller
 
         # Title at the top of the screen
-        title = tk.Label(self, text="Finalize Character", font=LARGE_FONT)
+        title = tk.Label(self, text="Finalize Character", font=("fixedsys", 20, "bold"),
+        bg="white", borderwidth=0, highlightthickness=0)
         title.grid(row=0, column=0, columnspan=3)
 
         # Data setup for database submission
@@ -703,43 +707,51 @@ class CharacterSubmit(tk.Frame):
         self.d_skill = {}
 
         self.lblList = []
-        self.lfVisual = tk.LabelFrame(self, text="Visuals")
+        self.lfVisual = tk.LabelFrame(self, text="Visuals", font=("fixedsys", 16, "bold"),
+        bg="white", borderwidth=0, highlightthickness=0)
         self.lfVisual.grid(row=1, column=1)
-        self.lfPers = tk.LabelFrame(self, text="Personality")
+        self.lfPers = tk.LabelFrame(self, text="Personality", font=("fixedsys", 16, "bold"),
+        bg="white", borderwidth=0, highlightthickness=0)
         self.lfPers.grid(row=1, column=2)
-        self.lfRightButt = tk.LabelFrame(self, text="Second Chance")
+        self.lfRightButt = tk.LabelFrame(self, text="Second Chance", font=("fixedsys", 16, "bold"),
+        bg="white", borderwidth=0, highlightthickness=0)
         self.lfRightButt.grid(row=1, column=3)
 
-        self.lblPerson = tk.Label(self.lfVisual)
+        self.lblPerson = tk.Label(self.lfVisual, font=("fixedsys", 16, "bold"),
+        bg="white", borderwidth=0, highlightthickness=0)
         self.lblPerson.grid(row=0, column=0)
 
         # ----- Bottom = Submit button -----
         butSubmit = tk.Button(self,
                               text="Submit",
-                              command=self.butSubmitClick)
+                              command=self.butSubmitClick,
+                              bg="#4af441", borderwidth=0, highlightthickness=0)
         butSubmit.grid(row=2, column=1)
 
         # ----- Second middle
-        self.lblPers = [tk.Label(self.lfPers, text=str(self.controller.curr_character.ope)),
-                        tk.Label(self.lfPers, text=str(self.controller.curr_character.con)),
-                        tk.Label(self.lfPers, text=str(self.controller.curr_character.ext)),
-                        tk.Label(self.lfPers, text=str(self.controller.curr_character.agr)),
-                        tk.Label(self.lfPers, text=str(self.controller.curr_character.neu))]
+        self.lblPers = [tk.Label(self.lfPers, text=str(self.controller.curr_character.ope),bg="white"),
+                        tk.Label(self.lfPers, text=str(self.controller.curr_character.con),bg="white"),
+                        tk.Label(self.lfPers, text=str(self.controller.curr_character.ext),bg="white"),
+                        tk.Label(self.lfPers, text=str(self.controller.curr_character.agr),bg="white"),
+                        tk.Label(self.lfPers, text=str(self.controller.curr_character.neu),bg="white")]
         for c, label in enumerate(self.lblPers):
             label.grid(row=c, column=0)
 
         # ----- Right side = Buttons to go back -----
         self.butHome = tk.Button(self.lfRightButt,
                                  text="Quit",
-                                 command=self.are_you_sure)
+                                 command=self.are_you_sure,
+                                 bg="CLR_LAVENDER", borderwidth=0, highlightthickness=0)
 
         self.butEditChar = tk.Button(self.lfRightButt,
                                      text="To Edit Character",
-                                     command=self.butEditCharClick)
+                                     command=self.butEditCharClick,
+                                     bg="CLR_LAVENDER", borderwidth=0, highlightthickness=0)
 
         self.butEditPers = tk.Button(self.lfRightButt,
                                      text="To Edit Personality",
-                                     command=self.butEditPersClick)
+                                     command=self.butEditPersClick,
+                                     bg="CLR_LAVENDER", borderwidth=0, highlightthickness=0)
 
         self.butEditChar.grid(row=0, column=0)
         self.butEditPers.grid(row=1, column=0)
@@ -791,16 +803,17 @@ class CharacterSubmit(tk.Frame):
         self.aggregate_data()
 
         # ----- Left side = Character Info -----
-        self.lfCharInfo = tk.LabelFrame(self, text="Character Information")
+        self.lfCharInfo = tk.LabelFrame(self, text="Character\nInformation",font=("fixedsys", 16, "bold"),
+        bg="white", borderwidth=0, highlightthickness=0)
         self.lfCharInfo.grid(row=1, column=0)
         for label in self.lblList:
             label.grid_remove()
         self.lblList = []
-        self.lblList = [tk.Label(self.lfCharInfo, text="First Name: " + self.controller.curr_character.fName),
-                        tk.Label(self.lfCharInfo, text="Last Name: " + self.controller.curr_character.lName),
-                        tk.Label(self.lfCharInfo, text="Size: " + self.controller.curr_character.size),
-                        tk.Label(self.lfCharInfo, text="Weight: " + self.controller.curr_character.weight),
-                        tk.Label(self.lfCharInfo, text="Gender: " + self.controller.curr_character.gender)]
+        self.lblList = [tk.Label(self.lfCharInfo, text="First Name: " + self.controller.curr_character.fName,bg="white"),
+                        tk.Label(self.lfCharInfo, text="Last Name: " + self.controller.curr_character.lName,bg="white"),
+                        tk.Label(self.lfCharInfo, text="Size: " + self.controller.curr_character.size,bg="white"),
+                        tk.Label(self.lfCharInfo, text="Weight: " + self.controller.curr_character.weight,bg="white"),
+                        tk.Label(self.lfCharInfo, text="Gender: " + self.controller.curr_character.gender,bg="white")]
         i = 0
         for label in self.lblList:
             label.grid(row=i, column=0)
