@@ -101,11 +101,3 @@ WHERE char_id = ?;"""
 # Character deleting
 del_character = \
 """DELETE FROM Character WHERE id = ?;"""
-del_character2 = \
-"""DELETE C 
-FROM Character C 
-INNER JOIN Clothing AS CL ON C.id = CL.char_id
-INNER JOIN Personality AS P ON C.id = P.char_id
-INNER JOIN Job AS J ON C.id = J.char_id
-INNER JOIN Skill AS S ON C.id = S.char_id
-WHERE C.id = ?;"""

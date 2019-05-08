@@ -1,5 +1,5 @@
 import tkinter as tk
-from PIL import Image, ImageTk, ImageColor
+from PIL import ImageColor
 import os
 import ImageEdit as IE
 import DBManager as DB
@@ -61,7 +61,8 @@ class Creator(tk.Tk):
 
     def popup(self, msg):
         pop = tk.Tk()
-        pop.wm_title("Wait")
+        pop.wm_title("Wait!")
+        pop.focus_force()
 
         w = 220
         h = 50
@@ -766,49 +767,90 @@ class CharacterView(tk.Frame):
 
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
-        row_num = 0
 
         label = tk.Label(self, text="Character View", font=LARGE_FONT)
         label.grid(row=0, column=0, columnspan=2)
 
         self.controller = controller
         self.data = []
+        self.lblChars = []
 
-    def update_page(self):
 
+        # Top level headers
         lblHeaders = [tk.Label(self, text="First Name"),
                       tk.Label(self, text="Last Name"),
                       tk.Label(self, text="Species"),
                       tk.Label(self, text="Gender")]
         for i, label in enumerate(lblHeaders):
+            label.bind("<Button-1>", lambda event, e=i: self.sort_chars(event, e))
             label.grid(row=1, column=i)
+
+        # Back button
+        butMain = tk.Button(self, text="Back", command=self.onBackClick)
+        butMain.grid(row=90, column=0, columnspan=20)
+
+    def update_page(self):
+        """Updates all the widgets on this page when something updates."""
 
         # List of tuples
         # Each tuple represents a different character
         self.data = self.controller.d.get_all_characters()
         # List of tuples
         # Each tuple represents a different label full of data
-        lblChars = []
+        self.show_labels()
+
+    def show_labels(self):
+
+        # Get rid of all the old labels
+        for lbl in self.lblChars:
+            for lblbl in lbl:
+                lblbl.grid_forget()
+        self.lblChars = []
 
         for charNum, row in enumerate(self.data):
-            lblChars.append([tk.Label(self, text=row[0],),
-                             tk.Label(self, text=row[1]),
-                             tk.Label(self, text=row[2]),
-                             tk.Label(self, text=row[3]),
-                             tk.Button(self, text="Delete", command=lambda: self.del_char(row[4]))])
+            self.lblChars.append([tk.Label(self, text=row[0],),
+                                  tk.Label(self, text=row[1]),
+                                  tk.Label(self, text=row[2]),
+                                  tk.Label(self, text=row[3]),
+                                  tk.Button(self, text="Delete: "+str(row[4]), command=lambda x=row[4]: self.are_you_sure(x))])
+                                  #tk.Button(self, text="Delete", command=lambda: self.del_char(row[4]))])
 
             # Place on grid
-            for attrNum, label in enumerate(lblChars[charNum]):
-                if attrNum < len(lblChars[charNum]) - 1:
+            for attrNum, label in enumerate(self.lblChars[charNum]):
+                if attrNum < len(self.lblChars[charNum]) - 1:
                     label.bind("<Button-1>", lambda event, x=row[4]: self.onLabelClick(event, x))
                     label.grid(row=2+charNum, column=attrNum)
                 else:
                     label.grid(row=2+charNum, column=attrNum)
 
-    def del_char(self, id):
+    def are_you_sure(self, id):
+        pop = tk.Tk()
+        pop.wm_title("Wait!")
+        pop.focus_force()
+
+        w = 220
+        h = 50
+
+        pop.geometry('%dx%d+%d+%d' % (w, h, int((pop.winfo_screenwidth()/2) - (w/2)), int((pop.winfo_screenheight()/2) - (h/2))))
+        msg = tk.Label(pop, text="Are you sure you want to delete this character?")
+        msg.grid(row=0, column=0, columnspan=2)
+        butYes = tk.Button(pop, text="Yes", bg="#4af441", command=lambda: self.del_char(id, pop))
+        butYes.grid(row=1, column=0)
+        butNo = tk.Button(pop, text="No", bg="#f46e42", command=pop.destroy)
+        butNo.grid(row=1, column=1)
+
+    def sort_chars(self, event, num):
+        self.data = sorted(self.data, key=lambda li: li[num].lower())
+        self.show_labels()
+
+    def del_char(self, id, pop):
         """Delete character with id."""
+        pop.destroy()
         self.controller.d.del_char(id)
         self.update_page()
+
+    def onBackClick(self):
+        self.controller.show_frame(MainMenu)
 
     def onLabelClick(self, event, id):
         """Whenever a label is clicked, will go to that character's submit screen.
@@ -818,7 +860,6 @@ class CharacterView(tk.Frame):
         """
         # A character object
         self.controller.curr_character = self.controller.d.get_character(id)
-        print("ID> ", self.controller.curr_character.id)
         screen = self.controller.frames[CharacterCreate]
 
         screen.entFName.insert(0, self.controller.curr_character.fName)

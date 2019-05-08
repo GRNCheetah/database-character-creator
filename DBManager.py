@@ -9,7 +9,7 @@ class DBManager:
 
         self.conn = sqlite3.connect('charcreation.db')
         self.cursor = self.conn.cursor()
-        self.conn.execute("pragma foreign_keys=on;")
+        self.conn.execute("pragma foreign_keys=on;") # Needed for cascade delete with foreign keys
         # new or edit
         # Change when Create or View button clicked on MainMenu
         self.mode = "new"
@@ -126,15 +126,10 @@ class DBManager:
 
         self.cursor.execute(sql.del_character, str(id))
         self.conn.commit()
-        '''self.cursor.execute(sql.del_clothing, str(id))
-        self.cursor.execute(sql.del_personality, str(id))
-        self.cursor.execute(sql.del_, str(id))
-        self.cursor.execute(sql.del_character, str(id))'''
 
 
 if __name__ == "__main__":
     d=DBManager()
     d.create_tables()
     d.insert_character()
-    r=d.print_all_character()
     d.close_database()
