@@ -156,13 +156,9 @@ class CharacterCreate(tk.Frame):
 
         # ----- Information Frame -----
         lfInfo = tk.LabelFrame(self,
-<<<<<<< HEAD
                                text="Character Information", font=("fixedsys", 16, "bold"),
                                bg="white", borderwidth=0, highlightthickness=0)
-=======
-                               text="Character Information",
-                               bg=COL_WHITE)
->>>>>>> 5cb219b49db3ac83d40eb625a5d30b6bf7ae5744
+
         lfInfo.grid(row=1, column=0)
 
         # First name
