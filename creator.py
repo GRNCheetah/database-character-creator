@@ -936,8 +936,23 @@ class CharacterView(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent, bg=CLR_MAIN)
 
-        label = tk.Label(self, text="Character View", font=("fixedsys", 20, "bold"))
-        label.grid(row=0, column=0, columnspan=2)
+        topFrame = tk.Frame(self, bg=CLR_MAIN)
+        topFrame.pack(fill="x", side="top")
+        self.midFrame = tk.Frame(self, bg=CLR_MAIN)
+        self.midFrame.pack(expand="true", fill="y", side="top")
+        botFrame = tk.Frame(self, bg=CLR_MAIN)
+        botFrame.pack(fill="x", expand="true", side="top")
+
+        # Top most part of the screen
+        img = Image.open(os.path.join("assets", "character_view.png"))
+        img = img.resize((int(controller.w * .8), int(controller.h * .20)), Image.ANTIALIAS)
+        img = ImageTk.PhotoImage(img)
+        self.title = tk.Label(topFrame,
+                              image=img,
+                              borderwidth=0,
+                              highlightthickness=0)
+        self.title.image = img
+        self.title.pack()
 
         self.controller = controller
         self.data = []
@@ -945,18 +960,19 @@ class CharacterView(tk.Frame):
 
 
         # Top level headers
-        lblHeaders = [tk.Label(self, text="First Name",bg=CLR_MAIN, highlightthickness=0, borderwidth=0),
-                      tk.Label(self, text="Last Name",bg=CLR_MAIN, highlightthickness=0, borderwidth=0),
-                      tk.Label(self, text="Species",bg=CLR_MAIN, highlightthickness=0, borderwidth=0),
-                      tk.Label(self, text="Gender",bg=CLR_MAIN, highlightthickness=0, borderwidth=0)]
+        lblHeaders = [tk.Label(self.midFrame, text="First Name",bg=CLR_MAIN, highlightthickness=0, borderwidth=0, font=LITTLE_FONT),
+                      tk.Label(self.midFrame, text="Last Name",bg=CLR_MAIN, highlightthickness=0, borderwidth=0, font=LITTLE_FONT),
+                      tk.Label(self.midFrame, text="Species",bg=CLR_MAIN, highlightthickness=0, borderwidth=0, font=LITTLE_FONT),
+                      tk.Label(self.midFrame, text="Gender",bg=CLR_MAIN, highlightthickness=0, borderwidth=0, font=LITTLE_FONT)]
         for i, label in enumerate(lblHeaders):
             label.bind("<Button-1>", lambda event, e=i: self.sort_chars(event, e))
-            label.grid(row=1, column=i)
+            label.grid(row=1, column=i, padx=3)
 
         # Back button
-        butMain = tk.Button(self, text="Back", command=self.onBackClick,
+        butMain = tk.Button(botFrame, text="Back", command=self.onBackClick,
         bg=CLR_LAVENDER, highlightthickness=0, borderwidth=1)
-        butMain.grid(row=90, column=0, columnspan=20)
+        butMain.pack()
+        #butMain.grid(row=90, column=0, columnspan=20)
 
     def update_page(self):
         """Updates all the widgets on this page when something updates."""
@@ -977,11 +993,11 @@ class CharacterView(tk.Frame):
         self.lblChars = []
 
         for charNum, row in enumerate(self.data):
-            self.lblChars.append([tk.Label(self, text=row[0],bg=CLR_MAIN, highlightthickness=0, borderwidth=0),
-                                  tk.Label(self, text=row[1],bg=CLR_MAIN, highlightthickness=0, borderwidth=0),
-                                  tk.Label(self, text=row[2],bg=CLR_MAIN, highlightthickness=0, borderwidth=0),
-                                  tk.Label(self, text=row[3],bg=CLR_MAIN, highlightthickness=0, borderwidth=0),
-                                  tk.Button(self, text="Delete",bg=CLR_LAVENDER, highlightthickness=0, borderwidth=1, command=lambda x=row[4]: self.are_you_sure(x))])
+            self.lblChars.append([tk.Label(self.midFrame, text=row[0],bg=CLR_MAIN, highlightthickness=0, borderwidth=0),
+                                  tk.Label(self.midFrame, text=row[1],bg=CLR_MAIN, highlightthickness=0, borderwidth=0),
+                                  tk.Label(self.midFrame, text=row[2],bg=CLR_MAIN, highlightthickness=0, borderwidth=0),
+                                  tk.Label(self.midFrame, text=row[3],bg=CLR_MAIN, highlightthickness=0, borderwidth=0),
+                                  tk.Button(self.midFrame, text="Delete",bg=CLR_LAVENDER, highlightthickness=0, borderwidth=1, command=lambda x=row[4]: self.are_you_sure(x))])
 
             # Place on grid
             for attrNum, label in enumerate(self.lblChars[charNum]):
