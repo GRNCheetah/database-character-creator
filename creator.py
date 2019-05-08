@@ -69,7 +69,7 @@ class Creator(tk.Tk):
         pop.wm_title("Wait!")
         pop.focus_force()
 
-        w = 220
+        w = 210
         h = 50
 
         pop.geometry('%dx%d+%d+%d' % (w, h, int((pop.winfo_screenwidth()/2) - (w/2)), int((pop.winfo_screenheight()/2) - (h/2))))
@@ -165,15 +165,27 @@ class CharacterCreate(tk.Frame):
         tk.Frame.__init__(self, parent, bg=CLR_MAIN)
         self.controller = controller
 
-        label = tk.Label(self, text="Time To Design", font=("fixedsys", 20, "bold"), bg=CLR_MAIN)
-        label.grid(row=0, column=1, columnspan=2)
+
+
+        # Sandwich frames
+        topFrame = tk.Frame(self, bg=CLR_MAIN)
+        topFrame.pack(fill="x", expand="true", side="top")
+        midFrame = tk.Frame(self, bg=CLR_MAIN)
+        midFrame.pack(fill="x", expand="true", side="top")
+        botFrame = tk.Frame(self, bg=CLR_MAIN)
+        botFrame.pack(fill="x", expand="true", side="top")
+
+        label = tk.Label(topFrame, text="Time To Design", font=("fixedsys", 20, "bold"), bg=CLR_MAIN)
+        label.pack()
+        #label.grid(row=0, column=1, columnspan=2)
+
 
         # ----- Information Frame -----
-        lfInfo = tk.LabelFrame(self,
+        lfInfo = tk.LabelFrame(midFrame,
                                text="Character Information", font=("fixedsys", 16, "bold"),
                                bg="white", borderwidth=0, highlightthickness=0)
-
-        lfInfo.grid(row=1, column=0)
+        lfInfo.pack(expand="true", side="left")
+        #lfInfo.grid(row=1, column=0)
 
         # First name
         lblFName = tk.Label(lfInfo,
@@ -296,11 +308,12 @@ class CharacterCreate(tk.Frame):
         self.entJob.grid(row=10, column=1)
 
         # ----- Visual Frame -----
-        lfVisual = tk.LabelFrame(self,
+        lfVisual = tk.LabelFrame(midFrame,
                                  text="Design Character",
                                  font=("fixedsys", 16, "bold"),
-                                 bg="white", borderwidth=0, highlightthickness=0)
-        lfVisual.grid(row=1, column=2)
+                                 bg=CLR_MAIN, borderwidth=0, highlightthickness=0)
+        lfVisual.pack(expand="true", side="right")
+        #lfVisual.grid(row=1, column=2)
 
         # Asset import
         imgLeftArrow = tk.PhotoImage(file=os.path.join("assets", "butLeft.gif"))
@@ -311,7 +324,7 @@ class CharacterCreate(tk.Frame):
         self.imgPerson = self.character.returnGIF()
         self.lblPerson = tk.Label(lfVisual,
                                   image=self.imgPerson,
-                                  bg="white")
+                                  bg=CLR_MAIN)
         self.lblPerson.image = self.imgPerson
         self.lblPerson.grid(row=1,
                             column=1,
@@ -413,22 +426,28 @@ class CharacterCreate(tk.Frame):
         self.sldBotColor.grid(row=3, column=3)
 
         # ----- Forward-Backward Frame -----
-        lfBot = tk.LabelFrame(self,
+        lfBot = tk.LabelFrame(botFrame,
                               text="Ready to Move",
-                              bg="white")
-        lfBot.grid(row=2, column=0, columnspan=2)
+                              bg=CLR_MAIN,
+                              font=("fixedsys", 16, "bold"))
+        lfBot.pack()
+        #lfBot.grid(row=2, column=1, columnspan=2)
 
         butBack2Main = tk.Button(lfBot,
                                  text="Back",
                                  command=lambda: self.are_you_sure(),
-                                 bg="#f46e42")
-        butBack2Main.grid(row=0, column=0)
+                                 bg="#f46e42",
+                                 font=LITTLE_FONT)
+        butBack2Main.pack(side="left")
+        #butBack2Main.grid(row=0, column=0)
 
         butForward2Pers = tk.Button(lfBot,
                                     text="Next",
                                     command=self.forward2PersClick,
-                                    bg="#4af441")
-        butForward2Pers.grid(row=0, column=1)
+                                    bg="#4af441",
+                                    font=LITTLE_FONT)
+        butForward2Pers.pack(side="right")
+        #butForward2Pers.grid(row=0, column=1)
 
     def set_defaults(self):
         """Sets everything to default when you go back to main menu."""
@@ -607,12 +626,12 @@ class PersonalityTest(tk.Frame):
     """
 
     def __init__(self, parent, controller):
-        tk.Frame.__init__(self, parent, bg="white", borderwidth=0, highlightthickness=0)
+        tk.Frame.__init__(self, parent, bg=CLR_MAIN, borderwidth=0, highlightthickness=0)
 
         self.controller = controller
 
         label = tk.Label(self, text="Personality Test", font=("fixedsys", 20, "bold"),
-        bg="white", borderwidth=0, highlightthickness=0)
+        bg=CLR_MAIN, borderwidth=0, highlightthickness=0)
         # label.pack(pady=10, padx=10)
         label.grid(row=0, column=0, columnspan=2)
 
@@ -622,11 +641,11 @@ results of this quiz will determine the personality of your character.
 """
 
         lblInstructions = tk.Label(self, text=instr,
-        bg="white", borderwidth=0, highlightthickness=0)
+        bg=CLR_MAIN, borderwidth=0, highlightthickness=0)
         # lblInstructions.pack(pady=10, padx=10)
         lblInstructions.grid(row=1, column=0, columnspan=2)
         lblCat=tk.Label(self, text="(Very Disagree, Disagree, Neutral, Agree, Very Agree)",
-        bg="white", borderwidth=0, highlightthickness=0)
+        bg=CLR_MAIN, borderwidth=0, highlightthickness=0)
         lblCat.grid(row=2, column=1)
         labels = []
         questionFrames = []
@@ -650,7 +669,7 @@ results of this quiz will determine the personality of your character.
         self.answers = [tk.IntVar(value=2) for i in range(len(questions))]
 
         for y in range(len(questions)):
-            labels.append(tk.Label(self, text=questions[y], bg="white", borderwidth=0, highlightthickness=0))
+            labels.append(tk.Label(self, text=questions[y], bg=CLR_MAIN, borderwidth=0, highlightthickness=0))
             labels[y].grid(row=3 + y, column=0)
 
             questionFrames.append(tk.LabelFrame(self))
@@ -803,7 +822,7 @@ class CharacterSubmit(tk.Frame):
         self.aggregate_data()
 
         # ----- Left side = Character Info -----
-        self.lfCharInfo = tk.LabelFrame(self, text="Character\nInformation",font=("fixedsys", 16, "bold"),
+        self.lfCharInfo = tk.LabelFrame(self, text="Character\nInformation", font=("fixedsys", 16, "bold"),
         bg="white", borderwidth=0, highlightthickness=0)
         self.lfCharInfo.grid(row=1, column=0)
         for label in self.lblList:
