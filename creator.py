@@ -120,6 +120,16 @@ class MainMenu(tk.Frame):
                                  pady=but_pady)
         self.butView.pack()
 
+        # ----- Quit --------
+        self.butQuit = tk.Button(self,
+                                 text="Quit",
+                                 background="yellow",
+                                 command=controller.on_close,
+                                 width=but_width,
+                                 padx=but_padx,
+                                 pady=but_pady)
+        self.butQuit.pack()
+
     def toCreateClick(self):
         self.controller.d.set_mode("new")
         self.controller.show_frame(CharacterCreate)
@@ -702,6 +712,7 @@ class CharacterSubmit(tk.Frame):
         self.controller.curr_character.shoes_color = ieChar.col_shoes
 
         if self.controller.d.mode == "new":
+            # Only need to get personality when we first create the character.
             # Personality Table
             ans = self.controller.frames[PersonalityTest].answers
             self.controller.curr_character.ope = round((ans[0].get() + ans[1].get() + ans[2].get()) / 12, 2)
@@ -743,11 +754,11 @@ class CharacterSubmit(tk.Frame):
         self.lblPerson.image = self.imgPerson
 
         # ----- Second middle = Personality Results -----
-        self.lblPers[0].configure(text=str(self.controller.curr_character.ope))
-        self.lblPers[1].configure(text=str(self.controller.curr_character.con))
-        self.lblPers[2].configure(text=str(self.controller.curr_character.ext))
-        self.lblPers[3].configure(text=str(self.controller.curr_character.agr))
-        self.lblPers[4].configure(text=str(self.controller.curr_character.neu))
+        self.lblPers[0].configure(text="Openness: " + str(self.controller.curr_character.ope))
+        self.lblPers[1].configure(text="Conscientiousness: " + str(self.controller.curr_character.con))
+        self.lblPers[2].configure(text="Extroversion: " + str(self.controller.curr_character.ext))
+        self.lblPers[3].configure(text="Agreeableness: " + str(self.controller.curr_character.agr))
+        self.lblPers[4].configure(text="Neuroticism: " + str(self.controller.curr_character.neu))
 
 
         if self.controller.d.mode == "edit":
@@ -853,7 +864,7 @@ class CharacterView(tk.Frame):
                                   tk.Label(self, text=row[1]),
                                   tk.Label(self, text=row[2]),
                                   tk.Label(self, text=row[3]),
-                                  tk.Button(self, text="Delete: "+str(row[4]), command=lambda x=row[4]: self.are_you_sure(x))])
+                                  tk.Button(self, text="Delete", command=lambda x=row[4]: self.are_you_sure(x))])
 
             # Place on grid
             for attrNum, label in enumerate(self.lblChars[charNum]):
