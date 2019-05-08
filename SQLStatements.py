@@ -81,7 +81,7 @@ WHERE id = ?;"""
 update_clothing = \
 """UPDATE Clothing
 SET file_name = ?, color = ?
-WHERE id = ? AND type = ?;"""
+WHERE char_id = ? AND type = ?;"""
 
 update_personality = \
 """UPDATE Personality

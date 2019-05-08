@@ -8,6 +8,7 @@ import Character
 LARGE_FONT = ("Verdana", 12)
 CLR_WHITE = "#ffffff"
 
+
 class Creator(tk.Tk):
 
     def __init__(self):
@@ -58,6 +59,7 @@ class Creator(tk.Tk):
     def on_close(self):
         self.d.close_database()
         tk.Tk.destroy(self)
+        exit() # Kills all windows, maybe not the best way but it works
 
     def popup(self, msg):
         pop = tk.Tk()
@@ -119,6 +121,16 @@ class MainMenu(tk.Frame):
                                  pady=but_pady)
         self.butView.pack()
 
+        # ----- Quit --------
+        self.butQuit = tk.Button(self,
+                                 text="Quit",
+                                 background="yellow",
+                                 command=controller.on_close,
+                                 width=but_width,
+                                 padx=but_padx,
+                                 pady=but_pady)
+        self.butQuit.pack()
+
     def toCreateClick(self):
         self.controller.d.set_mode("new")
         self.controller.show_frame(CharacterCreate)
@@ -144,8 +156,13 @@ class CharacterCreate(tk.Frame):
 
         # ----- Information Frame -----
         lfInfo = tk.LabelFrame(self,
+<<<<<<< HEAD
                                text="Character Information", font=("fixedsys", 16, "bold"),
                                bg="white", borderwidth=0, highlightthickness=0)
+=======
+                               text="Character Information",
+                               bg=COL_WHITE)
+>>>>>>> 5cb219b49db3ac83d40eb625a5d30b6bf7ae5744
         lfInfo.grid(row=1, column=0)
 
         # First name
@@ -494,10 +511,14 @@ class CharacterCreate(tk.Frame):
         return (self.entFName.get() and self.entLName.get())
 
     def back2MainClick(self):
+        """Will go to Main Menu or View screen depending on the database mode."""
         # When going back to main, clear this screen and personality choices
         self.set_defaults()
         self.controller.frames[PersonalityTest].set_defaults()
-        self.controller.show_frame(MainMenu)
+        if self.controller.d.mode == "new":
+            self.controller.show_frame(MainMenu)
+        elif self.controller.d.mode == "edit":
+            self.controller.show_frame(CharacterView)
 
     def forward2PersClick(self):
         if self.not_null():
@@ -649,10 +670,19 @@ class CharacterSubmit(tk.Frame):
                               command=self.butSubmitClick)
         butSubmit.grid(row=2, column=1)
 
+        # ----- Second middle
+        self.lblPers = [tk.Label(self.lfPers, text=str(self.controller.curr_character.ope)),
+                        tk.Label(self.lfPers, text=str(self.controller.curr_character.con)),
+                        tk.Label(self.lfPers, text=str(self.controller.curr_character.ext)),
+                        tk.Label(self.lfPers, text=str(self.controller.curr_character.agr)),
+                        tk.Label(self.lfPers, text=str(self.controller.curr_character.neu))]
+        for c, label in enumerate(self.lblPers):
+            label.grid(row=c, column=0)
+
         # ----- Right side = Buttons to go back -----
         self.butHome = tk.Button(self.lfRightButt,
                                  text="Quit",
-                                 command=self.butHomeClick)
+                                 command=self.are_you_sure)
 
         self.butEditChar = tk.Button(self.lfRightButt,
                                      text="To Edit Character",
@@ -694,13 +724,14 @@ class CharacterSubmit(tk.Frame):
         self.controller.curr_character.shoes_color = ieChar.col_shoes
 
         if self.controller.d.mode == "new":
+            # Only need to get personality when we first create the character.
             # Personality Table
             ans = self.controller.frames[PersonalityTest].answers
-            self.controller.curr_character.ope = (ans[0].get() + ans[1].get() + ans[2].get()) / 12
-            self.controller.curr_character.con = (ans[3].get() + ans[4].get() + ans[5].get()) / 12
-            self.controller.curr_character.ext = (ans[6].get() + ans[7].get() + ans[8].get()) / 12
-            self.controller.curr_character.agr = (ans[9].get() + ans[10].get() + ans[11].get()) / 12
-            self.controller.curr_character.neu = (ans[12].get() + ans[13].get() + ans[14].get()) / 12
+            self.controller.curr_character.ope = round((ans[0].get() + ans[1].get() + ans[2].get()) / 12, 2)
+            self.controller.curr_character.con = round((ans[3].get() + ans[4].get() + ans[5].get()) / 12, 2)
+            self.controller.curr_character.ext = round((ans[6].get() + ans[7].get() + ans[8].get()) / 12, 2)
+            self.controller.curr_character.agr = round((ans[9].get() + ans[10].get() + ans[11].get()) / 12, 2)
+            self.controller.curr_character.neu = round((ans[12].get() + ans[13].get() + ans[14].get()) / 12, 2)
 
         # Job Table
         self.controller.curr_character.job_desc = self.controller.frames[CharacterCreate].entJob.get()
@@ -735,19 +766,36 @@ class CharacterSubmit(tk.Frame):
         self.lblPerson.image = self.imgPerson
 
         # ----- Second middle = Personality Results -----
-        lblPers = [tk.Label(self.lfPers, text=str(self.controller.curr_character.ope)),
-                   tk.Label(self.lfPers, text=str(self.controller.curr_character.con)),
-                   tk.Label(self.lfPers, text=str(self.controller.curr_character.ext)),
-                   tk.Label(self.lfPers, text=str(self.controller.curr_character.agr)),
-                   tk.Label(self.lfPers, text=str(self.controller.curr_character.neu))]
-        for c, label in enumerate(lblPers):
-            label.grid(row=c, column=0)
+        self.lblPers[0].configure(text="Openness: " + str(self.controller.curr_character.ope))
+        self.lblPers[1].configure(text="Conscientiousness: " + str(self.controller.curr_character.con))
+        self.lblPers[2].configure(text="Extroversion: " + str(self.controller.curr_character.ext))
+        self.lblPers[3].configure(text="Agreeableness: " + str(self.controller.curr_character.agr))
+        self.lblPers[4].configure(text="Neuroticism: " + str(self.controller.curr_character.neu))
+
 
         if self.controller.d.mode == "edit":
             self.butEditPers.grid_remove()
         elif self.controller.d.mode == "new":
             self.butEditPers.grid(row=1, column=0)
 
+
+    def are_you_sure(self):
+        """Pop up to make sure user knows progress will be lost."""
+
+        pop = tk.Tk()
+        pop.wm_title("Wait!")
+        pop.focus_force()
+
+        w = 200
+        h = 75
+
+        pop.geometry('%dx%d+%d+%d' % (w, h, int((pop.winfo_screenwidth()/2) - (w/2)), int((pop.winfo_screenheight()/2) - (h/2))))
+        msg = tk.Label(pop, text="Are you sure you want quit?\nProgress will be lost.")
+        msg.grid(row=0, column=0, columnspan=2)
+        butYes = tk.Button(pop, text="Yes", bg="#4af441", command=lambda: self.butHomeClick(pop))
+        butYes.grid(row=1, column=0)
+        butNo = tk.Button(pop, text="No", bg="#f46e42", command=pop.destroy)
+        butNo.grid(row=1, column=1)
 
 
     def butEditCharClick(self):
@@ -756,17 +804,27 @@ class CharacterSubmit(tk.Frame):
     def butEditPersClick(self):
         self.controller.show_frame(PersonalityTest)
 
-    def butHomeClick(self):
+    def butHomeClick(self, pop):
+        pop.destroy()
         self.controller.frames[CharacterCreate].set_defaults()
         self.controller.frames[PersonalityTest].set_defaults()
-        self.controller.show_frame(MainMenu)
+        if self.controller.d.mode == "new":
+            self.controller.show_frame(MainMenu)
+        elif self.controller.d.mode == "edit":
+            self.controller.show_frame(CharacterView)
 
     def butSubmitClick(self):
         """Will upload the character to the database and clear all screens used."""
         self.controller.d.insertion(self.controller.curr_character)
         self.controller.frames[CharacterCreate].set_defaults()
         self.controller.frames[PersonalityTest].set_defaults()
-        self.controller.show_frame(MainMenu)
+
+
+        if self.controller.d.mode == "new": # Go to Main
+            self.controller.show_frame(MainMenu)
+        elif self.controller.d.mode == "edit": # Go back to the view after editing
+            self.controller.frames[CharacterView].update_page()
+            self.controller.show_frame(CharacterView)
 
 
 class CharacterView(tk.Frame):
@@ -818,8 +876,7 @@ class CharacterView(tk.Frame):
                                   tk.Label(self, text=row[1]),
                                   tk.Label(self, text=row[2]),
                                   tk.Label(self, text=row[3]),
-                                  tk.Button(self, text="Delete: "+str(row[4]), command=lambda x=row[4]: self.are_you_sure(x))])
-                                  #tk.Button(self, text="Delete", command=lambda: self.del_char(row[4]))])
+                                  tk.Button(self, text="Delete", command=lambda x=row[4]: self.are_you_sure(x))])
 
             # Place on grid
             for attrNum, label in enumerate(self.lblChars[charNum]):
@@ -834,7 +891,7 @@ class CharacterView(tk.Frame):
         pop.wm_title("Wait!")
         pop.focus_force()
 
-        w = 220
+        w = 300
         h = 50
 
         pop.geometry('%dx%d+%d+%d' % (w, h, int((pop.winfo_screenwidth()/2) - (w/2)), int((pop.winfo_screenheight()/2) - (h/2))))
@@ -903,6 +960,8 @@ class CharacterView(tk.Frame):
 
         c_max = max(r, g, b)
         c_min = min(r, g, b)
+
+        hue = 0
 
         delta = c_max - c_min
 
